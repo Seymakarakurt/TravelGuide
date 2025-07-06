@@ -1,107 +1,63 @@
-# TravelGuide - Intelligenter Reiseplanungs-Bot
+# TravelGuide
 
-Ein KI-gestützter Chatbot zur intelligenten Reiseplanung mit schrittweiser Datensammlung.
+Ein intelligenter Chatbot für Reiseplanung mit modernem Dark Theme Design.
 
-## Funktionen
+## Features
 
-- **Schrittweise Dialogführung**: Sammelt systematisch Reiseziel, Daten und Budget
-- **Intelligente Intent-Erkennung**: Regex-basierte Erkennung von Benutzerabsichten
-- **Wetter-API**: Echte Wetterdaten über OpenWeatherMap API
-- **Hotelsuche**: Realistische Hoteldaten basierend auf echten Hotels
-- **Web-Interface**: Moderne Chat-Oberfläche mit klickbaren Links
-- **Session-Management**: Benutzer-Sessions mit "Alles zurücksetzen" Funktion
+- **Wetter-Informationen** - Aktuelle Wetterdaten für Reiseziele
+- **Hotel-Suche** - Finden Sie passende Unterkünfte
+- **KI-Unterstützung** - Intelligente Antworten auf Reisefragen
 
-## Installation
+## Schnellstart
 
-1. **Python-Umgebung einrichten**:
+1. **Virtuelle Umgebung erstellen**:
 ```bash
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# oder
-venv\Scripts\activate     # Windows
 ```
 
-2. **Abhängigkeiten installieren**:
+2. **Virtuelle Umgebung aktivieren**:
+```bash
+# Windows
+venv\Scripts\activate
+
+# Linux/Mac
+source venv/bin/activate
+```
+
+3. **Installieren**:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **API-Keys konfigurieren**:
-Bearbeiten Sie die `config.env` Datei:
-
+4. **API-Key hinzufügen**:
 ```env
-# OpenWeatherMap API Key für Wetterdaten (KOSTENLOS)
-OPENWEATHER_API_KEY=your-openweather-api-key-here
+# config.env
+OPENWEATHER_API_KEY=your-api-key-here
 ```
 
-### API-Keys erhalten:
-
-- **OpenWeatherMap API Key**: Registrieren Sie sich auf [openweathermap.org](https://openweathermap.org) - **KOSTENLOS**
-
-## Verwendung
-
-1. **Bot starten**:
+5. **Starten**:
 ```bash
 python main.py
 ```
 
-2. **Web-Interface öffnen**:
-Öffnen Sie http://localhost:5001 in Ihrem Browser
+6. **Öffnen**: http://localhost:5001
 
-3. **Mit dem Bot chatten**:
-- Der Bot fragt schrittweise nach: Reiseziel → Reisedaten → Budget
-- Fragen Sie nach Wetter: "Wie ist das Wetter in Paris?"
-- Lassen Sie sich Hotels zeigen: "Hotels in London finden"
-- Nutzen Sie "Alles zurücksetzen" für eine neue Reiseplanung
+## Verwendung
+- **Wetter abfragen**: "Wie ist das Wetter in Paris?"
+- **Hotels suchen**: "Hotels in London finden"
+- **Sehenswürdigkeiten**: "Was kann ich in Rom besichtigen?"
+- **Alles zurücksetzen**: Für neue Reiseplanung
 
 ## Projektstruktur
-
 ```
 TravelGuide/
-├── main.py                 # Hauptanwendung
-├── decision_logic.py       # Entscheidungslogik und Session-Management
-├── config.env             # API-Keys und Konfiguration
-├── rasa_bot/              # Intent-Erkennung
-│   ├── __init__.py
-│   └── rasa_handler.py    # Regex-basierte Intent-Erkennung
-├── api_services/          # API-Integrationen
-│   ├── __init__.py
-│   ├── weather_service.py # OpenWeatherMap API
-│   ├── hotel_service.py   # Realistische Hoteldaten
-│   └── ai_service.py      # KI-Integration
-├── templates/             # Flask Templates
-│   └── index.html         # Moderne Chat-Interface
-└── requirements.txt       # Python-Abhängigkeiten
+├── main.py              # Flask App
+├── decision_logic.py    # Chat-Logik
+├── static/              # CSS & JS
+├── templates/           # HTML
+├── api_services/        # APIs
+└── rasa_bot/           # Intent-Erkennung
 ```
 
-## Features im Detail
-
-### Schrittweise Dialogführung
-- Sammelt systematisch: Reiseziel → Reisedaten → Budget
-- Verhindert Duplikate durch Session-Management
-- Kontextbewusste Antworten und Vorschläge
-
-### Intelligente Intent-Erkennung
-- Erkennt automatisch Reiseziele, Daten, Budget und Präferenzen
-- Fallback für unbekannte Intents
-- Einzelne Städtenamen werden automatisch als Reiseziel erkannt
-
-### Wetter-API (OpenWeatherMap)
-- **Aktuelle Wetterdaten** für beliebige Reiseziele
-- **Wettervorhersagen** für Reisezeiträume
-
-### Hotelsuche (Realistische Daten)
-- Vorgefertigte, realistische Hoteldaten
-- Basierend auf echten Hotels in beliebten Städten
-- Keine API-Abhängigkeit oder Webscraping
-- Klickbare Hotel-Links
-
-### Web-Interface
-- Moderne, responsive Chat-Oberfläche
-- Klickbare Vorschläge
-- Klickbare Links für Hotels
-- "Alles zurücksetzen" Button für neue Reiseplanung
-
 ## Lizenz
-
-Dieses Projekt ist für Bildungszwecke erstellt. 
+Für Bildungszwecke erstellt. 

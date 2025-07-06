@@ -84,12 +84,8 @@ class WeatherService:
             return {
                 'temperature': round(data['main']['temp']),
                 'feels_like': round(data['main']['feels_like']),
-                'humidity': data['main']['humidity'],
                 'description': data['weather'][0]['description'],
                 'icon': data['weather'][0]['icon'],
-                'wind_speed': round(data['wind']['speed'] * 3.6, 1),
-                'pressure': data['main']['pressure'],
-                'visibility': data.get('visibility', 10000) / 1000,
                 'timestamp': datetime.now().isoformat()
             }
             
@@ -144,20 +140,60 @@ class WeatherService:
         return {
             'temperature': 20,
             'feels_like': 22,
-            'humidity': 65,
             'description': 'Leicht bewölkt',
             'icon': '02d',
-            'wind_speed': 12.5,
-            'pressure': 1013,
-            'visibility': 10.0,
             'timestamp': datetime.now().isoformat(),
             'note': f'Wetterdaten für {location} (Simulation - API nicht verfügbar)'
         }
     
+    def _get_5day_forecast(self, location: str) -> Optional[str]:
+        try:
+            if not self.api_key:
+                return None
+            
+            coords = self._get_coordinates(location)
+            if not coords:
+                return None
+            
+            lat, lon = coords
+            
+            url = f"{self.base_url}/forecast"
+            params = {
+                'lat': lat,
+                'lon': lon,
+                'appid': self.api_key,
+                'units': 'metric',
+                'lang': 'de'
+            }
+            
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            forecast_summary = ""
+            seen_dates = set()
+            
+            for item in data['list']:
+                forecast_dt = datetime.fromtimestamp(item['dt'])
+                date_str = forecast_dt.strftime("%d.%m")
+                
+                if date_str not in seen_dates and len(seen_dates) < 5:
+                    seen_dates.add(date_str)
+                    temp = round(item['main']['temp'])
+                    description = item['weather'][0]['description']
+                    
+                    forecast_summary += f"• {date_str}: {temp}°C, {description}\n"
+            
+            return forecast_summary.strip()
+            
+        except Exception as e:
+            logger.error(f"Fehler bei 5-Tage-Vorhersage: {e}")
+            return None
+    
     def get_weather_summary(self, location: str) -> str:
         weather = self.get_weather(location)
         
-        # Ortsname großschreiben
         location_title = location.title()
         
         if 'note' in weather:
@@ -165,14 +201,10 @@ class WeatherService:
         
         summary = f"Wetter in {location_title}:\n"
         summary += f"• Temperatur: {weather['temperature']}°C (gefühlt {weather['feels_like']}°C)\n"
-        summary += f"• Beschreibung: {weather['description'].title()}\n"
-        summary += f"• Luftfeuchtigkeit: {weather['humidity']}%\n"
-        summary += f"• Wind: {weather['wind_speed']} km/h\n"
-        summary += f"• Sichtweite: {weather['visibility']} km"
+        summary += f"• Beschreibung: {weather['description'].title()}"
         
-        if 'forecast_temperature' in weather:
-            summary += f"\n\n Vorhersage für {weather['forecast_date']}:\n"
-            summary += f"• Temperatur: {weather['forecast_temperature']}°C\n"
-            summary += f"• Wetter: {weather['forecast_description'].title()}"
+        forecast_5days = self._get_5day_forecast(location)
+        if forecast_5days:
+            summary += f"\n\n5-Tage Vorhersage:\n{forecast_5days}"
         
         return summary 

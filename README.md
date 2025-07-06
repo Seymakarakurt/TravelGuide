@@ -7,7 +7,6 @@ Ein KI-gestützter Chatbot zur intelligenten Reiseplanung mit schrittweiser Date
 - **Schrittweise Dialogführung**: Sammelt systematisch Reiseziel, Daten und Budget
 - **Intelligente Intent-Erkennung**: Regex-basierte Erkennung von Benutzerabsichten
 - **Wetter-API**: Echte Wetterdaten über OpenWeatherMap API
-- **Flugsuche**: Generierte Flugdaten mit deduplizierten Ergebnissen
 - **Hotelsuche**: Realistische Hoteldaten basierend auf echten Hotels
 - **Web-Interface**: Moderne Chat-Oberfläche mit klickbaren Links
 - **Session-Management**: Benutzer-Sessions mit "Alles zurücksetzen" Funktion
@@ -52,7 +51,7 @@ python main.py
 3. **Mit dem Bot chatten**:
 - Der Bot fragt schrittweise nach: Reiseziel → Reisedaten → Budget
 - Fragen Sie nach Wetter: "Wie ist das Wetter in Paris?"
-- Lassen Sie sich Flüge oder Hotels zeigen
+- Lassen Sie sich Hotels zeigen: "Hotels in London finden"
 - Nutzen Sie "Alles zurücksetzen" für eine neue Reiseplanung
 
 ## Projektstruktur
@@ -68,8 +67,8 @@ TravelGuide/
 ├── api_services/          # API-Integrationen
 │   ├── __init__.py
 │   ├── weather_service.py # OpenWeatherMap API
-│   ├── flight_service.py  # Generierte Flugdaten
-│   └── hotel_service.py   # Realistische Hoteldaten
+│   ├── hotel_service.py   # Realistische Hoteldaten
+│   └── ai_service.py      # KI-Integration
 ├── templates/             # Flask Templates
 │   └── index.html         # Moderne Chat-Interface
 └── requirements.txt       # Python-Abhängigkeiten
@@ -91,12 +90,6 @@ TravelGuide/
 - **Aktuelle Wetterdaten** für beliebige Reiseziele
 - **Wettervorhersagen** für Reisezeiträume
 
-### Flugsuche (Generierte Daten)
-- Generierte Flugdaten mit Deduplizierung
-- Vollständige Airline-Namen statt Codes
-- Abflugzeiten und Flugdauer
-- Klickbare Google Flights Links
-
 ### Hotelsuche (Realistische Daten)
 - Vorgefertigte, realistische Hoteldaten
 - Basierend auf echten Hotels in beliebten Städten
@@ -106,7 +99,7 @@ TravelGuide/
 ### Web-Interface
 - Moderne, responsive Chat-Oberfläche
 - Klickbare Vorschläge
-- Klickbare Links für Flüge und Hotels
+- Klickbare Links für Hotels
 - "Alles zurücksetzen" Button für neue Reiseplanung
 
 ## Lizenz

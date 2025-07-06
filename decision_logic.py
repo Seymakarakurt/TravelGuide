@@ -1,18 +1,27 @@
 import json
+import time
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 import re
 from api_services import ai_service
+from api_services.mcp_service import MCPService
+from api_services.rag_service import RAGService
+from api_services.ollama_mcp_client import OllamaMCPClient
 
 class TravelGuideDecisionLogic:
     def __init__(self, hotel_service, weather_service, rasa_handler):
         self.hotel_service = hotel_service
         self.weather_service = weather_service
         self.rasa_handler = rasa_handler
+        self.mcp_service = MCPService()
+        self.rag_service = RAGService()
+        self.ollama_mcp_client = OllamaMCPClient()
         self.user_sessions = {}
 
     
     def process_user_message(self, message: str, user_id: str) -> Dict[str, Any]:
+        start_time = time.time()
+        
         try:
             if user_id not in self.user_sessions:
                 self.user_sessions[user_id] = self._initialize_user_session()
@@ -34,45 +43,34 @@ class TravelGuideDecisionLogic:
             if extracted_city:
                 has_city = True
             
-            if has_city and has_weather_word:
-                return self._handle_weather_request(user_id, {'weather_location': extracted_city}, message)
-
-            if has_city and has_hotel_word:
-                return self._handle_hotel_search_request(user_id, {'hotel_location': extracted_city}, message)
+            # MCP-basierte Verarbeitung für komplexe Anfragen
+            if self._should_use_mcp(message):
+                response = self._handle_mcp_request(message, user_id)
+            elif has_city and has_weather_word:
+                response = self._handle_weather_request(user_id, {'weather_location': extracted_city}, message)
+            elif has_city and has_hotel_word:
+                response = self._handle_hotel_search_request(user_id, {'hotel_location': extracted_city}, message)
             elif intent == 'search_hotels':
-                return self._handle_hotel_search_request(user_id, entities, message)
+                response = self._handle_hotel_search_request(user_id, entities, message)
             elif has_city and not has_hotel_word:
-                try:
-                    ollama_response = ai_service.generate(message)
-                    return {
-                        'type': 'general',
-                        'message': ollama_response,
-                        'suggestions': [
-                            'Wie ist das Wetter in Wien?',
-                            'Hotels in Barcelona finden',
-                            'Hotels in Kopenhagen finden',
-                            'Wetter in London abfragen'
-                        ]
-                    }
-                except Exception as e:
-                    return {
-                        'type': 'error',
-                        'message': 'Entschuldigung, die KI ist aktuell nicht erreichbar.',
-                        'suggestions': ['Versuchen Sie es später erneut.']
-                    }
-            if intent == 'greet':
-                return self._handle_greeting(user_id)
+                response = self._handle_rag_request(message, user_id)
+            elif intent == 'greet':
+                response = self._handle_greeting(user_id)
             elif intent == 'reset_session':
-                return self.reset_user_session(user_id)
+                response = self.reset_user_session(user_id)
             elif intent == 'get_weather':
-                return self._handle_weather_request(user_id, entities, message)
-
+                response = self._handle_weather_request(user_id, entities, message)
             elif intent == 'goodbye':
-                return self._handle_goodbye(user_id)
+                response = self._handle_goodbye(user_id)
             elif intent == 'unknown':
-                return self._handle_general_question(message, user_id)
+                response = self._handle_general_question(message, user_id)
             else:
-                return self._handle_general_question(message, user_id)
+                response = self._handle_general_question(message, user_id)
+            
+
+            
+            return response
+            
         except Exception as e:
             return {
                 'type': 'error',
@@ -260,22 +258,51 @@ class TravelGuideDecisionLogic:
                     'suggestions': ['Wie ist das Wetter in Berlin?', 'Wetter in München', 'Temperatur in Hamburg']
                 }
 
+        # RAG-basierte Antworten für Reisefragen
+        if any(word in message_lower for word in ['sehenswürdigkeiten', 'attraktionen', 'besichtigen', 'empfehlungen', 'tipps']):
+            location = self._extract_location_from_message(message)
+            if location:
+                rag_answer = self.rag_service.answer_question(message, location)
+                return {
+                    'type': 'rag_response',
+                    'message': rag_answer,
+                    'suggestions': [
+                        'Hotels in ' + location.title() + ' finden',
+                        'Wetter in ' + location.title() + ' abfragen',
+                        'Alles zurücksetzen'
+                    ]
+                }
+
         try:
-            ollama_response = ai_service.generate(message)
-            return {
-                'type': 'general',
-                'message': ollama_response,
-                'suggestions': [
-                    'Wie ist das Wetter in Wien?',
-                    'Hotels in Barcelona finden',
-                    'Hotels in Kopenhagen finden',
-                    'Wetter in London abfragen',
-                    'Wo finde ich die schönsten Sehenswürdigkeiten in Paris?',
-                    'Was kann ich in Rom besichtigen?',
-                    'Empfehlungen für Amsterdam',
-                    'Was sollte ich in Berlin sehen?'
-                ]
-            }
+            # Kombiniere RAG und Ollama für bessere Antworten
+            rag_answer = self.rag_service.answer_question(message)
+            if rag_answer and "keine relevanten Informationen" not in rag_answer:
+                return {
+                    'type': 'rag_response',
+                    'message': rag_answer,
+                    'suggestions': [
+                        'Wie ist das Wetter in Wien?',
+                        'Hotels in Barcelona finden',
+                        'Hotels in Kopenhagen finden',
+                        'Wetter in London abfragen'
+                    ]
+                }
+            else:
+                ollama_response = ai_service.generate(message)
+                return {
+                    'type': 'general',
+                    'message': ollama_response,
+                    'suggestions': [
+                        'Wie ist das Wetter in Wien?',
+                        'Hotels in Barcelona finden',
+                        'Hotels in Kopenhagen finden',
+                        'Wetter in London abfragen',
+                        'Wo finde ich die schönsten Sehenswürdigkeiten in Paris?',
+                        'Was kann ich in Rom besichtigen?',
+                        'Empfehlungen für Amsterdam',
+                        'Was sollte ich in Berlin sehen?'
+                    ]
+                }
         except Exception as e:
             return {
                 'type': 'error',
@@ -342,3 +369,141 @@ class TravelGuideDecisionLogic:
             'message': 'Vielen Dank für die Nutzung des TravelGuide! Ich wünsche Ihnen eine wundervolle Reise! 🌍',
             'suggestions': ['Neue Reise planen']
         }
+    
+    def _should_use_mcp(self, message: str) -> bool:
+        """Entscheidet, ob MCP für komplexe Anfragen verwendet werden soll"""
+        complex_keywords = [
+            'plan', 'planen', 'reiseplan', 'reiseplanung', 'itinerar', 'route',
+            'empfehlung', 'empfehlungen', 'beste zeit', 'optimal', 'kombination',
+            'vergleich', 'vergleichen', 'alternativen', 'optionen'
+        ]
+        
+        message_lower = message.lower()
+        return any(keyword in message_lower for keyword in complex_keywords)
+    
+    def _handle_mcp_request(self, message: str, user_id: str) -> Dict[str, Any]:
+        """Behandelt komplexe Anfragen mit MCP"""
+        try:
+            # Verfügbare Tools definieren
+            tools = [
+                {
+                    "name": "weather_service",
+                    "description": "Aktuelle Wetterinformationen für eine Stadt abrufen"
+                },
+                {
+                    "name": "hotel_service", 
+                    "description": "Hotels in einer Stadt suchen und vergleichen"
+                },
+                {
+                    "name": "rag_service",
+                    "description": "Reiseinformationen und Sehenswürdigkeiten finden"
+                }
+            ]
+            
+            # Ollama MCP Client verwenden
+            mcp_response = self.ollama_mcp_client.generate_with_tools(message, tools)
+            
+            if mcp_response.get('type') == 'tool_call':
+                tool_called = mcp_response['tool_called']
+                tool_name = tool_called['tool']
+                parameters = tool_called['parameters']
+                
+                # Tool ausführen
+                if tool_name == 'weather_service':
+                    location = parameters.get('location', '')
+                    weather_data = self.weather_service.get_weather(location)
+                    final_response = self.ollama_mcp_client.generate_follow_up(weather_data, message)
+                    
+                elif tool_name == 'hotel_service':
+                    location = parameters.get('location', '')
+                    hotels = self.hotel_service.search_hotels(location=location)
+                    final_response = self.ollama_mcp_client.generate_follow_up(hotels, message)
+                    
+                elif tool_name == 'rag_service':
+                    rag_results = self.rag_service.search(message)
+                    final_response = self.ollama_mcp_client.generate_follow_up(rag_results, message)
+                    
+                else:
+                    final_response = "Entschuldigung, ich konnte diese Anfrage nicht verarbeiten."
+                
+                return {
+                    'type': 'mcp_response',
+                    'message': final_response,
+                    'tool_used': tool_name,
+                    'suggestions': [
+                        'Weitere Reiseplanung',
+                        'Andere Stadt erkunden',
+                        'Mehr Details anfordern'
+                    ]
+                }
+            else:
+                # Direkte Antwort ohne Tool-Call
+                return {
+                    'type': 'mcp_response',
+                    'message': mcp_response.get('content', 'Keine Antwort verfügbar.'),
+                    'tool_used': None,
+                    'suggestions': [
+                        'Spezifischere Anfrage stellen',
+                        'Andere Stadt erkunden',
+                        'Weitere Informationen anfordern'
+                    ]
+                }
+                
+        except Exception as e:
+            return {
+                'type': 'error',
+                'message': f'Fehler bei der MCP-Verarbeitung: {str(e)}',
+                'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
+            }
+    
+    def _handle_rag_request(self, message: str, user_id: str) -> Dict[str, Any]:
+        """Behandelt RAG-basierte Anfragen"""
+        try:
+            rag_results = self.rag_service.search(message)
+            
+            if rag_results and rag_results.get('results'):
+                # RAG-Ergebnisse mit Ollama verarbeiten
+                context = "\n".join([result['content'] for result in rag_results['results']])
+                enhanced_response = self.ollama_mcp_client.generate_follow_up(
+                    {'context': context, 'query': message}, 
+                    message
+                )
+                
+                return {
+                    'type': 'rag_response',
+                    'message': enhanced_response,
+                    'sources': rag_results['results'],
+                    'suggestions': [
+                        'Mehr Details zu Sehenswürdigkeiten',
+                        'Praktische Reisetipps',
+                        'Andere Stadt erkunden'
+                    ]
+                }
+            else:
+                # Fallback zu allgemeiner KI-Antwort
+                try:
+                    ollama_response = ai_service.generate(message)
+                    return {
+                        'type': 'general',
+                        'message': ollama_response,
+                        'suggestions': [
+                            'Wie ist das Wetter in Wien?',
+                            'Hotels in Barcelona finden',
+                            'Hotels in Kopenhagen finden',
+                            'Wetter in London abfragen'
+                        ]
+                    }
+                except Exception as e:
+                    return {
+                        'type': 'error',
+                        'message': 'Entschuldigung, die KI ist aktuell nicht erreichbar.',
+                        'suggestions': ['Versuchen Sie es später erneut.']
+                    }
+                    
+        except Exception as e:
+            return {
+                'type': 'error',
+                'message': f'Fehler bei der RAG-Verarbeitung: {str(e)}',
+                'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
+            }
+    

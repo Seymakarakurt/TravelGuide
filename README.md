@@ -7,6 +7,10 @@ Ein intelligenter Chatbot für Reiseplanung mit modernem Dark Theme Design.
 - **Wetter-Informationen** - Aktuelle Wetterdaten für Reiseziele
 - **Hotel-Suche** - Finden Sie passende Unterkünfte
 - **KI-Unterstützung** - Intelligente Antworten auf Reisefragen
+- **RAG-Pipeline** - Retrieval-Augmented Generation für präzise Antworten
+- **MCP-Integration** - Model Context Protocol für strukturierte Funktionsaufrufe
+
+- **Erweiterte Reiseinformationen** - Detaillierte Daten zu 6+ Städten
 
 ## Schnellstart
 
@@ -46,7 +50,23 @@ python main.py
 - **Wetter abfragen**: "Wie ist das Wetter in Paris?"
 - **Hotels suchen**: "Hotels in London finden"
 - **Sehenswürdigkeiten**: "Was kann ich in Rom besichtigen?"
+- **Komplexe Anfragen**: "Planen Sie eine 3-tägige Reise nach Berlin"
+- **Reiseplanung**: "Empfehlungen für Amsterdam mit Wetter"
 - **Alles zurücksetzen**: Für neue Reiseplanung
+
+## Neue Features
+
+### MCP (Model Context Protocol)
+- Automatische Tool-Auswahl für komplexe Anfragen
+- Strukturierte Funktionsaufrufe mit Ollama
+- Intelligente Reiseplanung und -optimierung
+
+### Erweiterte RAG-Pipeline
+- Detaillierte Informationen zu Paris, London, Rom, Berlin, Amsterdam
+- Kategorisierte Reiseinformationen (Sehenswürdigkeiten, Tipps, allgemeine Infos)
+- Verbesserte Suchalgorithmen für präzisere Antworten
+
+
 
 ## Projektstruktur
 ```

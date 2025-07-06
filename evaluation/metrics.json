@@ -1,0 +1,60 @@
+{
+  "interactions": [
+    {
+      "timestamp": "2025-07-07T00:09:23.297771",
+      "user_id": "user_otakknysu",
+      "message": "Planen Sie eine 3-tägige Reise nach Paris",
+      "response_type": "mcp_response",
+      "response_time": 4.104891300201416,
+      "response_quality": null,
+      "user_feedback": null,
+      "intent_recognized": false,
+      "api_success": true
+    },
+    {
+      "timestamp": "2025-07-07T00:11:18.224472",
+      "user_id": "user_otakknysu",
+      "message": "Andere Stadt erkunden",
+      "response_type": "rag_response",
+      "response_time": 0.0035517215728759766,
+      "response_quality": null,
+      "user_feedback": null,
+      "intent_recognized": false,
+      "api_success": true
+    },
+    {
+      "timestamp": "2025-07-07T00:12:40.446858",
+      "user_id": "user_otakknysu",
+      "message": "Wetter in London abfragen",
+      "response_type": "weather_results",
+      "response_time": 2.003830909729004,
+      "response_quality": null,
+      "user_feedback": null,
+      "intent_recognized": true,
+      "api_success": true
+    },
+    {
+      "timestamp": "2025-07-07T00:13:44.674318",
+      "user_id": "user_diocik2k8",
+      "message": "Empfehlungen für Amsterdam",
+      "response_type": "mcp_response",
+      "response_time": 4.0684661865234375,
+      "response_quality": null,
+      "user_feedback": null,
+      "intent_recognized": false,
+      "api_success": true
+    },
+    {
+      "timestamp": "2025-07-07T00:14:00.686053",
+      "user_id": "user_diocik2k8",
+      "message": "Weitere Informationen anfordern",
+      "response_type": "error",
+      "response_time": 0.28324031829833984,
+      "response_quality": null,
+      "user_feedback": null,
+      "intent_recognized": false,
+      "api_success": false
+    }
+  ],
+  "last_updated": "2025-07-07T00:14:00.687241"
+}

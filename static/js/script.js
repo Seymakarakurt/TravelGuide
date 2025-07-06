@@ -71,6 +71,10 @@ function addBotMessage(message, suggestions, type) {
         messageDiv.innerHTML = `<div class="error-message">${message}</div>`;
     } else if (type === 'success') {
         messageDiv.innerHTML = `<div class="success-message">${message}</div>`;
+    } else if (type === 'rag_response') {
+        messageDiv.innerHTML = `<div class="rag-response">${message}</div>`;
+    } else if (type === 'mcp_response') {
+        messageDiv.innerHTML = `<div class="mcp-response">${message}</div>`;
     } else {
         messageDiv.textContent = message;
     }

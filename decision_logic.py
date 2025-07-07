@@ -13,7 +13,7 @@ class TravelGuideDecisionLogic:
         self.hotel_service = hotel_service
         self.weather_service = weather_service
         self.rasa_handler = rasa_handler
-        self.mcp_service = MCPService()
+        self.mcp_service = MCPService(hotel_service=hotel_service, weather_service=weather_service)
         self.rag_service = RAGService()
         self.ollama_mcp_client = OllamaMCPClient()
         self.user_sessions = {}
@@ -375,7 +375,8 @@ class TravelGuideDecisionLogic:
         complex_keywords = [
             'plan', 'planen', 'reiseplan', 'reiseplanung', 'itinerar', 'route',
             'empfehlung', 'empfehlungen', 'beste zeit', 'optimal', 'kombination',
-            'vergleich', 'vergleichen', 'alternativen', 'optionen'
+            'vergleich', 'vergleichen', 'alternativen', 'optionen', 'mit hotels',
+            'und wetter', 'komplett', 'vollständig', 'alles'
         ]
         
         message_lower = message.lower()
@@ -384,70 +385,54 @@ class TravelGuideDecisionLogic:
     def _handle_mcp_request(self, message: str, user_id: str) -> Dict[str, Any]:
         """Behandelt komplexe Anfragen mit MCP"""
         try:
-            # Verfügbare Tools definieren
-            tools = [
-                {
-                    "name": "weather_service",
-                    "description": "Aktuelle Wetterinformationen für eine Stadt abrufen"
-                },
-                {
-                    "name": "hotel_service", 
-                    "description": "Hotels in einer Stadt suchen und vergleichen"
-                },
-                {
-                    "name": "rag_service",
-                    "description": "Reiseinformationen und Sehenswürdigkeiten finden"
-                }
-            ]
+            # Extrahiere Stadt aus der Nachricht
+            city = self._extract_location_from_message(message)
             
-            # Ollama MCP Client verwenden
-            mcp_response = self.ollama_mcp_client.generate_with_tools(message, tools)
-            
-            if mcp_response.get('type') == 'tool_call':
-                tool_called = mcp_response['tool_called']
-                tool_name = tool_called['tool']
-                parameters = tool_called['parameters']
-                
-                # Tool ausführen
-                if tool_name == 'weather_service':
-                    location = parameters.get('location', '')
-                    weather_data = self.weather_service.get_weather(location)
-                    final_response = self.ollama_mcp_client.generate_follow_up(weather_data, message)
-                    
-                elif tool_name == 'hotel_service':
-                    location = parameters.get('location', '')
-                    hotels = self.hotel_service.search_hotels(location=location)
-                    final_response = self.ollama_mcp_client.generate_follow_up(hotels, message)
-                    
-                elif tool_name == 'rag_service':
-                    rag_results = self.rag_service.search(message)
-                    final_response = self.ollama_mcp_client.generate_follow_up(rag_results, message)
-                    
-                else:
-                    final_response = "Entschuldigung, ich konnte diese Anfrage nicht verarbeiten."
-                
+            if not city:
                 return {
-                    'type': 'mcp_response',
-                    'message': final_response,
-                    'tool_used': tool_name,
+                    'type': 'missing_info',
+                    'message': 'Bitte geben Sie eine Stadt für die Reiseplanung an.',
                     'suggestions': [
-                        'Weitere Reiseplanung',
-                        'Andere Stadt erkunden',
-                        'Mehr Details anfordern'
+                        'Erstelle einen Reiseplan für Berlin',
+                        'Plan mir eine Route durch Paris',
+                        'Hotels und Wetter in Amsterdam'
                     ]
                 }
-            else:
-                # Direkte Antwort ohne Tool-Call
-                return {
-                    'type': 'mcp_response',
-                    'message': mcp_response.get('content', 'Keine Antwort verfügbar.'),
-                    'tool_used': None,
-                    'suggestions': [
-                        'Spezifischere Anfrage stellen',
-                        'Andere Stadt erkunden',
-                        'Weitere Informationen anfordern'
-                    ]
-                }
+            
+            # Sammle alle Daten für die Stadt
+            print(f"🔍 Sammle alle Daten für {city}...")
+            collected_data = self.mcp_service.collect_all_data_for_city(city)
+            
+            # Erstelle einen Prompt für Ollama mit allen gesammelten Daten
+            data_summary = f"""
+Stadt: {city}
+
+WETTERDATEN:
+{json.dumps(collected_data.get('weather', {}), ensure_ascii=False, indent=2)}
+
+HOTEL-DATEN:
+{json.dumps(collected_data.get('hotels', {}), ensure_ascii=False, indent=2)}
+
+SEHENSWÜRDIGKEITEN:
+{json.dumps(collected_data.get('attractions', {}), ensure_ascii=False, indent=2)}
+
+Basierend auf diesen echten Daten, erstelle einen detaillierten Reiseplan für: {message}
+"""
+            
+            # Verwende Ollama um eine intelligente Antwort zu generieren
+            final_response = self.ollama_mcp_client.generate_follow_up(collected_data, message)
+            
+            return {
+                'type': 'mcp_response',
+                'message': final_response,
+                'tool_used': 'all_services',
+                'data_file': collected_data.get('data_file', ''),
+                'suggestions': [
+                    'Weitere Reiseplanung',
+                    'Andere Stadt erkunden',
+                    'Mehr Details anfordern'
+                ]
+            }
                 
         except Exception as e:
             return {
@@ -461,9 +446,9 @@ class TravelGuideDecisionLogic:
         try:
             rag_results = self.rag_service.search(message)
             
-            if rag_results and rag_results.get('results'):
+            if rag_results and len(rag_results) > 0:
                 # RAG-Ergebnisse mit Ollama verarbeiten
-                context = "\n".join([result['content'] for result in rag_results['results']])
+                context = "\n".join([result['content'] for result in rag_results])
                 enhanced_response = self.ollama_mcp_client.generate_follow_up(
                     {'context': context, 'query': message}, 
                     message
@@ -472,7 +457,7 @@ class TravelGuideDecisionLogic:
                 return {
                     'type': 'rag_response',
                     'message': enhanced_response,
-                    'sources': rag_results['results'],
+                    'sources': rag_results,
                     'suggestions': [
                         'Mehr Details zu Sehenswürdigkeiten',
                         'Praktische Reisetipps',

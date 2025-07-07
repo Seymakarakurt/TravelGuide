@@ -1,11 +1,16 @@
 import json
 import requests
+import os
 from typing import Dict, Any, List, Optional
 
 class OllamaMCPClient:
-    def __init__(self, base_url: str = "http://localhost:11434"):
-        self.base_url = base_url
-        self.model = "llama2"  # oder ein anderes verfügbares Modell
+    def __init__(self, base_url: str = None):
+        if base_url is None:
+            # Verwende Umgebungsvariable oder Fallback auf localhost
+            self.base_url = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+        else:
+            self.base_url = base_url
+        self.model = "llama3.1:8b"  # Modell das auf dem Server verfügbar ist
         
     def generate_with_tools(self, message: str, tools: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Generiert eine Antwort mit Tool-Calling Fähigkeiten"""
@@ -22,16 +27,14 @@ Verfügbare Tools:
         system_prompt += """
 Wenn du eine Frage beantworten kannst, ohne ein Tool zu verwenden, tue das.
 Wenn du ein Tool benötigst, antworte im folgenden Format:
-TOOL_CALL: {"tool": "tool_name", "parameters": {"param1": "value1"}}
+TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
 """
         
-        # Ollama API Request
+        # Prompt für /api/generate
+        prompt = f"{system_prompt}\nUser: {message}"
         payload = {
             "model": self.model,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": message}
-            ],
+            "prompt": prompt,
             "stream": False,
             "options": {
                 "temperature": 0.7,
@@ -40,11 +43,13 @@ TOOL_CALL: {"tool": "tool_name", "parameters": {"param1": "value1"}}
         }
         
         try:
-            response = requests.post(f"{self.base_url}/api/chat", json=payload)
+            # SSL-Verifizierung basierend auf Umgebungsvariable
+            verify_ssl = os.getenv("OLLAMA_VERIFY_SSL", "true").lower() == "true"
+            response = requests.post(f"{self.base_url}/api/generate", json=payload, verify=verify_ssl, timeout=120)
             response.raise_for_status()
             
             result = response.json()
-            content = result.get("message", {}).get("content", "")
+            content = result.get("response", "")
             
             # Prüfe auf Tool-Call
             if "TOOL_CALL:" in content:
@@ -97,7 +102,7 @@ TOOL_CALL: {"tool": "tool_name", "parameters": {"param1": "value1"}}
     def generate_follow_up(self, tool_result: Dict[str, Any], original_question: str) -> str:
         """Generiert eine Antwort basierend auf Tool-Ergebnissen"""
         
-        context = f"""
+        prompt = f"""
 Originale Frage: {original_question}
 Tool-Ergebnis: {json.dumps(tool_result, ensure_ascii=False, indent=2)}
 
@@ -106,9 +111,7 @@ Antworte auf die ursprüngliche Frage basierend auf den Tool-Ergebnissen.
         
         payload = {
             "model": self.model,
-            "messages": [
-                {"role": "user", "content": context}
-            ],
+            "prompt": prompt,
             "stream": False,
             "options": {
                 "temperature": 0.7
@@ -116,11 +119,13 @@ Antworte auf die ursprüngliche Frage basierend auf den Tool-Ergebnissen.
         }
         
         try:
-            response = requests.post(f"{self.base_url}/api/chat", json=payload)
+            # SSL-Verifizierung basierend auf Umgebungsvariable
+            verify_ssl = os.getenv("OLLAMA_VERIFY_SSL", "true").lower() == "true"
+            response = requests.post(f"{self.base_url}/api/generate", json=payload, verify=verify_ssl, timeout=120)
             response.raise_for_status()
             
             result = response.json()
-            return result.get("message", {}).get("content", "Keine Antwort verfügbar.")
+            return result.get("response", "Keine Antwort verfügbar.")
             
         except Exception as e:
             return f"Fehler bei der Antwortgenerierung: {str(e)}" 

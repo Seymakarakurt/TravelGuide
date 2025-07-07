@@ -17,6 +17,41 @@ class TravelGuideDecisionLogic:
         self.rag_service = RAGService()
         self.ollama_mcp_client = OllamaMCPClient()
         self.user_sessions = {}
+        
+        # Verfügbare Tools für das LLM
+        self.available_tools = [
+            {
+                "name": "search_hotels",
+                "description": "Sucht nach Hotels in einer bestimmten Stadt mit Check-in/Check-out Daten",
+                "parameters": {
+                    "location": "Stadt oder Ort",
+                    "check_in": "Check-in Datum (YYYY-MM-DD)",
+                    "check_out": "Check-out Datum (YYYY-MM-DD)",
+                    "guests": "Anzahl der Gäste"
+                }
+            },
+            {
+                "name": "get_weather",
+                "description": "Holt aktuelle Wetterinformationen für einen bestimmten Ort",
+                "parameters": {
+                    "location": "Stadt oder Ort"
+                }
+            },
+            {
+                "name": "search_attractions",
+                "description": "Sucht nach Sehenswürdigkeiten und Attraktionen in einer Stadt",
+                "parameters": {
+                    "location": "Stadt oder Ort"
+                }
+            },
+            {
+                "name": "get_travel_recommendations",
+                "description": "Gibt allgemeine Reiseempfehlungen für eine Stadt basierend auf verfügbaren Daten",
+                "parameters": {
+                    "location": "Stadt oder Ort"
+                }
+            }
+        ]
 
     
     def process_user_message(self, message: str, user_id: str) -> Dict[str, Any]:
@@ -34,39 +69,18 @@ class TravelGuideDecisionLogic:
 
             self._update_session_with_entities(session, entities)
 
-            message_lower = message.lower()
-            has_city = False
-            has_hotel_word = any(word in message_lower for word in ["hotel", "unterkunft", "hotels"])
-            has_weather_word = any(word in message_lower for word in ["wetter", "klima"])
-            
-            extracted_city = self._extract_location_from_message(message)
-            if extracted_city:
-                has_city = True
-            
-            if self._should_use_mcp(message):
-                response = self._handle_mcp_request(message, user_id)
-            elif has_city and has_weather_word:
-                response = self._handle_weather_request(user_id, {'weather_location': extracted_city}, message)
-            elif has_city and has_hotel_word:
-                response = self._handle_hotel_search_request(user_id, {'hotel_location': extracted_city}, message)
-            elif intent == 'search_hotels':
-                response = self._handle_hotel_search_request(user_id, entities, message)
-            elif has_city and not has_hotel_word:
-                response = self._handle_rag_request(message, user_id)
+            # ECHTE TOOL-CALLING-INTEGRATION
+            # Das LLM entscheidet selbst, welche Tools es braucht
+            if intent in ['search_hotels', 'get_weather', 'unknown'] or confidence < 0.7:
+                response = self._handle_with_tool_calling(message, user_id, session)
             elif intent == 'greet':
                 response = self._handle_greeting(user_id)
             elif intent == 'reset_session':
                 response = self.reset_user_session(user_id)
-            elif intent == 'get_weather':
-                response = self._handle_weather_request(user_id, entities, message)
             elif intent == 'goodbye':
                 response = self._handle_goodbye(user_id)
-            elif intent == 'unknown':
-                response = self._handle_general_question(message, user_id)
             else:
-                response = self._handle_general_question(message, user_id)
-            
-
+                response = self._handle_with_tool_calling(message, user_id, session)
             
             return response
             
@@ -77,8 +91,218 @@ class TravelGuideDecisionLogic:
                 'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
             }
 
+    def _handle_with_tool_calling(self, message: str, user_id: str, session: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        ECHTE TOOL-CALLING-INTEGRATION
+        Das LLM entscheidet selbst, welche Tools es braucht
+        """
+        try:
+            # Das LLM entscheidet, ob und welche Tools es verwenden möchte
+            tool_response = self.ollama_mcp_client.generate_with_tools(message, self.available_tools)
+            
+            print(f"DEBUG: Tool-Response: {tool_response}")
+            
+            if tool_response.get("type") == "tool_call":
+                # Das LLM hat entschieden, ein Tool zu verwenden
+                tool_called = tool_response.get("tool_called", {})
+                tool_name = tool_called.get("tool")
+                parameters = tool_called.get("parameters", {})
+                
+                print(f"LLM hat Tool '{tool_name}' mit Parametern {parameters} aufgerufen")
+                
+                # Tool ausführen
+                tool_result = self._execute_tool(tool_name, parameters, session)
+                
+                # LLM generiert finale Antwort basierend auf Tool-Ergebnis
+                final_response = self.ollama_mcp_client.generate_follow_up(tool_result, message)
+                
+                return {
+                    'type': 'tool_response',
+                    'message': final_response,
+                    'tool_used': tool_name,
+                    'tool_parameters': parameters,
+                    'suggestions': self._get_suggestions_for_tool(tool_name, parameters)
+                }
+            else:
+                # Prüfe, ob in der Antwort ein Tool-Call versteckt ist
+                content = tool_response.get("content", "")
+                if "get_weather:" in content or "search_hotels:" in content or "search_attractions:" in content:
+                    # Tool-Call in der Antwort gefunden - extrahiere und verarbeite
+                    print(f"DEBUG: Tool-Call in Antwort gefunden: {content}")
+                    
+                    # Extrahiere Tool-Call aus der Antwort
+                    if "get_weather:" in content:
+                        tool_name = "get_weather"
+                        # Extrahiere Location aus der Antwort
+                        import re
+                        location_match = re.search(r'"location":\s*"([^"]+)"', content)
+                        if location_match:
+                            location = location_match.group(1)
+                            parameters = {"location": location}
+                            
+                            print(f"DEBUG: Extrahierte Parameter: {parameters}")
+                            
+                            # Tool ausführen
+                            tool_result = self._execute_tool(tool_name, parameters, session)
+                            
+                            # Verwende die Wetter-Zusammenfassung als Antwort
+                            weather_summary = tool_result.get('summary', 'Keine Wetterdaten verfügbar.')
+                            
+                            return {
+                                'type': 'tool_response',
+                                'message': weather_summary,
+                                'tool_used': tool_name,
+                                'tool_parameters': parameters,
+                                'suggestions': self._get_suggestions_for_tool(tool_name, parameters)
+                            }
+                
+                # Das LLM hat entschieden, keine Tools zu verwenden
+                return {
+                    'type': 'general',
+                    'message': tool_response.get("content", "Keine Antwort verfügbar."),
+                    'suggestions': [
+                        'Wie ist das Wetter in Wien?',
+                        'Hotels in Barcelona finden',
+                        'Sehenswürdigkeiten in Paris',
+                        'Reiseempfehlungen für Rom'
+                    ]
+                }
+                
+        except Exception as e:
+            print(f"Fehler bei Tool-Calling: {str(e)}")
+            # Fallback zu traditioneller Logik
+            return self._fallback_to_traditional_logic(message, user_id, session)
 
-    
+    def _execute_tool(self, tool_name: str, parameters: Dict[str, Any], session: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Führt das vom LLM gewählte Tool aus
+        """
+        location = parameters.get('location', '')
+        
+        if tool_name == "search_hotels":
+            check_in = parameters.get('check_in', datetime.now().strftime("%Y-%m-%d"))
+            check_out = parameters.get('check_out', (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d"))
+            guests = parameters.get('guests', 1)
+            
+            hotels = self.hotel_service.search_hotels(
+                location=location,
+                check_in=check_in,
+                check_out=check_out,
+                guests=guests
+            )
+            
+            session['search_results']['hotels'] = hotels
+            return {
+                'tool': 'search_hotels',
+                'location': location,
+                'hotels': hotels,
+                'summary': self.hotel_service.get_hotel_summary(hotels, location, check_in, check_out, guests)
+            }
+            
+        elif tool_name == "get_weather":
+            weather_data = self.weather_service.get_weather(location)
+            session['search_results']['weather'] = weather_data
+            
+            return {
+                'tool': 'get_weather',
+                'location': location,
+                'weather': weather_data,
+                'summary': self.weather_service.get_weather_summary(location)
+            }
+            
+        elif tool_name == "search_attractions":
+            # Verwende RAG Service für Sehenswürdigkeiten
+            attractions_query = f"Sehenswürdigkeiten und Attraktionen in {location}"
+            attractions_results = self.rag_service.search(attractions_query)
+            
+            return {
+                'tool': 'search_attractions',
+                'location': location,
+                'attractions': attractions_results,
+                'summary': f"Informationen über Sehenswürdigkeiten in {location}"
+            }
+            
+        elif tool_name == "get_travel_recommendations":
+            # Kombiniere alle verfügbaren Daten für umfassende Empfehlungen
+            all_data = self.mcp_service.collect_all_data_for_city(location)
+            
+            return {
+                'tool': 'get_travel_recommendations',
+                'location': location,
+                'recommendations': all_data,
+                'summary': f"Umfassende Reiseempfehlungen für {location}"
+            }
+            
+        else:
+            return {
+                'tool': 'unknown',
+                'error': f"Unbekanntes Tool: {tool_name}"
+            }
+
+    def _get_suggestions_for_tool(self, tool_name: str, parameters: Dict[str, Any]) -> List[str]:
+        """
+        Generiert passende Vorschläge basierend auf dem verwendeten Tool
+        """
+        location = parameters.get('location', '')
+        
+        if tool_name == "search_hotels":
+            return [
+                f'Wetter in {location} abfragen',
+                f'Sehenswürdigkeiten in {location}',
+                f'Reiseempfehlungen für {location}',
+                'Andere Stadt erkunden'
+            ]
+        elif tool_name == "get_weather":
+            return [
+                f'Hotels in {location} finden',
+                f'Sehenswürdigkeiten in {location}',
+                f'Reiseempfehlungen für {location}',
+                'Andere Stadt erkunden'
+            ]
+        elif tool_name == "search_attractions":
+            return [
+                f'Hotels in {location} finden',
+                f'Wetter in {location} abfragen',
+                f'Reiseempfehlungen für {location}',
+                'Andere Stadt erkunden'
+            ]
+        elif tool_name == "get_travel_recommendations":
+            return [
+                f'Hotels in {location} finden',
+                f'Wetter in {location} abfragen',
+                f'Sehenswürdigkeiten in {location}',
+                'Andere Stadt erkunden'
+            ]
+        else:
+            return [
+                'Wie ist das Wetter in Wien?',
+                'Hotels in Barcelona finden',
+                'Sehenswürdigkeiten in Paris',
+                'Reiseempfehlungen für Rom'
+            ]
+
+    def _fallback_to_traditional_logic(self, message: str, user_id: str, session: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Fallback zur traditionellen Logik, falls Tool-Calling fehlschlägt
+        """
+        message_lower = message.lower()
+        has_city = False
+        has_hotel_word = any(word in message_lower for word in ["hotel", "unterkunft", "hotels"])
+        has_weather_word = any(word in message_lower for word in ["wetter", "klima"])
+        
+        extracted_city = self._extract_location_from_message(message)
+        if extracted_city:
+            has_city = True
+        
+        if has_city and has_weather_word:
+            return self._handle_weather_request(user_id, {'weather_location': extracted_city}, message)
+        elif has_city and has_hotel_word:
+            return self._handle_hotel_search_request(user_id, {'hotel_location': extracted_city}, message)
+        elif has_city and not has_hotel_word:
+            return self._handle_rag_request(message, user_id)
+        else:
+            return self._handle_general_question(message, user_id)
+
     def _clean_destination(self, destination: str) -> str:
         if not destination:
             return destination
@@ -366,71 +590,6 @@ class TravelGuideDecisionLogic:
             'message': 'Vielen Dank für die Nutzung des TravelGuide! Ich wünsche Ihnen eine wundervolle Reise! 🌍',
             'suggestions': ['Neue Reise planen']
         }
-    
-    def _should_use_mcp(self, message: str) -> bool:
-        complex_keywords = [
-            'plan', 'planen', 'reiseplan', 'reiseplanung', 'itinerar', 'route',
-            'empfehlung', 'empfehlungen', 'beste zeit', 'optimal', 'kombination',
-            'vergleich', 'vergleichen', 'alternativen', 'optionen', 'mit hotels',
-            'und wetter', 'komplett', 'vollständig', 'alles'
-        ]
-        
-        message_lower = message.lower()
-        return any(keyword in message_lower for keyword in complex_keywords)
-    
-    def _handle_mcp_request(self, message: str, user_id: str) -> Dict[str, Any]:
-        try:
-            city = self._extract_location_from_message(message)
-            
-            if not city:
-                return {
-                    'type': 'missing_info',
-                    'message': 'Bitte geben Sie eine Stadt für die Reiseplanung an.',
-                    'suggestions': [
-                        'Erstelle einen Reiseplan für Berlin',
-                        'Plan mir eine Route durch Paris',
-                        'Hotels und Wetter in Amsterdam'
-                    ]
-                }
-            
-            print(f"Sammle alle Daten für {city}...")
-            collected_data = self.mcp_service.collect_all_data_for_city(city)
-            
-            data_summary = f"""
-Stadt: {city}
-
-WETTERDATEN:
-{json.dumps(collected_data.get('weather', {}), ensure_ascii=False, indent=2)}
-
-HOTEL-DATEN:
-{json.dumps(collected_data.get('hotels', {}), ensure_ascii=False, indent=2)}
-
-SEHENSWÜRDIGKEITEN:
-{json.dumps(collected_data.get('attractions', {}), ensure_ascii=False, indent=2)}
-
-Basierend auf diesen echten Daten, erstelle einen detaillierten Reiseplan für: {message}
-"""
-            
-            final_response = self.ollama_mcp_client.generate_follow_up(collected_data, message)
-            
-            return {
-                'type': 'mcp_response',
-                'message': final_response,
-                'tool_used': 'all_services',
-                'data_file': collected_data.get('data_file', ''),
-                'suggestions': [
-                    'Weitere Reiseplanung',
-                    'Andere Stadt erkunden',
-                    'Mehr Details anfordern'
-                ]
-            }
-                
-        except Exception as e:
-            return {
-                'type': 'error',
-                'message': f'Fehler bei der MCP-Verarbeitung: {str(e)}',
-                'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
-            }
     
     def _handle_rag_request(self, message: str, user_id: str) -> Dict[str, Any]:
         try:

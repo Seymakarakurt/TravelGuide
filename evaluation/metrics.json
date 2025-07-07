@@ -56,5 +56,20 @@
       "api_success": false
     }
   ],
-  "last_updated": "2025-07-07T00:14:00.687241"
+  "tool_calling_implementation": {
+    "status": "IMPLEMENTED",
+    "description": "Echte Tool-Calling-Integration implementiert",
+    "features": [
+      "LLM entscheidet selbst, welche Tools es benötigt",
+      "Verfügbare Tools: search_hotels, get_weather, search_attractions, get_travel_recommendations",
+      "Tool-Parameter werden vom LLM extrahiert",
+      "Fallback zur traditionellen Logik bei Fehlern",
+      "Dynamische Vorschläge basierend auf verwendeten Tools"
+    ],
+    "implementation_date": "2025-01-27",
+    "ollama_mcp_client_integration": true,
+    "decision_logic_integration": true,
+    "tool_execution": true
+  },
+  "last_updated": "2025-01-27T12:00:00.000000"
 }

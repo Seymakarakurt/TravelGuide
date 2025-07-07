@@ -1,21 +1,17 @@
 import json
 import requests
 import os
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 class OllamaMCPClient:
     def __init__(self, base_url: str = None):
         if base_url is None:
-            # Verwende Umgebungsvariable oder Fallback auf localhost
             self.base_url = os.getenv("OLLAMA_HOST", "http://localhost:11434")
         else:
             self.base_url = base_url
-        self.model = "llama3.1:8b"  # Modell das auf dem Server verfügbar ist
+        self.model = "llama3.1:8b"
         
     def generate_with_tools(self, message: str, tools: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Generiert eine Antwort mit Tool-Calling Fähigkeiten"""
-        
-        # System-Prompt für Tool-Calling
         system_prompt = """Du bist ein Reiseassistent. Du kannst verschiedene Tools verwenden, um Reiseinformationen zu finden.
 
 Verfügbare Tools:
@@ -30,7 +26,6 @@ Wenn du ein Tool benötigst, antworte im folgenden Format:
 TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
 """
         
-        # Prompt für /api/generate
         prompt = f"{system_prompt}\nUser: {message}"
         payload = {
             "model": self.model,
@@ -43,7 +38,6 @@ TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
         }
         
         try:
-            # SSL-Verifizierung basierend auf Umgebungsvariable
             verify_ssl = os.getenv("OLLAMA_VERIFY_SSL", "true").lower() == "true"
             response = requests.post(f"{self.base_url}/api/generate", json=payload, verify=verify_ssl, timeout=120)
             response.raise_for_status()
@@ -51,7 +45,6 @@ TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
             result = response.json()
             content = result.get("response", "")
             
-            # Prüfe auf Tool-Call
             if "TOOL_CALL:" in content:
                 return self._parse_tool_call(content)
             else:
@@ -69,9 +62,7 @@ TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
             }
     
     def _parse_tool_call(self, content: str) -> Dict[str, Any]:
-        """Parst einen Tool-Call aus der Antwort"""
         try:
-            # Extrahiere Tool-Call aus der Antwort
             tool_call_start = content.find("TOOL_CALL:")
             if tool_call_start == -1:
                 return {
@@ -100,8 +91,6 @@ TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
             }
     
     def generate_follow_up(self, tool_result: Dict[str, Any], original_question: str) -> str:
-        """Generiert eine Antwort basierend auf Tool-Ergebnissen"""
-        
         prompt = f"""
 Originale Frage: {original_question}
 Tool-Ergebnis: {json.dumps(tool_result, ensure_ascii=False, indent=2)}
@@ -119,7 +108,6 @@ Antworte auf die ursprüngliche Frage basierend auf den Tool-Ergebnissen.
         }
         
         try:
-            # SSL-Verifizierung basierend auf Umgebungsvariable
             verify_ssl = os.getenv("OLLAMA_VERIFY_SSL", "true").lower() == "true"
             response = requests.post(f"{self.base_url}/api/generate", json=payload, verify=verify_ssl, timeout=120)
             response.raise_for_status()

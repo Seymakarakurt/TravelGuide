@@ -1,179 +1,49 @@
-import json
 from typing import List, Dict, Any
-import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 class RAGService:
     def __init__(self):
         self.travel_knowledge = [
-            # Paris
-            {
-                "id": 1,
-                "content": "Paris ist die Hauptstadt Frankreichs und bekannt für den Eiffelturm, den Louvre und die Champs-Élysées. Die beste Reisezeit ist von April bis Oktober.",
-                "category": "city_info",
-                "city": "paris"
-            },
-            {
-                "id": 2,
-                "content": "Für Reisen nach Paris empfehlen sich mindestens 3-4 Tage. Besuchen Sie den Eiffelturm am besten früh morgens oder abends.",
-                "category": "travel_tips",
-                "city": "paris"
-            },
-            {
-                "id": 3,
-                "content": "Der Louvre ist das größte Kunstmuseum der Welt. Kaufen Sie Tickets online und besuchen Sie es am besten dienstags oder donnerstags.",
-                "category": "attractions",
-                "city": "paris"
-            },
-            {
-                "id": 4,
-                "content": "Die Champs-Élysées ist eine der berühmtesten Straßen der Welt. Perfekt für Shopping und Menschenbeobachtung.",
-                "category": "attractions",
-                "city": "paris"
-            },
-            
-            # London
-            {
-                "id": 5,
-                "content": "London ist die Hauptstadt Englands mit Sehenswürdigkeiten wie Big Ben, Tower Bridge und Buckingham Palace. Das Wetter ist oft regnerisch.",
-                "category": "city_info", 
-                "city": "london"
-            },
-            {
-                "id": 6,
-                "content": "In London sollten Sie das London Eye, Westminster Abbey und die Tower of London besuchen. Nutzen Sie die U-Bahn für Transport.",
-                "category": "travel_tips",
-                "city": "london"
-            },
-            {
-                "id": 7,
-                "content": "Der Big Ben ist das Wahrzeichen Londons. Die beste Zeit für Fotos ist bei Sonnenuntergang.",
-                "category": "attractions",
-                "city": "london"
-            },
-            {
-                "id": 8,
-                "content": "Die Tower Bridge ist eine der berühmtesten Brücken der Welt. Besuchen Sie das Museum im Inneren der Brücke.",
-                "category": "attractions",
-                "city": "london"
-            },
-            
-            # Rom
-            {
-                "id": 9,
-                "content": "Rom ist die Hauptstadt Italiens mit dem Kolosseum, Vatikan und Trevi-Brunnen. Die beste Reisezeit ist im Frühling oder Herbst.",
-                "category": "city_info",
-                "city": "rom"
-            },
-            {
-                "id": 10,
-                "content": "Rom ist am besten zu Fuß zu erkunden. Besuchen Sie das Kolosseum mit Führung und reservieren Sie für den Vatikan im Voraus.",
-                "category": "travel_tips", 
-                "city": "rom"
-            },
-            {
-                "id": 11,
-                "content": "Das Kolosseum ist das größte antike Amphitheater. Kaufen Sie Skip-the-Line Tickets online.",
-                "category": "attractions",
-                "city": "rom"
-            },
-            {
-                "id": 12,
-                "content": "Der Vatikan ist der kleinste Staat der Welt. Besuchen Sie die Sixtinische Kapelle und den Petersdom.",
-                "category": "attractions",
-                "city": "rom"
-            },
-            
-            # Berlin
-            {
-                "id": 13,
-                "content": "Berlin ist die Hauptstadt Deutschlands und bekannt für das Brandenburger Tor, die Berliner Mauer und die Museumsinsel.",
-                "category": "city_info",
-                "city": "berlin"
-            },
-            {
-                "id": 14,
-                "content": "Das Brandenburger Tor ist das Wahrzeichen Berlins. Besuchen Sie es am besten bei Sonnenuntergang.",
-                "category": "attractions",
-                "city": "berlin"
-            },
-            {
-                "id": 15,
-                "content": "Die Museumsinsel ist UNESCO-Weltkulturerbe. Besuchen Sie das Pergamonmuseum und das Neue Museum.",
-                "category": "attractions",
-                "city": "berlin"
-            },
-            
-            # Amsterdam
-            {
-                "id": 16,
-                "content": "Amsterdam ist die Hauptstadt der Niederlande und bekannt für seine Grachten, das Van Gogh Museum und das Anne Frank Haus.",
-                "category": "city_info",
-                "city": "amsterdam"
-            },
-            {
-                "id": 17,
-                "content": "Die Grachten von Amsterdam sind UNESCO-Weltkulturerbe. Machen Sie eine Bootstour durch die historische Innenstadt.",
-                "category": "attractions",
-                "city": "amsterdam"
-            },
-            {
-                "id": 18,
-                "content": "Das Van Gogh Museum beherbergt die größte Van Gogh Sammlung der Welt. Kaufen Sie Tickets online.",
-                "category": "attractions",
-                "city": "amsterdam"
-            },
-            
-            # Allgemeine Reisetipps
-            {
-                "id": 19,
-                "content": "Buchen Sie Flüge und Hotels mindestens 3 Monate im Voraus für die besten Preise.",
-                "category": "general_tips",
-                "city": "general"
-            },
-            {
-                "id": 20,
-                "content": "Nutzen Sie öffentliche Verkehrsmittel in europäischen Städten - sie sind oft günstiger und schneller als Taxis.",
-                "category": "general_tips",
-                "city": "general"
-            },
-            {
-                "id": 21,
-                "content": "Besuchen Sie beliebte Sehenswürdigkeiten früh morgens oder spät abends, um Menschenmassen zu vermeiden.",
-                "category": "general_tips",
-                "city": "general"
-            },
-            {
-                "id": 22,
-                "content": "Laden Sie Offline-Karten herunter und lernen Sie ein paar grundlegende Sätze in der Landessprache.",
-                "category": "general_tips",
-                "city": "general"
-            }
+            {"id": 1, "content": "Paris ist die Hauptstadt Frankreichs und bekannt für den Eiffelturm, den Louvre und die Champs-Élysées. Die beste Reisezeit ist von April bis Oktober.", "category": "city_info", "city": "paris"},
+            {"id": 2, "content": "Für Reisen nach Paris empfehlen sich mindestens 3-4 Tage. Besuchen Sie den Eiffelturm am besten früh morgens oder abends.", "category": "travel_tips", "city": "paris"},
+            {"id": 3, "content": "Der Louvre ist das größte Kunstmuseum der Welt. Kaufen Sie Tickets online und besuchen Sie es am besten dienstags oder donnerstags.", "category": "attractions", "city": "paris"},
+            {"id": 4, "content": "Die Champs-Élysées ist eine der berühmtesten Straßen der Welt. Perfekt für Shopping und Menschenbeobachtung.", "category": "attractions", "city": "paris"},
+            {"id": 5, "content": "London ist die Hauptstadt Englands mit Sehenswürdigkeiten wie Big Ben, Tower Bridge und Buckingham Palace. Das Wetter ist oft regnerisch.", "category": "city_info", "city": "london"},
+            {"id": 6, "content": "In London sollten Sie das London Eye, Westminster Abbey und die Tower of London besuchen. Nutzen Sie die U-Bahn für Transport.", "category": "travel_tips", "city": "london"},
+            {"id": 7, "content": "Der Big Ben ist das Wahrzeichen Londons. Die beste Zeit für Fotos ist bei Sonnenuntergang.", "category": "attractions", "city": "london"},
+            {"id": 8, "content": "Die Tower Bridge ist eine der berühmtesten Brücken der Welt. Besuchen Sie das Museum im Inneren der Brücke.", "category": "attractions", "city": "london"},
+            {"id": 9, "content": "Rom ist die Hauptstadt Italiens mit dem Kolosseum, Vatikan und Trevi-Brunnen. Die beste Reisezeit ist im Frühling oder Herbst.", "category": "city_info", "city": "rom"},
+            {"id": 10, "content": "Rom ist am besten zu Fuß zu erkunden. Besuchen Sie das Kolosseum mit Führung und reservieren Sie für den Vatikan im Voraus.", "category": "travel_tips", "city": "rom"},
+            {"id": 11, "content": "Das Kolosseum ist das größte antike Amphitheater. Kaufen Sie Skip-the-Line Tickets online.", "category": "attractions", "city": "rom"},
+            {"id": 12, "content": "Der Vatikan ist der kleinste Staat der Welt. Besuchen Sie die Sixtinische Kapelle und den Petersdom.", "category": "attractions", "city": "rom"},
+            {"id": 13, "content": "Berlin ist die Hauptstadt Deutschlands und bekannt für das Brandenburger Tor, die Berliner Mauer und die Museumsinsel.", "category": "city_info", "city": "berlin"},
+            {"id": 14, "content": "Das Brandenburger Tor ist das Wahrzeichen Berlins. Besuchen Sie es am besten bei Sonnenuntergang.", "category": "attractions", "city": "berlin"},
+            {"id": 15, "content": "Die Museumsinsel ist UNESCO-Weltkulturerbe. Besuchen Sie das Pergamonmuseum und das Neue Museum.", "category": "attractions", "city": "berlin"},
+            {"id": 16, "content": "Amsterdam ist die Hauptstadt der Niederlande und bekannt für seine Grachten, das Van Gogh Museum und das Anne Frank Haus.", "category": "city_info", "city": "amsterdam"},
+            {"id": 17, "content": "Die Grachten von Amsterdam sind UNESCO-Weltkulturerbe. Machen Sie eine Bootstour durch die historische Innenstadt.", "category": "attractions", "city": "amsterdam"},
+            {"id": 18, "content": "Das Van Gogh Museum beherbergt die größte Van Gogh Sammlung der Welt. Kaufen Sie Tickets online.", "category": "attractions", "city": "amsterdam"},
+            {"id": 19, "content": "Buchen Sie Flüge und Hotels mindestens 3 Monate im Voraus für die besten Preise.", "category": "general_tips", "city": "general"},
+            {"id": 20, "content": "Nutzen Sie öffentliche Verkehrsmittel in europäischen Städten - sie sind oft günstiger und schneller als Taxis.", "category": "general_tips", "city": "general"},
+            {"id": 21, "content": "Besuchen Sie beliebte Sehenswürdigkeiten früh morgens oder spät abends, um Menschenmassen zu vermeiden.", "category": "general_tips", "city": "general"},
+            {"id": 22, "content": "Laden Sie Offline-Karten herunter und lernen Sie ein paar grundlegende Sätze in der Landessprache.", "category": "general_tips", "city": "general"}
         ]
         
         self.vectorizer = TfidfVectorizer(stop_words='english')
         self._build_vector_index()
     
     def _build_vector_index(self):
-        """Baut den Vektor-Index für die Dokumente"""
         documents = [doc["content"] for doc in self.travel_knowledge]
         self.vectors = self.vectorizer.fit_transform(documents)
     
     def search(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
-        """Sucht relevante Dokumente für eine Anfrage"""
-        # Query vektorisieren
         query_vector = self.vectorizer.transform([query])
-        
-        # Ähnlichkeit berechnen
         similarities = cosine_similarity(query_vector, self.vectors).flatten()
-        
-        # Top-K Ergebnisse finden
         top_indices = similarities.argsort()[-top_k:][::-1]
         
         results = []
         for idx in top_indices:
-            if similarities[idx] > 0.1:  # Mindest-Ähnlichkeit
+            if similarities[idx] > 0.1:
                 doc = self.travel_knowledge[idx].copy()
                 doc["similarity"] = float(similarities[idx])
                 results.append(doc)
@@ -181,44 +51,21 @@ class RAGService:
         return results
     
     def get_city_info(self, city: str) -> List[Dict[str, Any]]:
-        """Gibt Informationen zu einer spezifischen Stadt zurück"""
         city_lower = city.lower()
-        results = []
-        
-        for doc in self.travel_knowledge:
-            if doc["city"] == city_lower:
-                results.append(doc)
-        
-        return results
+        return [doc for doc in self.travel_knowledge if doc["city"] == city_lower]
     
     def get_travel_tips(self, city: str = None) -> List[Dict[str, Any]]:
-        """Gibt Reisetipps zurück"""
-        results = []
-        
-        for doc in self.travel_knowledge:
-            if doc["category"] == "travel_tips":
-                if city is None or doc["city"] == city.lower():
-                    results.append(doc)
-        
-        return results
+        return [doc for doc in self.travel_knowledge if doc["category"] == "travel_tips" and (city is None or doc["city"] == city.lower())]
     
     def answer_question(self, question: str, city: str = None) -> str:
-        """Beantwortet eine Frage basierend auf dem Wissen"""
-        # Suche relevante Dokumente
         relevant_docs = self.search(question, top_k=2)
         
         if not relevant_docs:
             return "Entschuldigung, ich habe keine relevanten Informationen zu Ihrer Frage gefunden."
         
-        # Filtere nach Stadt falls angegeben
         if city:
             city_docs = [doc for doc in relevant_docs if doc["city"] == city.lower()]
             if city_docs:
                 relevant_docs = city_docs
         
-        # Erstelle Antwort aus relevanten Dokumenten
-        answer_parts = []
-        for doc in relevant_docs:
-            answer_parts.append(doc["content"])
-        
-        return " ".join(answer_parts) 
+        return " ".join([doc["content"] for doc in relevant_docs]) 

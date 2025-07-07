@@ -77,8 +77,6 @@ class TravelGuideApp:
                 'version': '1.0.0'
             })
         
-
-        
         @self.app.route('/api/test/hotels', methods=['GET'])
         def test_hotels():
             try:
@@ -195,8 +193,6 @@ class TravelGuideApp:
                     'success': False,
                     'error': str(e)
                 }), 500
-        
-
     
     def run(self, host='127.0.0.1', port=5001):
         print("TravelGuide wird gestartet...")

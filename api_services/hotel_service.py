@@ -216,91 +216,7 @@ class HotelService:
             logger.warning(f"Fehler beim Klicken auf {description}: {e}")
             return False
     
-    def _extract_rating_from_hotel_element(self, hotel_element) -> float:
-        try:
-            parent = hotel_element.find_element(By.XPATH, "./..")
-            
-            logger.info(f"Suche Rating in Parent-Element: {parent.tag_name}")
-            
-            rating_selectors = [
-                "span.KFi5wf.lA0BZ",
-                "span[class*='KFi5wf']",
-                "span[class*='lA0BZ']",
-                "span[aria-label*='Bewertung']",
-                "span[aria-label*='Rating']",
-                "span[aria-label*='Sterne']",
-                "span[aria-label*='Stars']",
-                "div[aria-label*='Bewertung']",
-                "div[aria-label*='Rating']",
-                "span[class*='rating']",
-                "div[class*='rating']",
-                "span[class*='star']",
-                "div[class*='star']",
-                "span[aria-label*='out of 5']",
-                "span[aria-label*='von 5']",
-                "span[aria-label*='5 stars']",
-                "span[aria-label*='5 Sterne']"
-            ]
-            
-            for selector in rating_selectors:
-                try:
-                    rating_elements = parent.find_elements(By.CSS_SELECTOR, selector)
-                    logger.info(f"Selektor '{selector}' gefunden: {len(rating_elements)} Elemente")
-                    
-                    for rating_elem in rating_elements:
-                        text_content = rating_elem.text.strip()
-                        if text_content:
-                            logger.info(f"Rating Text gefunden: '{text_content}'")
-                            match = re.search(r'(\d+(?:[.,]\d+)?)', text_content)
-                            if match:
-                                rating = float(match.group(1).replace(',', '.'))
-                                if 0 <= rating <= 5:
-                                    logger.info(f"Rating extrahiert: {rating}")
-                                    return rating
-                        
-                        aria_label = rating_elem.get_attribute('aria-label')
-                        if aria_label:
-                            logger.info(f"Rating aria-label gefunden: '{aria_label}'")
-                            match = re.search(r'(\d+(?:[.,]\d+)?)', aria_label)
-                            if match:
-                                rating = float(match.group(1).replace(',', '.'))
-                                if 0 <= rating <= 5:
-                                    logger.info(f"Rating extrahiert: {rating}")
-                                    return rating
-                except Exception as e:
-                    logger.warning(f"Fehler mit Selektor '{selector}': {e}")
-                    continue
-            
-            logger.info("Kein Rating gefunden, verwende Standard-Rating 4.0")
-            return 4.0
-            
-        except Exception as e:
-            logger.warning(f"Fehler beim Extrahieren des Ratings: {e}")
-            return 4.0
-    
-    def _extract_rating_alternative(self, hotel_element) -> float:
-        try:
-            hotel_container = hotel_element.find_element(By.XPATH, "./ancestor::div[contains(@class, 'W8vlAc') or contains(@class, 'lRagtb')]")
-            
-            all_spans = hotel_container.find_elements(By.TAG_NAME, "span")
-            logger.info(f"Gefunden: {len(all_spans)} span-Elemente im Hotel-Container")
-            
-            for span in all_spans:
-                try:
-                    text_content = span.text.strip()
-                    if text_content and re.match(r'^\d+[.,]\d+$', text_content):
-                        rating = float(text_content.replace(',', '.'))
-                        if 0 <= rating <= 5:
-                            logger.info(f"Rating in span gefunden: {rating}")
-                            return rating
-                except Exception:
-                    continue
-            
-            return 4.0
-            
-        except Exception as e:
-            logger.warning(f"Fehler bei alternativer Rating-Extraktion: {e}")
-            return 4.0
+
     
     def _accept_cookies(self):
         try:
@@ -471,7 +387,6 @@ class HotelService:
                         hotels.append({
                             'name': name,
                             'price': price,
-                            'rating': 0,
                             'booking_links': {
                                 'Google Hotels': google_hotels_url
                             }

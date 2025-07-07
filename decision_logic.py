@@ -43,7 +43,6 @@ class TravelGuideDecisionLogic:
             if extracted_city:
                 has_city = True
             
-            # MCP-basierte Verarbeitung für komplexe Anfragen
             if self._should_use_mcp(message):
                 response = self._handle_mcp_request(message, user_id)
             elif has_city and has_weather_word:
@@ -258,7 +257,6 @@ class TravelGuideDecisionLogic:
                     'suggestions': ['Wie ist das Wetter in Berlin?', 'Wetter in München', 'Temperatur in Hamburg']
                 }
 
-        # RAG-basierte Antworten für Reisefragen
         if any(word in message_lower for word in ['sehenswürdigkeiten', 'attraktionen', 'besichtigen', 'empfehlungen', 'tipps']):
             location = self._extract_location_from_message(message)
             if location:
@@ -274,7 +272,6 @@ class TravelGuideDecisionLogic:
                 }
 
         try:
-            # Kombiniere RAG und Ollama für bessere Antworten
             rag_answer = self.rag_service.answer_question(message)
             if rag_answer and "keine relevanten Informationen" not in rag_answer:
                 return {
@@ -371,7 +368,6 @@ class TravelGuideDecisionLogic:
         }
     
     def _should_use_mcp(self, message: str) -> bool:
-        """Entscheidet, ob MCP für komplexe Anfragen verwendet werden soll"""
         complex_keywords = [
             'plan', 'planen', 'reiseplan', 'reiseplanung', 'itinerar', 'route',
             'empfehlung', 'empfehlungen', 'beste zeit', 'optimal', 'kombination',
@@ -383,9 +379,7 @@ class TravelGuideDecisionLogic:
         return any(keyword in message_lower for keyword in complex_keywords)
     
     def _handle_mcp_request(self, message: str, user_id: str) -> Dict[str, Any]:
-        """Behandelt komplexe Anfragen mit MCP"""
         try:
-            # Extrahiere Stadt aus der Nachricht
             city = self._extract_location_from_message(message)
             
             if not city:
@@ -399,11 +393,9 @@ class TravelGuideDecisionLogic:
                     ]
                 }
             
-            # Sammle alle Daten für die Stadt
-            print(f"🔍 Sammle alle Daten für {city}...")
+            print(f"Sammle alle Daten für {city}...")
             collected_data = self.mcp_service.collect_all_data_for_city(city)
             
-            # Erstelle einen Prompt für Ollama mit allen gesammelten Daten
             data_summary = f"""
 Stadt: {city}
 
@@ -419,7 +411,6 @@ SEHENSWÜRDIGKEITEN:
 Basierend auf diesen echten Daten, erstelle einen detaillierten Reiseplan für: {message}
 """
             
-            # Verwende Ollama um eine intelligente Antwort zu generieren
             final_response = self.ollama_mcp_client.generate_follow_up(collected_data, message)
             
             return {
@@ -442,12 +433,10 @@ Basierend auf diesen echten Daten, erstelle einen detaillierten Reiseplan für: 
             }
     
     def _handle_rag_request(self, message: str, user_id: str) -> Dict[str, Any]:
-        """Behandelt RAG-basierte Anfragen"""
         try:
             rag_results = self.rag_service.search(message)
             
             if rag_results and len(rag_results) > 0:
-                # RAG-Ergebnisse mit Ollama verarbeiten
                 context = "\n".join([result['content'] for result in rag_results])
                 enhanced_response = self.ollama_mcp_client.generate_follow_up(
                     {'context': context, 'query': message}, 

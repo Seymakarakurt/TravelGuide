@@ -140,12 +140,15 @@ class WeatherService:
         # Spezielle Dummy-Werte für bekannte Städte
         city_fallbacks = {
             'wien':    {'temperature': 21, 'feels_like': 22, 'description': 'Sonnig', 'icon': '01d'},
+            'vienna':  {'temperature': 21, 'feels_like': 22, 'description': 'Sonnig', 'icon': '01d'},
             'berlin':  {'temperature': 19, 'feels_like': 19, 'description': 'Leicht bewölkt', 'icon': '02d'},
             'münchen': {'temperature': 18, 'feels_like': 18, 'description': 'Regnerisch', 'icon': '09d'},
+            'munich':  {'temperature': 18, 'feels_like': 18, 'description': 'Regnerisch', 'icon': '09d'},
             'hamburg': {'temperature': 17, 'feels_like': 16, 'description': 'Windig', 'icon': '50d'},
             'paris':   {'temperature': 23, 'feels_like': 24, 'description': 'Heiter', 'icon': '01d'},
             'london':  {'temperature': 16, 'feels_like': 15, 'description': 'Bedeckt', 'icon': '04d'},
             'rom':     {'temperature': 27, 'feels_like': 28, 'description': 'Sonnig', 'icon': '01d'},
+            'rome':    {'temperature': 27, 'feels_like': 28, 'description': 'Sonnig', 'icon': '01d'},
             'amsterdam': {'temperature': 15, 'feels_like': 15, 'description': 'Leichter Regen', 'icon': '10d'},
         }
         key = location.strip().lower()

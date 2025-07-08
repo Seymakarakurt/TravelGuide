@@ -8,6 +8,8 @@ class MCPService:
         self.weather_service = weather_service
     
     def collect_all_data_for_city(self, city: str) -> Dict[str, Any]:
+        print(f"MCP-SERVICE: Sammle alle Daten für {city}")
+        
         collected_data = {
             "city": city,
             "timestamp": datetime.now().isoformat(),
@@ -18,35 +20,36 @@ class MCPService:
         
         try:
             collected_data["weather"] = self._get_weather(city)
-            print(f"Wetterdaten für {city} gesammelt")
+            print(f"MCP-SERVICE: Wetterdaten für {city} gesammelt")
         except Exception as e:
             collected_data["weather"] = {"error": f"Wetter-API Fehler: {str(e)}"}
-            print(f"Wetter-API Fehler für {city}: {e}")
+            print(f"MCP-SERVICE: Wetter-API Fehler für {city}: {e}")
         
         try:
             hotel_params = {"city": city}
             collected_data["hotels"] = self._search_hotels(hotel_params)
-            print(f"Hotel-Daten für {city} gesammelt")
+            print(f"MCP-SERVICE: Hotel-Daten für {city} gesammelt")
         except Exception as e:
             collected_data["hotels"] = {"error": f"Hotel-API Fehler: {str(e)}"}
-            print(f"Hotel-API Fehler für {city}: {e}")
+            print(f"MCP-SERVICE: Hotel-API Fehler für {city}: {e}")
         
         try:
             collected_data["attractions"] = self._get_attractions(city)
-            print(f"Sehenswürdigkeiten für {city} gesammelt")
+            print(f"MCP-SERVICE: Sehenswürdigkeiten für {city} gesammelt")
         except Exception as e:
             collected_data["attractions"] = {"error": f"Attractions Fehler: {str(e)}"}
-            print(f"Attractions Fehler für {city}: {e}")
+            print(f"MCP-SERVICE: Attractions Fehler für {city}: {e}")
         
         filename = f"travel_data_{city.lower()}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         try:
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(collected_data, f, ensure_ascii=False, indent=2)
-            print(f"Daten in {filename} gespeichert")
+            print(f"MCP-SERVICE: Daten in {filename} gespeichert")
             collected_data["data_file"] = filename
         except Exception as e:
-            print(f"Fehler beim Speichern: {e}")
+            print(f"MCP-SERVICE: Fehler beim Speichern: {e}")
         
+        print(f"MCP-SERVICE: Alle Daten für {city} erfolgreich gesammelt")
         return collected_data
     
     def _get_weather(self, city: str) -> Dict[str, Any]:

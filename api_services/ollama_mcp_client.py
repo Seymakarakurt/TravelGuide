@@ -12,18 +12,54 @@ class OllamaMCPClient:
         self.model = "llama3.1:8b"
         
     def generate_with_tools(self, message: str, tools: List[Dict[str, Any]]) -> Dict[str, Any]:
-        system_prompt = """Du bist ein Reiseassistent. Du kannst verschiedene Tools verwenden, um Reiseinformationen zu finden.
+        system_prompt = """Du bist ein intelligenter Reiseassistent. Du kannst verschiedene Tools verwenden, um Reiseinformationen zu finden, aber du entscheidest selbst, ob du sie brauchst.
 
 Verfügbare Tools:
 """
         
         for tool in tools:
             system_prompt += f"- {tool['name']}: {tool['description']}\n"
+            # Zeige die Parameter für jedes Tool
+            if 'parameters' in tool:
+                system_prompt += "  Parameter:\n"
+                for param_name, param_desc in tool['parameters'].items():
+                    system_prompt += f"    - {param_name}: {param_desc}\n"
         
         system_prompt += """
-Wenn du eine Frage beantworten kannst, ohne ein Tool zu verwenden, tue das.
-Wenn du ein Tool benötigst, antworte im folgenden Format:
-TOOL_CALL: {\"tool\": \"tool_name\", \"parameters\": {\"param1\": \"value1\"}}
+ENTSCHEIDUNGSLOGIK - DU ENTSCHEIDEST AUTONOM:
+
+DU hast die volle Kontrolle über die Entscheidung, ob und welche Tools du verwendest.
+
+VERWENDE TOOLS NUR WENN:
+- Du spezifische, aktuelle Daten brauchst (Wetter, Hotel-Preise, aktuelle Sehenswürdigkeiten)
+- Du mehrere Informationen gleichzeitig sammeln musst (komplexe Reiseplanung)
+- Die Frage nach konkreten, datenabhängigen Informationen verlangt
+
+ANTWORTE DIREKT WENN:
+- Du die Frage mit deinem eigenen Wissen beantworten kannst
+- Es sich um allgemeine Fragen über Reisen, Kultur, Geschichte handelt
+- Du Vergleiche oder Empfehlungen geben kannst
+- Die Frage nach Meinungen oder Erfahrungen fragt
+
+BEISPIELE FÜR TOOL-NUTZUNG:
+- "Wie ist das Wetter in Wien?" → get_weather
+- "Hotels in Paris" → search_hotels  
+- "Was kann ich in Rom besichtigen?" → search_attractions
+- "Ich plane 3 Tage nach Barcelona, brauche Hotel und Wetter" → get_complete_travel_data
+
+BEISPIELE FÜR DIREKTE ANTWORTEN:
+- "Was ist der Eiffelturm?" → Direkte Antwort
+- "Was ist eine gute Reisezeit für Europa?" → Direkte Antwort
+- "Vergleiche Wien und Paris" → Direkte Antwort
+- "Erzähl mir von der Wiener Kaffeehauskultur" → Direkte Antwort
+- "Was ist der Unterschied zwischen Hostel und Hotel?" → Direkte Antwort
+
+WICHTIG: Du entscheidest selbst! Verwende Tools nur wenn wirklich nötig.
+
+Wenn du ein Tool verwenden möchtest:
+TOOL_CALL: {"tool": "tool_name", "parameters": {"param1": "value1"}}
+
+WICHTIG: Verwende die exakten Parameter-Namen, die in der Tool-Beschreibung angegeben sind!
 """
         
         prompt = f"{system_prompt}\nUser: {message}"

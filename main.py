@@ -193,6 +193,94 @@ class TravelGuideApp:
                     'success': False,
                     'error': str(e)
                 }), 500
+        
+        @self.app.route('/api/test/mcp', methods=['GET'])
+        def test_mcp_service():
+            try:
+                city = request.args.get('city', 'Wien')
+                
+                # Teste MCP-Service
+                mcp_data = self.decision_logic.mcp_service.collect_all_data_for_city(city)
+                
+                return jsonify({
+                    'success': True,
+                    'city': city,
+                    'mcp_data': mcp_data,
+                    'timestamp': datetime.now().isoformat()
+                })
+                
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+        
+        @self.app.route('/api/test/mcp/weather', methods=['GET'])
+        def test_mcp_weather():
+            try:
+                city = request.args.get('city', 'Wien')
+                
+                # Teste nur Wetter-Komponente
+                weather_data = self.decision_logic.mcp_service._get_weather(city)
+                
+                return jsonify({
+                    'success': True,
+                    'city': city,
+                    'weather_data': weather_data,
+                    'timestamp': datetime.now().isoformat()
+                })
+                
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+        
+        @self.app.route('/api/test/mcp/hotels', methods=['GET'])
+        def test_mcp_hotels():
+            try:
+                city = request.args.get('city', 'Wien')
+                
+                # Teste nur Hotel-Komponente
+                hotel_data = self.decision_logic.mcp_service._search_hotels({"city": city})
+                
+                return jsonify({
+                    'success': True,
+                    'city': city,
+                    'hotel_data': hotel_data,
+                    'timestamp': datetime.now().isoformat()
+                })
+                
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+        
+        @self.app.route('/api/test/mcp/attractions', methods=['GET'])
+        def test_mcp_attractions():
+            try:
+                city = request.args.get('city', 'Wien')
+                
+                # Teste nur Attractions-Komponente
+                attractions_data = self.decision_logic.mcp_service._get_attractions(city)
+                
+                return jsonify({
+                    'success': True,
+                    'city': city,
+                    'attractions_data': attractions_data,
+                    'timestamp': datetime.now().isoformat()
+                })
+                
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
     
     def run(self, host='127.0.0.1', port=5001):
         print("TravelGuide wird gestartet...")

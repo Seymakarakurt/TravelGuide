@@ -7,6 +7,7 @@ from api_services import ai_service
 from api_services.mcp_service import MCPService
 from api_services.rag_service import RAGService
 from api_services.ollama_mcp_client import OllamaMCPClient
+from evaluation.evaluation_system import EvaluationSystem
 
 class TravelGuideDecisionLogic:
     def __init__(self, hotel_service, weather_service, rasa_handler):
@@ -17,6 +18,7 @@ class TravelGuideDecisionLogic:
         self.rag_service = RAGService()
         self.ollama_mcp_client = OllamaMCPClient()
         self.user_sessions = {}
+        self.evaluation_system = EvaluationSystem()
         
         self.available_tools = [
             {
@@ -84,14 +86,35 @@ class TravelGuideDecisionLogic:
             else:
                 response = self._handle_with_autonomous_llm(message, user_id, session)
             
+            # Evaluation durchführen
+            response_time = time.time() - start_time
+            intent_recognized = intent != 'unknown' and confidence > 0.5
+            api_success = response.get('type') != 'error'
+            
+            # Interaktion aufzeichnen
+            interaction_id = self.evaluation_system.record_interaction(
+                user_id, message, response, response_time, intent_recognized, api_success
+            )
+            
+            # Evaluation-ID zur Antwort hinzufügen
+            response['evaluation_id'] = interaction_id
+            
             return response
             
         except Exception as e:
-            return {
+            response = {
                 'type': 'error',
                 'message': 'Entschuldigung, es gab einen Fehler bei der Verarbeitung Ihrer Anfrage.',
                 'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
             }
+            
+            # Auch Fehler evaluieren
+            response_time = time.time() - start_time
+            self.evaluation_system.record_interaction(
+                user_id, message, response, response_time, False, False
+            )
+            
+            return response
 
     def _handle_with_autonomous_llm(self, message: str, user_id: str, session: Dict[str, Any]) -> Dict[str, Any]:
         try:

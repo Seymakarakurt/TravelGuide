@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGuide - Evaluations-Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .quality-distribution {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .quality-bar {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .quality-label {
+            width: 100px;
+            font-weight: bold;
+        }
+        
+        .quality-progress {
+            flex: 1;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+        
+        .quality-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .excellent { background: #28a745; }
+        .good { background: #17a2b8; }
+        .acceptable { background: #ffc107; }
+        .poor { background: #fd7e14; }
+        .very_poor { background: #dc3545; }
+        
+        .recent-interactions {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .interaction-item {
+            background: white;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .interaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .interaction-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .interaction-quality {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .excellent { background: #d4edda; color: #155724; }
+        .good { background: #d1ecf1; color: #0c5460; }
+        .acceptable { background: #fff3cd; color: #856404; }
+        .poor { background: #f8d7da; color: #721c24; }
+        .very_poor { background: #f5c6cb; color: #721c24; }
+        
+        .interaction-message {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .interaction-details {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Evaluations-Dashboard</h1>
+            <p>Umfassende Analyse der TravelGuide-Performance</p>
+        </div>
+        
+        <div class="content">
+            <button class="refresh-btn" onclick="loadEvaluationData()">🔄 Daten aktualisieren</button>
+            
+            <div id="loading" class="loading">
+                <h3>Lade Evaluationsdaten...</h3>
+            </div>
+            
+            <div id="error" class="error" style="display: none;"></div>
+            
+            <div id="dashboard" style="display: none;">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Gesamt Interaktionen</div>
+                        <div class="metric-value" id="total-interactions">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Durchschnittliche Qualität</div>
+                        <div class="metric-value" id="avg-quality">0.0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Benutzerzufriedenheit</div>
+                        <div class="metric-value" id="satisfaction">0%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Intent-Erkennung</div>
+                        <div class="metric-value" id="intent-recognition">0%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">API-Erfolgsrate</div>
+                        <div class="metric-value" id="api-success">0%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Durchschnittliche Antwortzeit</div>
+                        <div class="metric-value" id="avg-response-time">0.0s</div>
+                    </div>
+                </div>
+                
+                <div class="quality-distribution">
+                    <h3>Qualitätsverteilung</h3>
+                    <div id="quality-bars"></div>
+                </div>
+                
+                <div class="recent-interactions">
+                    <h3>Letzte Interaktionen</h3>
+                    <div id="interactions-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function loadEvaluationData() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const dashboard = document.getElementById('dashboard');
+            
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            dashboard.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/evaluation/report');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayDashboard(data.report);
+                } else {
+                    throw new Error(data.error || 'Unbekannter Fehler');
+                }
+            } catch (err) {
+                error.textContent = `Fehler beim Laden der Daten: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+        
+        function displayDashboard(report) {
+            const dashboard = document.getElementById('dashboard');
+            
+            // Aggregierte Metriken
+            const summary = report.summary;
+            document.getElementById('total-interactions').textContent = summary.total_interactions;
+            document.getElementById('avg-quality').textContent = (summary.overall_quality_score * 100).toFixed(1) + '%';
+            document.getElementById('satisfaction').textContent = (summary.user_satisfaction * 100).toFixed(1) + '%';
+            document.getElementById('intent-recognition').textContent = (summary.system_performance.intent_recognition_rate * 100).toFixed(1) + '%';
+            document.getElementById('api-success').textContent = (summary.system_performance.api_success_rate * 100).toFixed(1) + '%';
+            document.getElementById('avg-response-time').textContent = summary.system_performance.avg_response_time.toFixed(2) + 's';
+            
+            // Qualitätsverteilung
+            displayQualityDistribution(report.quality_distribution);
+            
+            // Letzte Interaktionen
+            displayRecentInteractions(report.recent_interactions);
+            
+            dashboard.style.display = 'block';
+        }
+        
+        function displayQualityDistribution(distribution) {
+            const container = document.getElementById('quality-bars');
+            container.innerHTML = '';
+            
+            const total = Object.values(distribution).reduce((sum, count) => sum + count, 0);
+            
+            const qualityLabels = {
+                'excellent': 'Ausgezeichnet',
+                'good': 'Gut',
+                'acceptable': 'Akzeptabel',
+                'poor': 'Schlecht',
+                'very_poor': 'Sehr schlecht'
+            };
+            
+            Object.entries(distribution).forEach(([level, count]) => {
+                const percentage = total > 0 ? (count / total * 100) : 0;
+                
+                const bar = document.createElement('div');
+                bar.className = 'quality-bar';
+                bar.innerHTML = `
+                    <div class="quality-label">${qualityLabels[level] || level}</div>
+                    <div class="quality-progress">
+                        <div class="quality-fill ${level}" style="width: ${percentage}%"></div>
+                    </div>
+                    <div style="width: 60px; text-align: right;">${count}</div>
+                `;
+                
+                container.appendChild(bar);
+            });
+        }
+        
+        function displayRecentInteractions(interactions) {
+            const container = document.getElementById('interactions-list');
+            container.innerHTML = '';
+            
+            interactions.forEach(interaction => {
+                const item = document.createElement('div');
+                item.className = 'interaction-item';
+                
+                const quality = interaction.response_quality;
+                const feedback = interaction.user_feedback;
+                
+                item.innerHTML = `
+                    <div class="interaction-header">
+                        <div class="interaction-time">${new Date(interaction.timestamp).toLocaleString('de-DE')}</div>
+                        <div class="interaction-quality ${quality?.level || 'unknown'}">
+                            ${quality?.level || 'Unbekannt'} (${(quality?.score * 100 || 0).toFixed(1)}%)
+                        </div>
+                    </div>
+                    <div class="interaction-message">"${interaction.message}"</div>
+                    <div class="interaction-details">
+                        <strong>Typ:</strong> ${interaction.response_type} | 
+                        <strong>Tool:</strong> ${interaction.tool_used || 'Kein Tool'} | 
+                        <strong>Zeit:</strong> ${interaction.response_time.toFixed(2)}s | 
+                        <strong>Bewertung:</strong> ${feedback?.rating || 'N/A'}/5 ⭐
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+        
+        // Initial laden
+        loadEvaluationData();
+    </script>
+</body>
+</html> 

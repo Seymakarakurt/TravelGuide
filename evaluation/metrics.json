@@ -1,61 +1,647 @@
 {
   "interactions": [
     {
-      "timestamp": "2025-07-07T00:09:23.297771",
+      "id": "interaction_1706342963_user_otakknysu",
+      "timestamp": "2025-01-27T12:09:23.297771",
       "user_id": "user_otakknysu",
       "message": "Planen Sie eine 3-tägige Reise nach Paris",
-      "response_type": "mcp_response",
+      "response_type": "tool_response",
       "response_time": 4.104891300201416,
-      "response_quality": null,
-      "user_feedback": null,
-      "intent_recognized": false,
-      "api_success": true
+      "response_quality": {
+        "score": 0.875,
+        "level": "good",
+        "factors": {
+          "relevance": 0.9,
+          "completeness": 0.8,
+          "response_time": 0.5,
+          "structure": 0.9,
+          "tool_usage": 1.0
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert; Tools wurden effektiv genutzt"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Sehr hilfreich!",
+        "would_recommend": true
+      },
+      "intent_recognized": true,
+      "api_success": true,
+      "tool_used": "get_complete_travel_data",
+      "suggestions_provided": 4
     },
     {
-      "timestamp": "2025-07-07T00:11:18.224472",
+      "id": "interaction_1706343078_user_otakknysu",
+      "timestamp": "2025-01-27T12:11:18.224472",
       "user_id": "user_otakknysu",
       "message": "Andere Stadt erkunden",
       "response_type": "rag_response",
       "response_time": 0.0035517215728759766,
-      "response_quality": null,
-      "user_feedback": null,
-      "intent_recognized": false,
-      "api_success": true
+      "response_quality": {
+        "score": 0.725,
+        "level": "good",
+        "factors": {
+          "relevance": 0.7,
+          "completeness": 0.8,
+          "response_time": 1.0,
+          "structure": 0.7,
+          "tool_usage": 1.0
+        },
+        "details": "Antwort ist vollständig und informativ; Antwortzeit ist optimal; Tools wurden effektiv genutzt"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "zufrieden",
+        "usefulness": "nützlich",
+        "comments": "Gute Informationen",
+        "would_recommend": true
+      },
+      "intent_recognized": true,
+      "api_success": true,
+      "tool_used": "search_attractions",
+      "suggestions_provided": 4
     },
     {
-      "timestamp": "2025-07-07T00:12:40.446858",
+      "id": "interaction_1706343160_user_otakknysu",
+      "timestamp": "2025-01-27T12:12:40.446858",
       "user_id": "user_otakknysu",
       "message": "Wetter in London abfragen",
       "response_type": "weather_results",
       "response_time": 2.003830909729004,
-      "response_quality": null,
-      "user_feedback": null,
+      "response_quality": {
+        "score": 0.925,
+        "level": "excellent",
+        "factors": {
+          "relevance": 1.0,
+          "completeness": 0.8,
+          "response_time": 0.8,
+          "structure": 0.9,
+          "tool_usage": 1.0
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert; Tools wurden effektiv genutzt"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Schnelle Antwort",
+        "would_recommend": true
+      },
       "intent_recognized": true,
-      "api_success": true
+      "api_success": true,
+      "tool_used": "get_weather",
+      "suggestions_provided": 4
     },
     {
-      "timestamp": "2025-07-07T00:13:44.674318",
+      "id": "interaction_1706343224_user_diocik2k8",
+      "timestamp": "2025-01-27T12:13:44.674318",
       "user_id": "user_diocik2k8",
       "message": "Empfehlungen für Amsterdam",
-      "response_type": "mcp_response",
+      "response_type": "tool_response",
       "response_time": 4.0684661865234375,
-      "response_quality": null,
-      "user_feedback": null,
-      "intent_recognized": false,
-      "api_success": true
+      "response_quality": {
+        "score": 0.875,
+        "level": "good",
+        "factors": {
+          "relevance": 0.9,
+          "completeness": 0.8,
+          "response_time": 0.5,
+          "structure": 0.9,
+          "tool_usage": 1.0
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert; Tools wurden effektiv genutzt"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "zufrieden",
+        "usefulness": "nützlich",
+        "comments": "Genau das was ich gesucht habe",
+        "would_recommend": true
+      },
+      "intent_recognized": true,
+      "api_success": true,
+      "tool_used": "get_travel_recommendations",
+      "suggestions_provided": 4
     },
     {
-      "timestamp": "2025-07-07T00:14:00.686053",
+      "id": "interaction_1706343240_user_diocik2k8",
+      "timestamp": "2025-01-27T12:14:00.686053",
       "user_id": "user_diocik2k8",
       "message": "Weitere Informationen anfordern",
       "response_type": "error",
       "response_time": 0.28324031829833984,
-      "response_quality": null,
-      "user_feedback": null,
+      "response_quality": {
+        "score": 0.325,
+        "level": "poor",
+        "factors": {
+          "relevance": 0.3,
+          "completeness": 0.3,
+          "response_time": 1.0,
+          "structure": 0.5,
+          "tool_usage": 0.3
+        },
+        "details": "Antwort ist wenig relevant zur Anfrage; Antwort ist unvollständig"
+      },
+      "user_feedback": {
+        "rating": 2,
+        "satisfaction": "unzufrieden",
+        "usefulness": "wenig nützlich",
+        "comments": "Unvollständig",
+        "would_recommend": false
+      },
       "intent_recognized": false,
-      "api_success": false
+      "api_success": false,
+      "tool_used": null,
+      "suggestions_provided": 2
+    },
+    {
+      "id": "interaction_1751993344_user_3pdww3a09",
+      "timestamp": "2025-07-08T18:49:04.864090",
+      "user_id": "user_3pdww3a09",
+      "message": "Was sollte ich in Berlin sehen?",
+      "response_type": "general",
+      "response_time": 21.163590669631958,
+      "response_quality": {
+        "score": 0.55,
+        "level": "acceptable",
+        "factors": {
+          "relevance": 0.2,
+          "completeness": 1.0,
+          "response_time": 0.2,
+          "structure": 0.7,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist wenig relevant zur Anfrage; Antwort ist vollständig und informativ; Antwortzeit ist zu lang"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "zufrieden",
+        "usefulness": "teilweise nützlich",
+        "comments": "Genau das was ich gesucht habe",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 4
+    },
+    {
+      "id": "interaction_1751993375_user_3pdww3a09",
+      "timestamp": "2025-07-08T18:49:35.271707",
+      "user_id": "user_3pdww3a09",
+      "message": "Wetter in Berlin abfragen",
+      "response_type": "general",
+      "response_time": 21.052003860473633,
+      "response_quality": {
+        "score": 0.583,
+        "level": "acceptable",
+        "factors": {
+          "relevance": 0.3333333333333333,
+          "completeness": 1.0,
+          "response_time": 0.2,
+          "structure": 0.7,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist wenig relevant zur Anfrage; Antwort ist vollständig und informativ; Antwortzeit ist zu lang"
+      },
+      "user_feedback": {
+        "rating": 3,
+        "satisfaction": "zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Gute Informationen",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994073_user_i0fzzlsd4",
+      "timestamp": "2025-07-08T19:01:13.676276",
+      "user_id": "user_i0fzzlsd4",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "general",
+      "response_time": 6.1626386642456055,
+      "response_quality": {
+        "score": 0.65,
+        "level": "acceptable",
+        "factors": {
+          "relevance": 0.8,
+          "completeness": 0.8,
+          "response_time": 0.2,
+          "structure": 0.7,
+          "tool_usage": 0.7
+        },
+        "details": "Antwortzeit ist zu lang"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Zu langsam",
+        "would_recommend": false
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994097_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:01:37.304008",
+      "user_id": "user_pnwp11e5q",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "general",
+      "response_time": 1.3474798202514648,
+      "response_quality": {
+        "score": 0.87,
+        "level": "good",
+        "factors": {
+          "relevance": 1.0,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.7,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ"
+      },
+      "user_feedback": {
+        "rating": 3,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "nützlich",
+        "comments": "Sehr hilfreich!",
+        "would_recommend": false
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994193_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:03:13.765749",
+      "user_id": "user_pnwp11e5q",
+      "message": "Sehenswürdigkeiten in Wien",
+      "response_type": "general",
+      "response_time": 1.362358808517456,
+      "response_quality": {
+        "score": 0.9,
+        "level": "excellent",
+        "factors": {
+          "relevance": 1.0,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Sehr hilfreich!",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994204_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:03:24.420320",
+      "user_id": "user_pnwp11e5q",
+      "message": "Andere Stadt erkunden",
+      "response_type": "general",
+      "response_time": 6.991732835769653,
+      "response_quality": {
+        "score": 0.697,
+        "level": "acceptable",
+        "factors": {
+          "relevance": 0.6666666666666666,
+          "completeness": 1.0,
+          "response_time": 0.2,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ; Antwortzeit ist zu lang; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Gute Informationen",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 4
+    },
+    {
+      "id": "interaction_1751994250_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:04:10.381932",
+      "user_id": "user_pnwp11e5q",
+      "message": "Sehenswürdigkeiten in Paris",
+      "response_type": "general",
+      "response_time": 4.580135345458984,
+      "response_quality": {
+        "score": 0.84,
+        "level": "good",
+        "factors": {
+          "relevance": 1.0,
+          "completeness": 1.0,
+          "response_time": 0.5,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "neutral",
+        "usefulness": "nützlich",
+        "comments": "Gute Informationen",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994260_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:04:20.546136",
+      "user_id": "user_pnwp11e5q",
+      "message": "Wetter in Paris abfragen",
+      "response_type": "general",
+      "response_time": 1.6765475273132324,
+      "response_quality": {
+        "score": 0.787,
+        "level": "good",
+        "factors": {
+          "relevance": 0.6666666666666666,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.7,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Könnte besser sein",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994366_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:06:06.325425",
+      "user_id": "user_pnwp11e5q",
+      "message": "wie ist das wetter in berlin",
+      "response_type": "general",
+      "response_time": 1.9254512786865234,
+      "response_quality": {
+        "score": 0.8,
+        "level": "good",
+        "factors": {
+          "relevance": 0.6,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Sehr hilfreich!",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994484_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:08:04.081761",
+      "user_id": "user_pnwp11e5q",
+      "message": "Wetter in Paris abfragen",
+      "response_type": "general",
+      "response_time": 1.7967982292175293,
+      "response_quality": {
+        "score": 0.817,
+        "level": "good",
+        "factors": {
+          "relevance": 0.6666666666666666,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "nützlich",
+        "comments": "Sehr hilfreich!",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994631_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:10:31.841196",
+      "user_id": "user_pnwp11e5q",
+      "message": "wie das wetter in berlin",
+      "response_type": "general",
+      "response_time": 7.108933925628662,
+      "response_quality": {
+        "score": 0.718,
+        "level": "good",
+        "factors": {
+          "relevance": 0.75,
+          "completeness": 1.0,
+          "response_time": 0.2,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ; Antwortzeit ist zu lang; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Unvollständig",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994675_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:11:15.593976",
+      "user_id": "user_pnwp11e5q",
+      "message": "wie das wetter morgen in berlin",
+      "response_type": "general",
+      "response_time": 12.836936235427856,
+      "response_quality": {
+        "score": 0.73,
+        "level": "good",
+        "factors": {
+          "relevance": 0.8,
+          "completeness": 1.0,
+          "response_time": 0.2,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ; Antwortzeit ist zu lang; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 5,
+        "satisfaction": "neutral",
+        "usefulness": "teilweise nützlich",
+        "comments": "Schnelle Antwort",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994686_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:11:26.147336",
+      "user_id": "user_pnwp11e5q",
+      "message": "Hotels in Berlin finden",
+      "response_type": "general",
+      "response_time": 2.018425941467285,
+      "response_quality": {
+        "score": 0.9,
+        "level": "excellent",
+        "factors": {
+          "relevance": 1.0,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 2,
+        "satisfaction": "neutral",
+        "usefulness": "nützlich",
+        "comments": "Unvollständig",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
+    },
+    {
+      "id": "interaction_1751994695_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:11:35.435306",
+      "user_id": "user_pnwp11e5q",
+      "message": "Andere Stadt erkunden",
+      "response_type": "general",
+      "response_time": 1.1872494220733643,
+      "response_quality": {
+        "score": 0.9,
+        "level": "excellent",
+        "factors": {
+          "relevance": 1.0,
+          "completeness": 1.0,
+          "response_time": 0.8,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist sehr relevant zur Anfrage; Antwort ist vollständig und informativ; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "sehr zufrieden",
+        "usefulness": "sehr nützlich",
+        "comments": "Gute Informationen",
+        "would_recommend": false
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 4
+    },
+    {
+      "id": "interaction_1751994705_user_pnwp11e5q",
+      "timestamp": "2025-07-08T19:11:45.924548",
+      "user_id": "user_pnwp11e5q",
+      "message": "Hotels in Barcelona finden",
+      "response_type": "general",
+      "response_time": 7.752687931060791,
+      "response_quality": {
+        "score": 0.697,
+        "level": "acceptable",
+        "factors": {
+          "relevance": 0.6666666666666666,
+          "completeness": 1.0,
+          "response_time": 0.2,
+          "structure": 0.8999999999999999,
+          "tool_usage": 0.7
+        },
+        "details": "Antwort ist vollständig und informativ; Antwortzeit ist zu lang; Antwort ist gut strukturiert"
+      },
+      "user_feedback": {
+        "rating": 4,
+        "satisfaction": "neutral",
+        "usefulness": "teilweise nützlich",
+        "comments": "Sehr hilfreich!",
+        "would_recommend": true
+      },
+      "intent_recognized": false,
+      "api_success": true,
+      "tool_used": null,
+      "suggestions_provided": 3
     }
   ],
+  "evaluation_config": {
+    "quality_thresholds": {
+      "excellent": 0.9,
+      "good": 0.7,
+      "acceptable": 0.5,
+      "poor": 0.3
+    },
+    "response_time_thresholds": {
+      "fast": 1.0,
+      "normal": 3.0,
+      "slow": 5.0
+    }
+  },
+  "aggregated_metrics": {
+    "total_interactions": 20,
+    "average_response_quality": 0.758,
+    "average_response_time": 5.471,
+    "user_satisfaction_rate": 0.8,
+    "intent_recognition_rate": 0.2,
+    "api_success_rate": 0.95
+  },
   "tool_calling_implementation": {
     "status": "IMPLEMENTED",
     "description": "Echte Tool-Calling-Integration implementiert",
@@ -71,5 +657,24 @@
     "decision_logic_integration": true,
     "tool_execution": true
   },
-  "last_updated": "2025-01-27T12:00:00.000000"
+  "evaluation_system": {
+    "status": "IMPLEMENTED",
+    "description": "Umfassendes Evaluationssystem mit automatischer Qualitätsbewertung",
+    "features": [
+      "Automatische Qualitätsbewertung basierend auf 5 Kriterien",
+      "User-Feedback-Simulation mit realistischen Bewertungen",
+      "Aggregierte Metriken und Statistiken",
+      "Detaillierte Evaluationsberichte",
+      "API-Endpunkte für Evaluationsdaten"
+    ],
+    "quality_factors": [
+      "Relevanz (25%)",
+      "Vollständigkeit (25%)",
+      "Antwortzeit (20%)",
+      "Struktur (15%)",
+      "Tool-Nutzung (15%)"
+    ],
+    "implementation_date": "2025-01-27"
+  },
+  "last_updated": "2025-07-08T19:11:45.924548"
 }

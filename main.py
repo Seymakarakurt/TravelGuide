@@ -37,6 +37,10 @@ class TravelGuideApp:
         def index():
             return render_template('index.html')
         
+        @self.app.route('/evaluation')
+        def evaluation_dashboard():
+            return render_template('evaluation_dashboard.html')
+        
         @self.app.route('/api/chat', methods=['POST'])
         def chat_endpoint():
             try:
@@ -76,6 +80,38 @@ class TravelGuideApp:
                 'timestamp': datetime.now().isoformat(),
                 'version': '1.0.0'
             })
+        
+        @self.app.route('/api/evaluation/report', methods=['GET'])
+        def get_evaluation_report():
+            try:
+                report = self.decision_logic.evaluation_system.get_evaluation_report()
+                return jsonify({
+                    'success': True,
+                    'report': report,
+                    'timestamp': datetime.now().isoformat()
+                })
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+        
+        @self.app.route('/api/evaluation/metrics', methods=['GET'])
+        def get_evaluation_metrics():
+            try:
+                metrics = self.decision_logic.evaluation_system.metrics
+                return jsonify({
+                    'success': True,
+                    'metrics': metrics,
+                    'timestamp': datetime.now().isoformat()
+                })
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
         
         @self.app.route('/api/test/hotels', methods=['GET'])
         def test_hotels():

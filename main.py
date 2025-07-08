@@ -74,29 +74,46 @@ class TravelGuideApp:
                 interaction = None
                 if self.evaluation_service:
                     try:
-                        interaction = self.evaluation_service.evaluate_interaction(
+                        quality_evaluation = self.evaluation_service.evaluate_response_quality(
                             user_message=message,
                             response=response,
-                            user_id=user_id,
                             response_time=response_time,
-                            response_type=response.get('type', 'unknown'),
-                            intent_recognized=response.get('intent_recognized', False),
-                            api_success=response.get('type') != 'error',
-                            detected_intent=response.get('detected_intent', ''),
-                            confidence=response.get('confidence', 0.0)
+                            api_success=response.get('type') != 'error'
                         )
+                        
+                        intent_evaluation = self.evaluation_service.evaluate_intent_recognition(
+                            user_message=message,
+                            detected_intent=response.get('detected_intent', ''),
+                            confidence=response.get('confidence', 0.0),
+                            entities=response.get('entities', {})
+                        )
+                        
+                        performance_metrics = self.evaluation_service.track_performance_metrics(
+                            response_time=response_time,
+                            api_calls=1 if response.get('tool_used') else 0,
+                            api_success_rate=100.0 if response.get('type') != 'error' else 0.0,
+                            tool_used=response.get('tool_used')
+                        )
+                        
+                        interaction = {
+                            'interaction_id': f"{user_id}_{int(time.time())}",
+                            'quality_evaluation': quality_evaluation,
+                            'intent_evaluation': intent_evaluation,
+                            'performance_metrics': performance_metrics
+                        }
+                        
                     except Exception as e:
                         print(f"❌ Fehler bei der Evaluierung: {e}")
                         import traceback
                         traceback.print_exc()
                         interaction = {
                             'interaction_id': f"{user_id}_{int(time.time())}",
-                            'response_quality': {'overall_quality': 0.5}
+                            'quality_evaluation': {'overall_score': 0.5}
                         }
                 else:
                     interaction = {
                         'interaction_id': f"{user_id}_{int(time.time())}",
-                        'response_quality': {'overall_quality': 0.5}
+                        'quality_evaluation': {'overall_score': 0.5}
                     }
                 
                 return jsonify({
@@ -104,8 +121,10 @@ class TravelGuideApp:
                     'response': response,
                     'interaction_id': interaction.get('interaction_id'),
                     'evaluation': {
-                        'quality_score': interaction.get('response_quality', {}).get('overall_quality', 0),
-                        'response_time': response_time
+                        'quality_score': interaction.get('quality_evaluation', {}).get('overall_score', 0),
+                        'response_time': response_time,
+                        'quality_dimensions': interaction.get('quality_evaluation', {}).get('quality_scores', {}),
+                        'improvement_suggestions': interaction.get('quality_evaluation', {}).get('improvement_suggestions', [])
                     }
                 })
                 
@@ -149,13 +168,12 @@ class TravelGuideApp:
                         'error': 'Interaction ID erforderlich'
                     }), 400
                 
-                self.evaluation_service.add_user_feedback(
-                    interaction_id=interaction_id,
+                self.evaluation_service.collect_user_feedback(
                     user_id=user_id,
+                    response_id=interaction_id,
                     rating=rating,
-                    helpful=helpful,
-                    follow_up_needed=follow_up_needed,
-                    specific_feedback=specific_feedback
+                    feedback_type="helpful" if helpful else "not_helpful",
+                    additional_feedback=specific_feedback
                 )
                 
                 return jsonify({
@@ -373,11 +391,19 @@ class TravelGuideApp:
         @self.app.route('/api/evaluation/report', methods=['GET'])
         def evaluation_report():
             try:
-                report = self.evaluation_service.get_evaluation_report()
+                if not self.evaluation_service:
+                    return jsonify({
+                        'success': False,
+                        'error': 'Evaluation Service nicht verfügbar'
+                    }), 500
+                
+                report = self.evaluation_service.generate_evaluation_report()
+                
                 return jsonify({
                     'success': True,
                     'report': report
                 })
+                
             except Exception as e:
                 return jsonify({
                     'success': False,
@@ -387,11 +413,49 @@ class TravelGuideApp:
         @self.app.route('/api/evaluation/quality-insights', methods=['GET'])
         def quality_insights():
             try:
-                insights = self.evaluation_service.get_quality_insights()
+                if not self.evaluation_service:
+                    return jsonify({
+                        'success': False,
+                        'error': 'Evaluation Service nicht verfügbar'
+                    }), 500
+                
+                # Generiere Insights aus den Metriken
+                metrics = self.evaluation_service._calculate_overall_metrics()
+                quality_dimensions = self.evaluation_service._calculate_quality_dimensions()
+                
+                insights = {
+                    'metrics': metrics,
+                    'quality_dimensions': quality_dimensions,
+                    'recommendations': self.evaluation_service._generate_improvement_recommendations()
+                }
+                
                 return jsonify({
                     'success': True,
                     'insights': insights
                 })
+                
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e)
+                }), 500
+        
+        @self.app.route('/api/feedback/statistics', methods=['GET'])
+        def feedback_statistics():
+            try:
+                if not self.evaluation_service:
+                    return jsonify({
+                        'success': False,
+                        'error': 'Evaluation Service nicht verfügbar'
+                    }), 500
+                
+                feedback_stats = self.evaluation_service._calculate_feedback_statistics()
+                
+                return jsonify({
+                    'success': True,
+                    'statistics': feedback_stats
+                })
+                
             except Exception as e:
                 return jsonify({
                     'success': False,

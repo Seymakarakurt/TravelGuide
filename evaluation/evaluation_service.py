@@ -1,433 +1,511 @@
 import json
 import time
-import re
+from typing import Dict, Any, List, Optional
 from datetime import datetime
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
-import numpy as np
+import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-@dataclass
-class ResponseQualityMetrics:
-    relevance_score: float
-    completeness_score: float
-    accuracy_score: float
-    helpfulness_score: float
-    coherence_score: float
-    overall_quality: float
-    
-    def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
-
-@dataclass
-class UserFeedback:
-    rating: int
-    helpful: bool
-    follow_up_needed: bool
-    specific_feedback: str
-    timestamp: str
-
-@dataclass
-class IntentEvaluation:
-    detected_intent: str
-    confidence_score: float
-    expected_intent: Optional[str] = None
-    intent_correct: Optional[bool] = None
-    entity_extraction_accuracy: float = 0.0
-    context_understanding: float = 0.0
-
-class ResponseQualityEvaluator:
-    
-    def __init__(self):
-        self.quality_keywords = {
-            'relevance': ['relevant', 'passend', 'angemessen', 'zutreffend'],
-            'completeness': ['vollständig', 'umfassend', 'detailliert', 'ausführlich'],
-            'accuracy': ['korrekt', 'genau', 'präzise', 'zuverlässig'],
-            'helpfulness': ['hilfreich', 'nützlich', 'praktisch', 'brauchbar'],
-            'coherence': ['logisch', 'verständlich', 'klar', 'strukturiert']
-        }
-    
-    def evaluate_response_quality(self, user_message: str, response: Dict[str, Any]) -> ResponseQualityMetrics:
-        response_text = self._extract_response_text(response)
-        
-        relevance_score = self._calculate_relevance_score(user_message, response_text)
-        completeness_score = self._calculate_completeness_score(response)
-        accuracy_score = self._calculate_accuracy_score(response)
-        helpfulness_score = self._calculate_helpfulness_score(response)
-        coherence_score = self._calculate_coherence_score(response_text)
-        
-        overall_quality = np.mean([
-            relevance_score, completeness_score, accuracy_score, 
-            helpfulness_score, coherence_score
-        ])
-        
-        return ResponseQualityMetrics(
-            relevance_score=relevance_score,
-            completeness_score=completeness_score,
-            accuracy_score=accuracy_score,
-            helpfulness_score=helpfulness_score,
-            coherence_score=coherence_score,
-            overall_quality=overall_quality
-        )
-    
-    def _extract_response_text(self, response: Dict[str, Any]) -> str:
-        if isinstance(response, dict):
-            if 'message' in response:
-                return str(response['message'])
-            elif 'response' in response:
-                return str(response['response'])
-            else:
-                return str(response)
-        return str(response)
-    
-    def _calculate_relevance_score(self, user_message: str, response_text: str) -> float:
-        try:
-            vectorizer = TfidfVectorizer(stop_words='english', max_features=100)
-            vectors = vectorizer.fit_transform([user_message, response_text])
-            similarity = cosine_similarity(vectors[0:1], vectors[1:2])[0][0]
-            
-            keyword_overlap = self._calculate_keyword_overlap(user_message, response_text)
-            
-            relevance_score = (similarity * 0.7) + (keyword_overlap * 0.3)
-            return min(1.0, max(0.0, relevance_score))
-            
-        except Exception:
-            return 0.5
-    
-    def _calculate_keyword_overlap(self, message: str, response: str) -> float:
-        message_words = set(re.findall(r'\b\w+\b', message.lower()))
-        response_words = set(re.findall(r'\b\w+\b', response.lower()))
-        
-        if not message_words:
-            return 0.0
-        
-        overlap = len(message_words.intersection(response_words))
-        return min(1.0, overlap / len(message_words))
-    
-    def _calculate_completeness_score(self, response: Dict[str, Any]) -> float:
-        score = 0.5
-        
-        if isinstance(response, dict):
-            if 'message' in response and response['message']:
-                score += 0.2
-            
-            if 'suggestions' in response and response['suggestions']:
-                score += 0.15
-            
-            if 'data' in response or 'results' in response:
-                score += 0.15
-            
-            if 'type' in response and response['type'] != 'error':
-                score += 0.1
-        
-        return min(1.0, score)
-    
-    def _calculate_accuracy_score(self, response: Dict[str, Any]) -> float:
-        score = 0.5
-        
-        if isinstance(response, dict):
-            if response.get('type') != 'error':
-                score += 0.3
-            
-            if 'data' in response or 'results' in response:
-                score += 0.2
-            
-            message = response.get('message', '')
-            if message and len(message) > 50:
-                score += 0.1
-        
-        return min(1.0, score)
-    
-    def _calculate_helpfulness_score(self, response: Dict[str, Any]) -> float:
-        score = 0.5
-        
-        if isinstance(response, dict):
-            if 'suggestions' in response and response['suggestions']:
-                score += 0.2
-            
-            message = response.get('message', '')
-            action_words = ['können', 'sollten', 'empfehle', 'buchen', 'besuchen', 'planen']
-            if any(word in message.lower() for word in action_words):
-                score += 0.15
-            
-            if 'data' in response or 'results' in response:
-                score += 0.15
-        
-        return min(1.0, score)
-    
-    def _calculate_coherence_score(self, response_text: str) -> float:
-        if not response_text:
-            return 0.0
-        
-        score = 0.5
-        
-        sentences = re.split(r'[.!?]+', response_text)
-        if len(sentences) > 1:
-            score += 0.2
-        
-        logical_connectors = ['daher', 'deshalb', 'außerdem', 'zudem', 'jedoch', 'aber', 'und', 'oder']
-        if any(connector in response_text.lower() for connector in logical_connectors):
-            score += 0.15
-        
-        if any(char in response_text for char in ['•', '-', '*', '1.', '2.', '3.']):
-            score += 0.15
-        
-        return min(1.0, score)
-
-class UserFeedbackCollector:
-    
-    def __init__(self, feedback_file: str = 'evaluation/user_feedback.json'):
-        self.feedback_file = feedback_file
-        self.feedback_data = self._load_feedback()
-    
-    def _load_feedback(self) -> Dict[str, Any]:
-        try:
-            with open(self.feedback_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            return {'feedback_entries': [], 'statistics': {}}
-    
-    def save_feedback(self, user_id: str, interaction_id: str, feedback: UserFeedback):
-        feedback_entry = {
-            'user_id': user_id,
-            'interaction_id': interaction_id,
-            'feedback': asdict(feedback)
-        }
-        
-        self.feedback_data['feedback_entries'].append(feedback_entry)
-        self._update_statistics()
-        self._save_to_file()
-    
-    def _update_statistics(self):
-        entries = self.feedback_data['feedback_entries']
-        
-        if not entries:
-            return
-        
-        ratings = [entry['feedback']['rating'] for entry in entries]
-        helpful_count = sum(1 for entry in entries if entry['feedback']['helpful'])
-        follow_up_count = sum(1 for entry in entries if entry['feedback']['follow_up_needed'])
-        
-        self.feedback_data['statistics'] = {
-            'total_feedback': len(entries),
-            'average_rating': np.mean(ratings),
-            'helpful_percentage': (helpful_count / len(entries)) * 100,
-            'follow_up_percentage': (follow_up_count / len(entries)) * 100,
-            'rating_distribution': {
-                '1_star': ratings.count(1),
-                '2_star': ratings.count(2),
-                '3_star': ratings.count(3),
-                '4_star': ratings.count(4),
-                '5_star': ratings.count(5)
-            }
-        }
-    
-    def _save_to_file(self):
-        with open(self.feedback_file, 'w', encoding='utf-8') as f:
-            json.dump(self.feedback_data, f, indent=2, ensure_ascii=False)
-    
-    def get_feedback_statistics(self) -> Dict[str, Any]:
-        return self.feedback_data.get('statistics', {})
-
-class IntentEvaluator:
-    
-    def __init__(self):
-        self.intent_patterns = {
-            'weather_query': [r'wetter', r'temperatur', r'regnet', r'sonne', r'klima'],
-            'hotel_search': [r'hotel', r'unterkunft', r'buchen', r'zimmer', r'übernachtung'],
-            'attraction_search': [r'sehenswürdigkeit', r'attraktion', r'museum', r'denkmal', r'besichtigen'],
-            'travel_planning': [r'planen', r'reise', r'urlaub', r'trip', r'route'],
-            'general_inquiry': [r'was', r'wie', r'wo', r'wann', r'kann']
-        }
-    
-    def evaluate_intent_recognition(self, user_message: str, detected_intent: str, 
-                                  confidence: float, expected_intent: Optional[str] = None) -> IntentEvaluation:
-        intent_correct = None
-        if expected_intent:
-            intent_correct = detected_intent == expected_intent
-        
-        entity_accuracy = self._evaluate_entity_extraction(user_message)
-        context_understanding = self._evaluate_context_understanding(user_message, detected_intent)
-        
-        return IntentEvaluation(
-            detected_intent=detected_intent,
-            confidence_score=confidence,
-            expected_intent=expected_intent,
-            intent_correct=intent_correct,
-            entity_extraction_accuracy=entity_accuracy,
-            context_understanding=context_understanding
-        )
-    
-    def _evaluate_entity_extraction(self, message: str) -> float:
-        entities_found = 0
-        total_entities = 0
-        
-        city_patterns = [r'\b[A-Z][a-z]+(?:[-\s][A-Z][a-z]+)*\b']
-        for pattern in city_patterns:
-            matches = re.findall(pattern, message)
-            total_entities += len(matches)
-            entities_found += len(matches)
-        
-        number_patterns = [r'\d+', r'\d+\.\d+']
-        for pattern in number_patterns:
-            matches = re.findall(pattern, message)
-            total_entities += len(matches)
-            entities_found += len(matches)
-        
-        if total_entities == 0:
-            return 0.5
-        
-        return min(1.0, entities_found / total_entities)
-    
-    def _evaluate_context_understanding(self, message: str, detected_intent: str) -> float:
-        score = 0.5
-        
-        if detected_intent in self.intent_patterns:
-            patterns = self.intent_patterns[detected_intent]
-            matches = sum(1 for pattern in patterns if re.search(pattern, message.lower()))
-            if matches > 0:
-                score += 0.3
-        
-        context_indicators = ['jetzt', 'heute', 'morgen', 'nächste', 'letzte', 'während']
-        if any(indicator in message.lower() for indicator in context_indicators):
-            score += 0.2
-        
-        return min(1.0, score)
+import numpy as np
 
 class EvaluationService:
+    def __init__(self):
+        self.metrics_file = "evaluation/metrics.json"
+        self.feedback_file = "evaluation/user_feedback.json"
+        self.quality_thresholds = {
+            "relevance": 0.7,
+            "completeness": 0.6,
+            "accuracy": 0.8,
+            "helpfulness": 0.7,
+            "coherence": 0.6
+        }
+        
+        # Lade bestehende Metriken
+        self.metrics = self._load_metrics()
+        self.user_feedback = self._load_user_feedback()
+        
+    def evaluate_response_quality(self, user_message: str, response: Dict[str, Any], 
+                                response_time: float, api_success: bool) -> Dict[str, Any]:
+        """Umfassende Qualitätsbewertung einer Antwort"""
+        
+        evaluation = {
+            "timestamp": datetime.now().isoformat(),
+            "user_message": user_message,
+            "response_type": response.get("type", "unknown"),
+            "response_time": response_time,
+            "api_success": api_success,
+            "quality_scores": {},
+            "overall_score": 0.0,
+            "improvement_suggestions": []
+        }
+        
+        # 1. Relevanz-Bewertung (TF-IDF + Keyword-Überlappung)
+        relevance_score = self._evaluate_relevance(user_message, response)
+        evaluation["quality_scores"]["relevance"] = relevance_score
+        
+        # 2. Vollständigkeit-Bewertung
+        completeness_score = self._evaluate_completeness(response)
+        evaluation["quality_scores"]["completeness"] = completeness_score
+        
+        # 3. Genauigkeit-Bewertung
+        accuracy_score = self._evaluate_accuracy(response)
+        evaluation["quality_scores"]["accuracy"] = accuracy_score
+        
+        # 4. Hilfreichkeit-Bewertung
+        helpfulness_score = self._evaluate_helpfulness(response)
+        evaluation["quality_scores"]["helpfulness"] = helpfulness_score
+        
+        # 5. Kohärenz-Bewertung
+        coherence_score = self._evaluate_coherence(response)
+        evaluation["quality_scores"]["coherence"] = coherence_score
+        
+        # Gesamtbewertung
+        evaluation["overall_score"] = np.mean(list(evaluation["quality_scores"].values()))
+        
+        # Verbesserungsvorschläge
+        evaluation["improvement_suggestions"] = self._generate_improvement_suggestions(evaluation["quality_scores"])
+        
+        # Metriken speichern
+        self._save_evaluation(evaluation)
+        
+        return evaluation
     
-    def __init__(self, metrics_file: str = 'evaluation/metrics.json'):
-        self.metrics_file = metrics_file
-        self.quality_evaluator = ResponseQualityEvaluator()
-        self.feedback_collector = UserFeedbackCollector()
-        self.intent_evaluator = IntentEvaluator()
-        self.metrics_data = self._load_metrics()
+    def collect_user_feedback(self, user_id: str, response_id: str, rating: int, 
+                            feedback_type: str, additional_feedback: str = "") -> Dict[str, Any]:
+        """Sammelt und speichert User-Feedback"""
+        
+        feedback = {
+            "timestamp": datetime.now().isoformat(),
+            "user_id": user_id,
+            "response_id": response_id,
+            "rating": rating,  # 1-5 Sterne
+            "feedback_type": feedback_type,  # "helpful", "not_helpful", "more_info"
+            "additional_feedback": additional_feedback
+        }
+        
+        # Speichere Feedback
+        if "feedback" not in self.user_feedback:
+            self.user_feedback["feedback"] = []
+        
+        self.user_feedback["feedback"].append(feedback)
+        self._save_user_feedback()
+        
+        return feedback
+    
+    def evaluate_intent_recognition(self, user_message: str, detected_intent: str, 
+                                  confidence: float, entities: Dict[str, Any]) -> Dict[str, Any]:
+        """Bewertet die Intent-Erkennung"""
+        
+        intent_evaluation = {
+            "timestamp": datetime.now().isoformat(),
+            "user_message": user_message,
+            "detected_intent": detected_intent,
+            "confidence": confidence,
+            "entities": entities,
+            "intent_accuracy": 0.0,
+            "entity_accuracy": 0.0,
+            "context_understanding": 0.0
+        }
+        
+        # Intent-Genauigkeit basierend auf Keywords
+        intent_accuracy = self._evaluate_intent_accuracy(user_message, detected_intent)
+        intent_evaluation["intent_accuracy"] = intent_accuracy
+        
+        # Entity-Extraktion-Genauigkeit
+        entity_accuracy = self._evaluate_entity_accuracy(user_message, entities)
+        intent_evaluation["entity_accuracy"] = entity_accuracy
+        
+        # Kontextverständnis
+        context_understanding = self._evaluate_context_understanding(user_message, detected_intent, entities)
+        intent_evaluation["context_understanding"] = context_understanding
+        
+        # Speichere Intent-Evaluation
+        if "intent_evaluations" not in self.metrics:
+            self.metrics["intent_evaluations"] = []
+        
+        self.metrics["intent_evaluations"].append(intent_evaluation)
+        self._save_metrics()
+        
+        return intent_evaluation
+    
+    def track_performance_metrics(self, response_time: float, api_calls: int, 
+                                api_success_rate: float, tool_used: str = None) -> Dict[str, Any]:
+        """Trackt Performance-Metriken"""
+        
+        performance = {
+            "timestamp": datetime.now().isoformat(),
+            "response_time": response_time,
+            "api_calls": api_calls,
+            "api_success_rate": api_success_rate,
+            "tool_used": tool_used
+        }
+        
+        # Speichere Performance-Metriken
+        if "performance_metrics" not in self.metrics:
+            self.metrics["performance_metrics"] = []
+        
+        self.metrics["performance_metrics"].append(performance)
+        self._save_metrics()
+        
+        return performance
+    
+    def generate_evaluation_report(self) -> Dict[str, Any]:
+        """Generiert einen umfassenden Evaluierungsbericht"""
+        
+        report = {
+            "timestamp": datetime.now().isoformat(),
+            "metrics": self._calculate_overall_metrics(),
+            "feedback_stats": self._calculate_feedback_statistics(),
+            "quality_dimensions": self._calculate_quality_dimensions(),
+            "performance_trends": self._calculate_performance_trends(),
+            "improvement_recommendations": self._generate_improvement_recommendations()
+        }
+        
+        return report
+    
+    def _evaluate_relevance(self, user_message: str, response: Dict[str, Any]) -> float:
+        """Bewertet die Relevanz der Antwort zur ursprünglichen Frage"""
+        
+        response_message = response.get("message", "")
+        if not response_message:
+            return 0.0
+        
+        # TF-IDF Vektorisierung
+        try:
+            vectorizer = TfidfVectorizer(stop_words='english', max_features=100)
+            tfidf_matrix = vectorizer.fit_transform([user_message, response_message])
+            similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+        except:
+            similarity = 0.0
+        
+        # Keyword-Überlappung
+        user_keywords = set(re.findall(r'\b\w+\b', user_message.lower()))
+        response_keywords = set(re.findall(r'\b\w+\b', response_message.lower()))
+        
+        if user_keywords:
+            keyword_overlap = len(user_keywords.intersection(response_keywords)) / len(user_keywords)
+        else:
+            keyword_overlap = 0.0
+        
+        # Kombiniere TF-IDF und Keyword-Überlappung
+        relevance_score = (similarity * 0.7) + (keyword_overlap * 0.3)
+        
+        return min(1.0, max(0.0, relevance_score))
+    
+    def _evaluate_completeness(self, response: Dict[str, Any]) -> float:
+        """Bewertet die Vollständigkeit der Antwort"""
+        
+        response_message = response.get("message", "")
+        response_type = response.get("type", "")
+        
+        # Basis-Score
+        completeness = 0.5
+        
+        # Länge der Antwort
+        if len(response_message) > 50:
+            completeness += 0.2
+        
+        # Strukturierte Antwort
+        if response_type in ["mcp_response", "tool_response"]:
+            completeness += 0.2
+        
+        # Enthält spezifische Informationen
+        if any(keyword in response_message.lower() for keyword in ["hotel", "wetter", "sehenswürdigkeit", "preis", "temperatur"]):
+            completeness += 0.1
+        
+        return min(1.0, completeness)
+    
+    def _evaluate_accuracy(self, response: Dict[str, Any]) -> float:
+        """Bewertet die Genauigkeit der Antwort"""
+        
+        response_type = response.get("type", "")
+        api_success = response.get("api_success", True)
+        
+        # Basis-Score
+        accuracy = 0.5
+        
+        # API-Erfolg
+        if api_success:
+            accuracy += 0.3
+        
+        # Strukturierte Antwort
+        if response_type in ["mcp_response", "tool_response"]:
+            accuracy += 0.2
+        
+        return min(1.0, accuracy)
+    
+    def _evaluate_helpfulness(self, response: Dict[str, Any]) -> float:
+        """Bewertet die Hilfreichkeit der Antwort"""
+        
+        response_message = response.get("message", "")
+        suggestions = response.get("suggestions", [])
+        
+        # Basis-Score
+        helpfulness = 0.4
+        
+        # Enthält handlungsorientierte Informationen
+        action_words = ["finden", "buchen", "besuchen", "sehen", "gehen", "nehmen"]
+        if any(word in response_message.lower() for word in action_words):
+            helpfulness += 0.3
+        
+        # Hat Vorschläge
+        if suggestions:
+            helpfulness += 0.2
+        
+        # Keine Fehlermeldung
+        if "fehler" not in response_message.lower() and "entschuldigung" not in response_message.lower():
+            helpfulness += 0.1
+        
+        return min(1.0, helpfulness)
+    
+    def _evaluate_coherence(self, response: Dict[str, Any]) -> float:
+        """Bewertet die Kohärenz der Antwort"""
+        
+        response_message = response.get("message", "")
+        
+        # Basis-Score
+        coherence = 0.5
+        
+        # Grammatikalische Struktur
+        sentences = response_message.split('.')
+        if len(sentences) > 1:
+            coherence += 0.2
+        
+        # Logische Verknüpfung
+        if any(word in response_message.lower() for word in ["weil", "da", "daher", "deshalb", "außerdem"]):
+            coherence += 0.2
+        
+        # Keine Widersprüche
+        if not any(word in response_message.lower() for word in ["aber", "jedoch", "allerdings", "trotzdem"]):
+            coherence += 0.1
+        
+        return min(1.0, coherence)
+    
+    def _evaluate_intent_accuracy(self, user_message: str, detected_intent: str) -> float:
+        """Bewertet die Intent-Erkennungsgenauigkeit"""
+        
+        message_lower = user_message.lower()
+        
+        # Keyword-basierte Intent-Validierung
+        intent_keywords = {
+            "hotel_search": ["hotel", "unterkunft", "übernachtung", "zimmer"],
+            "weather_query": ["wetter", "temperatur", "regen", "sonne"],
+            "attractions_search": ["sehenswürdigkeit", "attraktion", "museum", "denkmal"]
+        }
+        
+        for intent, keywords in intent_keywords.items():
+            if any(keyword in message_lower for keyword in keywords):
+                if detected_intent == intent:
+                    return 1.0
+                else:
+                    return 0.3
+        
+        return 0.5  # Neutral für unbekannte Intents
+    
+    def _evaluate_entity_accuracy(self, user_message: str, entities: Dict[str, Any]) -> float:
+        """Bewertet die Entity-Extraktion-Genauigkeit"""
+        
+        # Einfache Entity-Validierung
+        location_entities = entities.get("location", [])
+        
+        if location_entities:
+            return 0.8
+        else:
+            # Prüfe auf bekannte Städte
+            known_cities = ["berlin", "münchen", "hamburg", "köln", "frankfurt", "paris", "london", "rom", "amsterdam"]
+            if any(city in user_message.lower() for city in known_cities):
+                return 0.3  # Stadt erkannt, aber nicht als Entity extrahiert
+        
+        return 0.5
+    
+    def _evaluate_context_understanding(self, user_message: str, detected_intent: str, entities: Dict[str, Any]) -> float:
+        """Bewertet das Kontextverständnis"""
+        
+        # Kombiniere Intent und Entity-Erkennung
+        intent_score = self._evaluate_intent_accuracy(user_message, detected_intent)
+        entity_score = self._evaluate_entity_accuracy(user_message, entities)
+        
+        return (intent_score + entity_score) / 2
+    
+    def _generate_improvement_suggestions(self, quality_scores: Dict[str, float]) -> List[str]:
+        """Generiert Verbesserungsvorschläge basierend auf Qualitäts-Scores"""
+        
+        suggestions = []
+        
+        for dimension, score in quality_scores.items():
+            if score < self.quality_thresholds.get(dimension, 0.7):
+                if dimension == "relevance":
+                    suggestions.append("Antwort sollte relevanter zur ursprünglichen Frage sein")
+                elif dimension == "completeness":
+                    suggestions.append("Antwort sollte vollständigere Informationen enthalten")
+                elif dimension == "accuracy":
+                    suggestions.append("Antwort sollte genauer und fehlerfreier sein")
+                elif dimension == "helpfulness":
+                    suggestions.append("Antwort sollte handlungsorientierter sein")
+                elif dimension == "coherence":
+                    suggestions.append("Antwort sollte kohärenter und verständlicher sein")
+        
+        return suggestions
+    
+    def _calculate_overall_metrics(self) -> Dict[str, Any]:
+        """Berechnet Gesamtmetriken"""
+        
+        if "evaluations" not in self.metrics:
+            return {}
+        
+        evaluations = self.metrics["evaluations"]
+        if not evaluations:
+            return {}
+        
+        total_interactions = len(evaluations)
+        avg_response_time = np.mean([e.get("response_time", 0) for e in evaluations])
+        avg_quality_score = np.mean([e.get("overall_score", 0) for e in evaluations])
+        
+        # API-Erfolgsrate
+        api_successes = sum(1 for e in evaluations if e.get("api_success", False))
+        api_success_rate = (api_successes / total_interactions) * 100 if total_interactions > 0 else 0
+        
+        # Intent-Erkennungsrate
+        intent_evaluations = self.metrics.get("intent_evaluations", [])
+        if intent_evaluations:
+            avg_intent_accuracy = np.mean([e.get("intent_accuracy", 0) for e in intent_evaluations])
+        else:
+            avg_intent_accuracy = 0.0
+        
+        return {
+            "total_interactions": total_interactions,
+            "average_response_time": round(avg_response_time, 2),
+            "average_quality_score": round(avg_quality_score, 2),
+            "api_success_rate": round(api_success_rate, 1),
+            "intent_recognition_rate": round(avg_intent_accuracy * 100, 1)
+        }
+    
+    def _calculate_feedback_statistics(self) -> Dict[str, Any]:
+        """Berechnet Feedback-Statistiken"""
+        
+        feedback_list = self.user_feedback.get("feedback", [])
+        if not feedback_list:
+            return {}
+        
+        total_feedback = len(feedback_list)
+        avg_rating = np.mean([f.get("rating", 0) for f in feedback_list])
+        
+        # Hilfreichkeits-Statistiken
+        helpful_count = sum(1 for f in feedback_list if f.get("feedback_type") == "helpful")
+        helpful_percentage = (helpful_count / total_feedback) * 100 if total_feedback > 0 else 0
+        
+        return {
+            "total_feedback": total_feedback,
+            "average_rating": round(avg_rating, 1),
+            "helpful_percentage": round(helpful_percentage, 1)
+        }
+    
+    def _calculate_quality_dimensions(self) -> Dict[str, float]:
+        """Berechnet durchschnittliche Qualitäts-Dimensionen"""
+        
+        if "evaluations" not in self.metrics:
+            return {}
+        
+        evaluations = self.metrics["evaluations"]
+        if not evaluations:
+            return {}
+        
+        dimensions = ["relevance", "completeness", "accuracy", "helpfulness", "coherence"]
+        quality_dimensions = {}
+        
+        for dimension in dimensions:
+            scores = [e.get("quality_scores", {}).get(dimension, 0) for e in evaluations]
+            if scores:
+                quality_dimensions[f"{dimension}_score"] = round(np.mean(scores), 2)
+        
+        return quality_dimensions
+    
+    def _calculate_performance_trends(self) -> Dict[str, Any]:
+        """Berechnet Performance-Trends"""
+        
+        performance_metrics = self.metrics.get("performance_metrics", [])
+        if not performance_metrics:
+            return {}
+        
+        recent_metrics = performance_metrics[-10:]  # Letzte 10 Metriken
+        
+        avg_response_time = np.mean([m.get("response_time", 0) for m in recent_metrics])
+        avg_api_success_rate = np.mean([m.get("api_success_rate", 0) for m in recent_metrics])
+        
+        return {
+            "recent_avg_response_time": round(avg_response_time, 2),
+            "recent_avg_api_success_rate": round(avg_api_success_rate, 1)
+        }
+    
+    def _generate_improvement_recommendations(self) -> List[str]:
+        """Generiert Verbesserungsempfehlungen"""
+        
+        recommendations = []
+        
+        # Analysiere Qualitäts-Dimensionen
+        quality_dimensions = self._calculate_quality_dimensions()
+        
+        for dimension, score in quality_dimensions.items():
+            if score < 0.7:
+                if "relevance" in dimension:
+                    recommendations.append("Verbessere Relevanz der Antworten durch bessere Intent-Erkennung")
+                elif "completeness" in dimension:
+                    recommendations.append("Erweitere Antworten um mehr Details und Kontext")
+                elif "accuracy" in dimension:
+                    recommendations.append("Überprüfe API-Integration und Datenqualität")
+                elif "helpfulness" in dimension:
+                    recommendations.append("Füge mehr handlungsorientierte Vorschläge hinzu")
+                elif "coherence" in dimension:
+                    recommendations.append("Verbessere die logische Struktur der Antworten")
+        
+        return recommendations
+    
+    def _save_evaluation(self, evaluation: Dict[str, Any]):
+        """Speichert eine Evaluation"""
+        
+        if "evaluations" not in self.metrics:
+            self.metrics["evaluations"] = []
+        
+        self.metrics["evaluations"].append(evaluation)
+        self._save_metrics()
+    
+    def _save_metrics(self):
+        """Speichert Metriken in Datei"""
+        
+        try:
+            with open(self.metrics_file, 'w', encoding='utf-8') as f:
+                json.dump(self.metrics, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"Fehler beim Speichern der Metriken: {e}")
+    
+    def _save_user_feedback(self):
+        """Speichert User-Feedback in Datei"""
+        
+        try:
+            with open(self.feedback_file, 'w', encoding='utf-8') as f:
+                json.dump(self.user_feedback, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"Fehler beim Speichern des User-Feedbacks: {e}")
     
     def _load_metrics(self) -> Dict[str, Any]:
+        """Lädt Metriken aus Datei"""
+        
         try:
             with open(self.metrics_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except FileNotFoundError:
-            return {
-                'interactions': [],
-                'evaluation_summary': {},
-                'last_updated': datetime.now().isoformat()
-            }
-    
-    def evaluate_interaction(self, user_message: str, response: Dict[str, Any], 
-                           user_id: str, response_time: float, response_type: str,
-                           intent_recognized: bool, api_success: bool,
-                           detected_intent: str = '', confidence: float = 0.0) -> Dict[str, Any]:
-        quality_metrics = self.quality_evaluator.evaluate_response_quality(user_message, response)
-        intent_evaluation = self.intent_evaluator.evaluate_intent_recognition(
-            user_message, detected_intent, confidence
-        )
-        
-        interaction = {
-            'timestamp': datetime.now().isoformat(),
-            'user_id': user_id,
-            'message': user_message,
-            'response_type': response_type,
-            'response_time': response_time,
-            'response_quality': quality_metrics.to_dict(),
-            'user_feedback': None,
-            'intent_recognized': intent_recognized,
-            'intent_evaluation': asdict(intent_evaluation),
-            'api_success': api_success,
-            'interaction_id': f"{user_id}_{int(time.time())}"
-        }
-        
-        self.metrics_data['interactions'].append(interaction)
-        self._update_evaluation_summary()
-        self._save_metrics()
-        
-        return interaction
-    
-    def add_user_feedback(self, interaction_id: str, user_id: str, 
-                         rating: int, helpful: bool, follow_up_needed: bool, 
-                         specific_feedback: str = ""):
-        feedback = UserFeedback(
-            rating=rating,
-            helpful=helpful,
-            follow_up_needed=follow_up_needed,
-            specific_feedback=specific_feedback,
-            timestamp=datetime.now().isoformat()
-        )
-        
-        self.feedback_collector.save_feedback(user_id, interaction_id, feedback)
-        
-        for interaction in self.metrics_data['interactions']:
-            if interaction.get('interaction_id') == interaction_id:
-                interaction['user_feedback'] = asdict(feedback)
-                break
-        
-        self._update_evaluation_summary()
-        self._save_metrics()
-    
-    def _update_evaluation_summary(self):
-        interactions = self.metrics_data['interactions']
-        
-        if not interactions:
-            return
-        
-        response_times = [i['response_time'] for i in interactions]
-        quality_scores = [i['response_quality']['overall_quality'] for i in interactions if i['response_quality']]
-        intent_confidences = [i['intent_evaluation']['confidence_score'] for i in interactions if i['intent_evaluation']]
-        
-        api_success_count = sum(1 for i in interactions if i['api_success'])
-        api_success_rate = (api_success_count / len(interactions)) * 100
-        
-        intent_recognized_count = sum(1 for i in interactions if i['intent_recognized'])
-        intent_recognition_rate = (intent_recognized_count / len(interactions)) * 100
-        
-        feedback_stats = self.feedback_collector.get_feedback_statistics()
-        
-        self.metrics_data['evaluation_summary'] = {
-            'total_interactions': len(interactions),
-            'average_response_time': np.mean(response_times) if response_times else 0,
-            'average_quality_score': np.mean(quality_scores) if quality_scores else 0,
-            'average_intent_confidence': np.mean(intent_confidences) if intent_confidences else 0,
-            'api_success_rate': api_success_rate,
-            'intent_recognition_rate': intent_recognition_rate,
-            'feedback_statistics': feedback_stats,
-            'last_updated': datetime.now().isoformat()
-        }
-    
-    def _save_metrics(self):
-        with open(self.metrics_file, 'w', encoding='utf-8') as f:
-            json.dump(self.metrics_data, f, indent=2, ensure_ascii=False)
-    
-    def get_evaluation_report(self) -> Dict[str, Any]:
-        return {
-            'metrics': self.metrics_data,
-            'feedback_stats': self.feedback_collector.get_feedback_statistics(),
-            'summary': self.metrics_data.get('evaluation_summary', {})
-        }
-    
-    def get_quality_insights(self) -> Dict[str, Any]:
-        interactions = self.metrics_data['interactions']
-        
-        if not interactions:
             return {}
-        
-        quality_scores = [i['response_quality'] for i in interactions if i['response_quality']]
-        
-        if not quality_scores:
+        except Exception as e:
+            print(f"Fehler beim Laden der Metriken: {e}")
             return {}
+    
+    def _load_user_feedback(self) -> Dict[str, Any]:
+        """Lädt User-Feedback aus Datei"""
         
-        dimensions = ['relevance_score', 'completeness_score', 'accuracy_score', 
-                     'helpfulness_score', 'coherence_score']
-        
-        insights = {}
-        for dimension in dimensions:
-            scores = [qs[dimension] for qs in quality_scores if dimension in qs]
-            if scores:
-                insights[dimension] = {
-                    'average': np.mean(scores),
-                    'min': np.min(scores),
-                    'max': np.max(scores),
-                    'std': np.std(scores)
-                }
-        
-        return insights 
+        try:
+            with open(self.feedback_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
+        except Exception as e:
+            print(f"Fehler beim Laden des User-Feedbacks: {e}")
+            return {} 

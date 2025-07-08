@@ -1,10 +1,11 @@
 <div id="feedback-widget" class="feedback-widget" style="display: none;">
     <div class="feedback-header">
         <h4>Wie hilfreich war diese Antwort?</h4>
-        <button class="feedback-close" onclick="hideFeedbackWidget()">&times;</button>
+        <button class="close-feedback" onclick="hideFeedbackWidget()">&times;</button>
     </div>
     
     <div class="feedback-content">
+        <!-- Sterne-Bewertung -->
         <div class="rating-section">
             <div class="stars">
                 <span class="star" data-rating="1" onclick="setRating(1)">★</span>
@@ -13,31 +14,31 @@
                 <span class="star" data-rating="4" onclick="setRating(4)">★</span>
                 <span class="star" data-rating="5" onclick="setRating(5)">★</span>
             </div>
-            <p class="rating-text">Bewerten Sie die Antwortqualität</p>
+            <div class="rating-text" id="rating-text">Bewerten Sie die Antwort</div>
         </div>
         
+        <!-- Schnelle Bewertungen -->
         <div class="quick-feedback">
-            <button class="feedback-btn helpful" onclick="setQuickFeedback('helpful', true)">
-                Hilfreich
+            <button class="quick-btn helpful" onclick="setQuickFeedback('helpful')">
+                👍 Hilfreich
             </button>
-            <button class="feedback-btn not-helpful" onclick="setQuickFeedback('helpful', false)">
-                Nicht hilfreich
+            <button class="quick-btn not-helpful" onclick="setQuickFeedback('not_helpful')">
+                👎 Nicht hilfreich
             </button>
-            <button class="feedback-btn follow-up" onclick="setQuickFeedback('follow_up', true)">
-                Brauche mehr Info
+            <button class="quick-btn more-info" onclick="setQuickFeedback('more_info')">
+                ℹ️ Mehr Info
             </button>
         </div>
         
+        <!-- Spezifisches Feedback -->
         <div class="specific-feedback">
-            <textarea id="specific-feedback" placeholder="Teilen Sie uns mit, was wir verbessern können... (optional)"></textarea>
+            <textarea id="specific-feedback" placeholder="Geben Sie uns spezifisches Feedback für Verbesserungen..."></textarea>
         </div>
         
+        <!-- Submit Button -->
         <div class="feedback-actions">
             <button class="submit-feedback" onclick="submitFeedback()">
                 Feedback senden
-            </button>
-            <button class="skip-feedback" onclick="hideFeedbackWidget()">
-                Überspringen
             </button>
         </div>
     </div>
@@ -73,7 +74,7 @@
     font-size: 16px;
 }
 
-.feedback-close {
+.close-feedback {
     background: none;
     border: none;
     font-size: 20px;
@@ -81,7 +82,7 @@
     color: #666;
 }
 
-.feedback-close:hover {
+.close-feedback:hover {
     color: #333;
 }
 
@@ -96,12 +97,11 @@
 
 .stars {
     font-size: 24px;
-    margin-bottom: 10px;
+    color: #ddd;
+    cursor: pointer;
 }
 
 .star {
-    cursor: pointer;
-    color: #ddd;
     transition: color 0.2s;
 }
 
@@ -111,19 +111,18 @@
 }
 
 .rating-text {
-    margin: 0;
-    color: #666;
+    margin-top: 8px;
     font-size: 14px;
+    color: #666;
 }
 
 .quick-feedback {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
 }
 
-.feedback-btn {
+.quick-btn {
     flex: 1;
     padding: 8px 12px;
     border: 1px solid #ddd;
@@ -134,11 +133,11 @@
     transition: all 0.2s;
 }
 
-.feedback-btn:hover {
+.quick-btn:hover {
     background: #f8f9fa;
 }
 
-.feedback-btn.active {
+.quick-btn.active {
     background: #007bff;
     color: white;
     border-color: #007bff;
@@ -148,7 +147,7 @@
     margin-bottom: 20px;
 }
 
-.specific-feedback textarea {
+#specific-feedback {
     width: 100%;
     height: 80px;
     padding: 10px;
@@ -159,63 +158,48 @@
 }
 
 .feedback-actions {
-    display: flex;
-    gap: 10px;
+    text-align: center;
 }
 
-.submit-feedback,
-.skip-feedback {
-    flex: 1;
-    padding: 10px;
+.submit-feedback {
+    background: #007bff;
+    color: white;
     border: none;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     transition: background 0.2s;
 }
 
-.submit-feedback {
-    background: #007bff;
-    color: white;
-}
-
 .submit-feedback:hover {
     background: #0056b3;
 }
 
-.skip-feedback {
-    background: #6c757d;
-    color: white;
+.submit-feedback:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
-.skip-feedback:hover {
-    background: #545b62;
+.feedback-success {
+    color: #28a745;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
 }
 
-/* Animation */
-.feedback-widget {
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+.feedback-error {
+    color: #dc3545;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
 }
 </style>
 
 <script>
 let currentRating = 0;
-let currentFeedback = {
-    helpful: null,
-    follow_up: false
-};
-let currentInteractionId = null;
+let currentQuickFeedback = '';
+let currentInteractionId = '';
 
 function showFeedbackWidget(interactionId) {
     currentInteractionId = interactionId;
@@ -230,20 +214,29 @@ function hideFeedbackWidget() {
 
 function resetFeedback() {
     currentRating = 0;
-    currentFeedback = { helpful: null, follow_up: false };
+    currentQuickFeedback = '';
     
     // Reset stars
     document.querySelectorAll('.star').forEach(star => {
         star.classList.remove('active');
     });
     
-    // Reset buttons
-    document.querySelectorAll('.feedback-btn').forEach(btn => {
+    // Reset quick feedback buttons
+    document.querySelectorAll('.quick-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     
     // Reset textarea
     document.getElementById('specific-feedback').value = '';
+    
+    // Reset rating text
+    document.getElementById('rating-text').textContent = 'Bewerten Sie die Antwort';
+    
+    // Remove success/error messages
+    const successMsg = document.querySelector('.feedback-success');
+    const errorMsg = document.querySelector('.feedback-error');
+    if (successMsg) successMsg.remove();
+    if (errorMsg) errorMsg.remove();
 }
 
 function setRating(rating) {
@@ -257,39 +250,49 @@ function setRating(rating) {
             star.classList.remove('active');
         }
     });
+    
+    // Update rating text
+    const ratingTexts = [
+        'Sehr schlecht',
+        'Schlecht', 
+        'Okay',
+        'Gut',
+        'Sehr gut'
+    ];
+    document.getElementById('rating-text').textContent = ratingTexts[rating - 1] || 'Bewerten Sie die Antwort';
 }
 
-function setQuickFeedback(type, value) {
-    if (type === 'helpful') {
-        currentFeedback.helpful = value;
-        // Update button states
-        document.querySelectorAll('.feedback-btn.helpful, .feedback-btn.not-helpful').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-    } else if (type === 'follow_up') {
-        currentFeedback.follow_up = value;
-        event.target.classList.toggle('active');
-    }
+function setQuickFeedback(type) {
+    currentQuickFeedback = type;
+    
+    // Update button states
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    event.target.classList.add('active');
 }
 
 function submitFeedback() {
-    if (!currentInteractionId) {
-        console.error('Keine Interaction ID verfügbar');
+    const specificFeedback = document.getElementById('specific-feedback').value;
+    
+    // Validate feedback
+    if (!currentRating && !currentQuickFeedback) {
+        showFeedbackMessage('Bitte geben Sie eine Bewertung ab.', 'error');
         return;
     }
     
-    const specificFeedback = document.getElementById('specific-feedback').value;
-    
+    // Prepare feedback data
     const feedbackData = {
         interaction_id: currentInteractionId,
-        rating: currentRating,
-        helpful: currentFeedback.helpful,
-        follow_up_needed: currentFeedback.follow_up,
-        specific_feedback: specificFeedback
+        rating: currentRating || 3,
+        helpful: currentQuickFeedback === 'helpful',
+        follow_up_needed: currentQuickFeedback === 'more_info',
+        specific_feedback: specificFeedback,
+        user_id: 'anonymous'
     };
     
-    // Sende Feedback an Backend
+    // Send feedback to server
     fetch('/api/feedback', {
         method: 'POST',
         headers: {
@@ -300,62 +303,64 @@ function submitFeedback() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Feedback erfolgreich gesendet');
-            hideFeedbackWidget();
-            showFeedbackThankYou();
+            showFeedbackMessage('Vielen Dank für Ihr Feedback!', 'success');
+            setTimeout(() => {
+                hideFeedbackWidget();
+            }, 2000);
         } else {
-            console.error('Fehler beim Senden des Feedbacks:', data.error);
+            showFeedbackMessage('Fehler beim Senden des Feedbacks.', 'error');
         }
     })
     .catch(error => {
-        console.error('Fehler beim Senden des Feedbacks:', error);
+        console.error('Feedback error:', error);
+        showFeedbackMessage('Fehler beim Senden des Feedbacks.', 'error');
     });
 }
 
-function showFeedbackThankYou() {
-    // Zeige kurze Bestätigung
-    const thankYou = document.createElement('div');
-    thankYou.className = 'feedback-thank-you';
-    thankYou.innerHTML = 'Vielen Dank für Ihr Feedback!';
-    thankYou.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #28a745;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 4px;
-        z-index: 1001;
-        animation: fadeIn 0.3s ease-out;
-    `;
+function showFeedbackMessage(message, type) {
+    // Remove existing messages
+    const existingMsg = document.querySelector('.feedback-success, .feedback-error');
+    if (existingMsg) existingMsg.remove();
     
-    document.body.appendChild(thankYou);
+    // Create new message
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `feedback-${type}`;
+    msgDiv.textContent = message;
     
-    setTimeout(() => {
-        thankYou.remove();
-    }, 3000);
+    // Insert after feedback actions
+    const actionsDiv = document.querySelector('.feedback-actions');
+    actionsDiv.appendChild(msgDiv);
 }
 
-// Event Listener für Sterne-Hover
+// Auto-hide feedback widget after 30 seconds
+let feedbackTimeout;
+function startFeedbackTimeout() {
+    feedbackTimeout = setTimeout(() => {
+        hideFeedbackWidget();
+    }, 30000);
+}
+
+function clearFeedbackTimeout() {
+    if (feedbackTimeout) {
+        clearTimeout(feedbackTimeout);
+    }
+}
+
+// Start timeout when widget is shown
 document.addEventListener('DOMContentLoaded', function() {
-    const stars = document.querySelectorAll('.star');
-    
-    stars.forEach((star, index) => {
-        star.addEventListener('mouseenter', function() {
-            stars.forEach((s, i) => {
-                if (i <= index) {
-                    s.style.color = '#ffd700';
+    const widget = document.getElementById('feedback-widget');
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                if (widget.style.display === 'block') {
+                    startFeedbackTimeout();
+                } else {
+                    clearFeedbackTimeout();
                 }
-            });
-        });
-        
-        star.addEventListener('mouseleave', function() {
-            stars.forEach((s, i) => {
-                if (!s.classList.contains('active')) {
-                    s.style.color = '#ddd';
-                }
-            });
+            }
         });
     });
+    
+    observer.observe(widget, { attributes: true });
 });
 </script> 

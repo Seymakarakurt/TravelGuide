@@ -17,12 +17,21 @@ from selenium.webdriver.common.action_chains import ActionChains
 logger = logging.getLogger(__name__)
 
 class HotelService:
-    def __init__(self):
+    def __init__(self, currency="EUR"):
         self.price_cache = {}
         self.cache_file = 'hotel_prices_cache.json'
+        self.currency = currency.upper()
         self._load_cache()
         
         self.driver = None
+        
+        # Währungsinformationen
+        self.currency_info = {
+            "EUR": {"symbol": "€", "name": "Euro", "exchange_rate": 1.0},
+            "TL": {"symbol": "₺", "name": "Türkische Lira", "exchange_rate": 35.0},  # Ungefährer Kurs
+            "USD": {"symbol": "$", "name": "US Dollar", "exchange_rate": 1.1},
+            "TRY": {"symbol": "₺", "name": "Türkische Lira", "exchange_rate": 35.0}
+        }
     
     def _load_cache(self):
         try:
@@ -47,7 +56,7 @@ class HotelService:
 
     def search_hotels(self, location: str, check_in: Optional[str] = None, 
                      check_out: Optional[str] = None, guests: int = 1, 
-                     budget: Optional[int] = None) -> List[Dict[str, Any]]:
+                     budget: Optional[int] = None, currency: Optional[str] = None) -> List[Dict[str, Any]]:
         try:
             if not check_in:
                 check_in = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')
@@ -68,17 +77,25 @@ class HotelService:
                     logger.info(f"Neues Cache-Format erkannt: {len(cached_hotels)} Hotels")
                 
                 hotels = cached_hotels
-                if budget:
-                    hotels = [h for h in hotels if h.get('price', 0) <= budget]
-                hotels.sort(key=lambda x: x.get('price', 0))
-                
-                return hotels
+                            # Währung konvertieren
+            if currency and currency.upper() != self.currency:
+                hotels = self._convert_currency(hotels, currency.upper())
+            
+            if budget:
+                hotels = [h for h in hotels if h.get('price', 0) <= budget]
+            hotels.sort(key=lambda x: x.get('price', 0))
+            
+            return hotels
             
             logger.info(f"Starte Selenium-Webscraping für Hotels in {location}")
             
             hotels = self._search_hotels_with_selenium(location, check_in, check_out, guests)
             
             logger.info(f"Hotels gefunden: {len(hotels)} Hotels")
+            
+            # Währung konvertieren
+            if currency and currency.upper() != self.currency:
+                hotels = self._convert_currency(hotels, currency.upper())
             
             if budget:
                 hotels = [h for h in hotels if h.get('price', 0) <= budget]
@@ -129,7 +146,12 @@ class HotelService:
             amenities = hotel.get('amenities', [])
             
             summary += f"{i}. {name}\n"
-            summary += f"   Preis: {price:.0f} EUR pro Nacht\n"
+            
+            # Währung anzeigen
+            currency_symbol = self.currency_info.get(self.currency, {}).get("symbol", "€")
+            currency_name = self.currency_info.get(self.currency, {}).get("name", "EUR")
+            summary += f"   Preis: {price:.0f} {currency_symbol} ({currency_name}) pro Nacht\n"
+            
             if address:
                 summary += f"   Adresse: {address}\n"
             if amenities:
@@ -156,6 +178,42 @@ class HotelService:
         if os.path.exists(self.cache_file):
             os.remove(self.cache_file)
         logger.info("Hotel-Cache gelöscht")
+    
+    def _convert_currency(self, hotels: List[Dict[str, Any]], target_currency: str) -> List[Dict[str, Any]]:
+        """Konvertiert Hotel-Preise in die gewünschte Währung"""
+        if target_currency not in self.currency_info:
+            logger.warning(f"Unbekannte Währung: {target_currency}")
+            return hotels
+        
+        target_rate = self.currency_info[target_currency]["exchange_rate"]
+        source_rate = self.currency_info.get(self.currency, {}).get("exchange_rate", 1.0)
+        
+        conversion_rate = target_rate / source_rate
+        
+        converted_hotels = []
+        for hotel in hotels:
+            converted_hotel = hotel.copy()
+            if 'price' in converted_hotel:
+                converted_hotel['price'] = converted_hotel['price'] * conversion_rate
+                converted_hotel['original_currency'] = self.currency
+                converted_hotel['converted_currency'] = target_currency
+            converted_hotels.append(converted_hotel)
+        
+        logger.info(f"Währung konvertiert: {self.currency} -> {target_currency} (Rate: {conversion_rate:.2f})")
+        return converted_hotels
+    
+    def set_currency(self, currency: str):
+        """Setzt die Währung für zukünftige Anfragen"""
+        currency = currency.upper()
+        if currency in self.currency_info:
+            self.currency = currency
+            logger.info(f"Währung geändert zu: {currency}")
+        else:
+            logger.warning(f"Unbekannte Währung: {currency}")
+    
+    def get_available_currencies(self) -> List[str]:
+        """Gibt verfügbare Währungen zurück"""
+        return list(self.currency_info.keys())
 
     def _setup_selenium_driver(self):
         try:

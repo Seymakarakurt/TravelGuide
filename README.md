@@ -1,15 +1,26 @@
 # TravelGuide - Intelligenter Reiseplanungs-Assistent
 
-Ein Chatbot für Reiseplanung mit KI-gestützter Entscheidungslogik und Tool-Calling-Integration.
+Ein Chatbot für Reiseplanung mit echter MCP-Integration und umfassender Evaluierungsstrategie.
 
 ## Features
 
-- **Intelligente Entscheidungslogik**: Das System wählt automatisch die passenden Tools
+### Echte MCP-Integration
+- **Direkte API-Aufrufe**: Das LLM kann APIs direkt aufrufen
+- **Tool-Calling**: Dynamische Tool-Auswahl basierend auf Benutzeranfragen
+- **Strukturierte API-Integration**: Robuste Fehlerbehandlung und Fallback-Mechanismen
+
+### Verfügbare Tools
 - **Hotel-Suche**: Automatische Hotelsuche mit Preisvergleich
 - **Wetter-Abfragen**: Aktuelle Wetterdaten für beliebige Städte
 - **Attraktionen**: Sehenswürdigkeiten und Reiseempfehlungen
 - **Reiseplanung**: Intelligente Reisevorschläge
-- **Feedback-System**: Bewertung der Antwortqualität
+
+### Umfassende Evaluierungsstrategie
+- **Automatische Qualitätsbewertung** in 5 Dimensionen (Relevanz, Vollständigkeit, Genauigkeit, Hilfreichkeit, Kohärenz)
+- **User-Feedback-System**: Interaktives Feedback-Widget mit Sterne-Bewertung
+- **Intent-Erkennung-Bewertung**: Konfidenz-Scores und Entity-Extraktion
+- **Performance-Metriken**: Response-Zeit und API-Erfolgsrate
+- **A/B-Testing**: Automatische Verbesserungsvorschläge
 
 ## Architektur
 
@@ -63,3 +74,36 @@ python main.py
    - "Hotels in Barcelona finden"
    - "Sehenswürdigkeiten in Paris"
    - "Empfehlungen für Amsterdam"
+
+3. **Feedback-System**: Nach jeder Antwort erscheint automatisch ein Feedback-Widget zur Bewertung
+
+## Evaluierung
+
+### Automatische Qualitätsbewertung
+Das System bewertet jede Antwort in 5 Dimensionen:
+- **Relevanz**: TF-IDF + Keyword-Überlappung zur ursprünglichen Frage
+- **Vollständigkeit**: Struktur und Inhalt der Antwort
+- **Genauigkeit**: Fehlerfreiheit und API-Validierung
+- **Hilfreichkeit**: Handlungsorientierung und Vorschläge
+- **Kohärenz**: Logik und Verständlichkeit
+
+### User-Feedback-System
+- **Interaktives Feedback-Widget** nach jeder Antwort
+- **Sterne-Bewertung** (1-5) für Antwortqualität
+- **Schnelle Bewertungen**: Hilfreich/Nicht hilfreich/Mehr Info
+- **Spezifisches Feedback** für Verbesserungsvorschläge
+
+### Intent-Erkennung-Bewertung
+- **Intent-Erkennungsgenauigkeit** mit Konfidenz-Scores
+- **Entity-Extraktion-Genauigkeit** für Named Entities
+- **Kontextverständnis-Bewertung** für bessere Intent-Analyse
+
+### Performance-Metriken
+- **Response-Zeit** und API-Erfolgsrate
+- **Tool-Ausführungsrate** und MCP-Integration-Erfolg
+- **Qualitäts-Insights** mit automatischen Verbesserungsvorschlägen
+
+### API-Endpoints
+- `GET /api/evaluation/report` - Vollständiger Evaluierungsbericht
+- `GET /api/evaluation/quality-insights` - Qualitäts-Insights
+- `GET /api/feedback/statistics` - Feedback-Statistiken

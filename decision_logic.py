@@ -15,7 +15,7 @@ class TravelGuideDecisionLogic:
         self.rasa_handler = rasa_handler
         self.mcp_service = MCPService(hotel_service=hotel_service, weather_service=weather_service)
         self.rag_service = RAGService()
-        self.ollama_mcp_client = OllamaMCPClient()
+        self.ollama_mcp_client = OllamaMCPClient(hotel_service=hotel_service, weather_service=weather_service)
         self.user_sessions = {}
         
         self.available_tools = [
@@ -97,75 +97,67 @@ class TravelGuideDecisionLogic:
 
     def _handle_with_autonomous_llm(self, message: str, user_id: str, session: Dict[str, Any]) -> Dict[str, Any]:
         try:
-            tool_response = self.ollama_mcp_client.generate_with_tools(message, self.available_tools)
+            mcp_response = self.ollama_mcp_client.generate_with_tools(message, self.available_tools)
             
-            print(f"DEBUG: Tool-Response: {tool_response}")
+            print(f"DEBUG: MCP-Response: {mcp_response}")
             
-            if tool_response.get("type") == "tool_call":
-                tool_called = tool_response.get("tool_called", {})
+            if mcp_response.get("type") == "mcp_response":
+                tool_called = mcp_response.get("tool_called", {})
                 tool_name = tool_called.get("tool")
                 parameters = tool_called.get("parameters", {})
+                api_result = tool_called.get("api_result", {})
                 
-                print(f"OLLAMA ENTSCHEIDUNG: Tool {tool_name} wird verwendet")
-                print(f"Parameter: {parameters}")
-                
-                tool_result = self._execute_tool(tool_name, parameters, session)
-                print(f"Tool-Ergebnis: {tool_result.get('summary', 'Keine Zusammenfassung verfügbar')}")
-                
-                final_response = self.ollama_mcp_client.generate_follow_up(tool_result, message)
-                print(f"Finale Antwort generiert")
+                print(f"MCP-INTEGRATION: Tool {tool_name} erfolgreich ausgeführt")
+                print(f"API-Ergebnis: {api_result}")
                 
                 return {
-                    'type': 'tool_response',
-                    'message': final_response,
+                    'type': 'mcp_response',
+                    'message': mcp_response.get("content", "Keine Antwort verfügbar"),
                     'tool_used': tool_name,
                     'tool_parameters': parameters,
+                    'api_result': api_result,
                     'suggestions': self._get_suggestions_for_tool(tool_name, parameters)
                 }
-            else:
-                content = tool_response.get("content", "")
-                if "TOOL_CALL:" in content:
-                    print(f"VERSTECKTER TOOL-CALL GEFUNDEN: {content}")
-                    
-                    import re
-                    tool_call_match = re.search(r'TOOL_CALL:\s*(\{[^}]+\})', content)
-                    
-                    if tool_call_match:
-                        try:
-                            tool_call_json = tool_call_match.group(1)
-                            tool_call = json.loads(tool_call_json)
-                            tool_name = tool_call.get("tool")
-                            parameters = tool_call.get("parameters", {})
-                            
-                            print(f"OLLAMA ENTSCHEIDUNG: Tool {tool_name} wird verwendet (aus verstecktem Call)")
-                            print(f"Parameter: {parameters}")
-                            
-                            tool_result = self._execute_tool(tool_name, parameters, session)
-                            print(f"Tool-Ergebnis: {tool_result.get('summary', 'Keine Zusammenfassung verfügbar')}")
-                            
-                            summary = tool_result.get('summary', 'Keine Daten verfügbar.')
-                            
-                            return {
-                                'type': 'tool_response',
-                                'message': summary,
-                                'tool_used': tool_name,
-                                'tool_parameters': parameters,
-                                'suggestions': self._get_suggestions_for_tool(tool_name, parameters)
-                            }
-                            
-                        except json.JSONDecodeError as e:
-                            print(f"Fehler beim Parsen des Tool-Calls: {e}")
-                            return {
-                                'type': 'error',
-                                'message': 'Fehler beim Verarbeiten der Tool-Anfrage.',
-                                'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
-                            }
-                    else:
+            elif mcp_response.get("type") == "text_response":
+                content = mcp_response.get("content", "")
+                
+                message_lower = message.lower()
+                if any(keyword in message_lower for keyword in ['hotel', 'unterkunft', 'übernachtung', 'zimmer']):
+                    print("MCP-FALLBACK: Hotel-Anfrage erkannt")
+                    location = self._extract_location_from_message(message)
+                    if location:
+                        return self._handle_hotel_search_request(user_id, {"location": location}, message)
+                
+                elif any(keyword in message_lower for keyword in ['wetter', 'temperatur', 'regen', 'sonne']):
+                    print("MCP-FALLBACK: Wetter-Anfrage erkannt")
+                    location = self._extract_location_from_message(message)
+                    if location:
+                        return self._handle_weather_request(user_id, {"location": location}, message)
+                
+                elif any(keyword in message_lower for keyword in ['sehenswürdigkeit', 'attraktion', 'museum', 'denkmal', 'platz']):
+                    print("MCP-FALLBACK: Sehenswürdigkeiten-Anfrage erkannt")
+                    location = self._extract_location_from_message(message)
+                    if location:
+                        tool_result = self._execute_tool("search_attractions", {"location": location}, session)
                         return {
-                            'type': 'error',
-                            'message': 'Konnte keine Tool-Parameter finden.',
-                            'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
+                            'type': 'tool_response',
+                            'message': tool_result.get('summary', 'Keine Sehenswürdigkeiten gefunden.'),
+                            'tool_used': 'search_attractions',
+                            'tool_parameters': {"location": location},
+                            'suggestions': self._get_suggestions_for_tool('search_attractions', {"location": location})
                         }
+                
+                return {
+                    'type': 'text_response',
+                    'message': content,
+                    'suggestions': self._generate_smart_suggestions(message_lower)
+                }
+            else:
+                return {
+                    'type': 'error',
+                    'message': mcp_response.get("content", "Fehler bei der MCP-Integration"),
+                    'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
+                }
                 
                 message_lower = message.lower()
                 if any(keyword in message_lower for keyword in ['hotel', 'unterkunft', 'übernachtung', 'zimmer']):

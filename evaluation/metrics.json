@@ -22,5 +22,8 @@
     },
     "last_updated": "2025-07-08T22:30:00.000000"
   },
-  "last_updated": "2025-07-08T22:30:00.000000"
+  "last_updated": "2025-07-08T22:30:00.000000",
+  "evaluations": [],
+  "intent_evaluations": [],
+  "performance_metrics": []
 }

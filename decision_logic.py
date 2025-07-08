@@ -59,7 +59,6 @@ class TravelGuideDecisionLogic:
             }
         ]
 
-    
     def process_user_message(self, message: str, user_id: str) -> Dict[str, Any]:
         start_time = time.time()
         
@@ -165,8 +164,47 @@ class TravelGuideDecisionLogic:
                             'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
                         }
                 
-                print("OLLAMA ENTSCHEIDUNG: Kein Tool benötigt - antwortet mit eigenem Wissen")
                 message_lower = message.lower()
+                if any(keyword in message_lower for keyword in ['hotel', 'unterkunft', 'übernachtung', 'zimmer']):
+                    print("OLLAMA ENTSCHEIDUNG: Hotel-Anfrage erkannt - verwende search_hotels")
+                    location = self._extract_location_from_message(message)
+                    if location:
+                        tool_result = self._execute_tool("search_hotels", {"location": location}, session)
+                        return {
+                            'type': 'tool_response',
+                            'message': tool_result.get('summary', 'Keine Hotels gefunden.'),
+                            'tool_used': 'search_hotels',
+                            'tool_parameters': {"location": location},
+                            'suggestions': self._get_suggestions_for_tool('search_hotels', {"location": location})
+                        }
+                
+                elif any(keyword in message_lower for keyword in ['wetter', 'temperatur', 'regen', 'sonne']):
+                    print("OLLAMA ENTSCHEIDUNG: Wetter-Anfrage erkannt - verwende get_weather")
+                    location = self._extract_location_from_message(message)
+                    if location:
+                        tool_result = self._execute_tool("get_weather", {"location": location}, session)
+                        return {
+                            'type': 'tool_response',
+                            'message': tool_result.get('summary', 'Keine Wetterdaten verfügbar.'),
+                            'tool_used': 'get_weather',
+                            'tool_parameters': {"location": location},
+                            'suggestions': self._get_suggestions_for_tool('get_weather', {"location": location})
+                        }
+                
+                elif any(keyword in message_lower for keyword in ['sehenswürdigkeit', 'attraktion', 'museum', 'denkmal', 'platz']):
+                    print("OLLAMA ENTSCHEIDUNG: Sehenswürdigkeiten-Anfrage erkannt - verwende search_attractions")
+                    location = self._extract_location_from_message(message)
+                    if location:
+                        tool_result = self._execute_tool("search_attractions", {"location": location}, session)
+                        return {
+                            'type': 'tool_response',
+                            'message': tool_result.get('summary', 'Keine Sehenswürdigkeiten gefunden.'),
+                            'tool_used': 'search_attractions',
+                            'tool_parameters': {"location": location},
+                            'suggestions': self._get_suggestions_for_tool('search_attractions', {"location": location})
+                        }
+                
+                print("OLLAMA ENTSCHEIDUNG: Kein Tool benötigt - antwortet mit eigenem Wissen")
                 suggestions = self._generate_smart_suggestions(message_lower)
                 
                 return {
@@ -269,19 +307,19 @@ class TravelGuideDecisionLogic:
             summary = f"Reiseempfehlungen für {location.title()}:\n\n"
             
             if city_info:
-                summary += "🏛️ Stadtinfo:\n"
+                summary += "Stadtinfo:\n"
                 for info in city_info:
                     summary += f"• {info['content']}\n"
                 summary += "\n"
             
             if travel_tips:
-                summary += "💡 Reisetipps:\n"
+                summary += "Reisetipps:\n"
                 for tip in travel_tips:
                     summary += f"• {tip['content']}\n"
                 summary += "\n"
             
             if weather_data and 'note' not in weather_data:
-                summary += f"🌤️ Wetter: {weather_data['description']} bei {weather_data['temperature']}°C\n"
+                summary += f"Wetter: {weather_data['description']} bei {weather_data['temperature']}°C\n"
             
             all_data = {
                 'city_info': city_info,
@@ -314,11 +352,11 @@ class TravelGuideDecisionLogic:
                 weather = mcp_data['weather']
                 if isinstance(weather, dict) and 'data' in weather:
                     weather_data = weather['data']
-                    summary += f"🌤️ Wetter: {weather_data.get('description', 'N/A')} bei {weather_data.get('temperature', 'N/A')}°C\n"
+                    summary += f"Wetter: {weather_data.get('description', 'N/A')} bei {weather_data.get('temperature', 'N/A')}°C\n"
                 else:
-                    summary += f"🌤️ Wetter: {weather.get('description', 'N/A')} bei {weather.get('temperature', 'N/A')}°C\n"
+                    summary += f"Wetter: {weather.get('description', 'N/A')} bei {weather.get('temperature', 'N/A')}°C\n"
             else:
-                summary += "🌤️ Wetter: Daten nicht verfügbar\n"
+                summary += "Wetter: Daten nicht verfügbar\n"
             
             summary += "\n"
             
@@ -326,13 +364,13 @@ class TravelGuideDecisionLogic:
                 hotels = mcp_data['hotels']
                 if isinstance(hotels, dict) and 'hotels' in hotels:
                     hotel_list = hotels['hotels']
-                    summary += f"🏨 Hotels: {len(hotel_list)} Optionen verfügbar\n"
+                    summary += f"Hotels: {len(hotel_list)} Optionen verfügbar\n"
                     for i, hotel in enumerate(hotel_list[:3], 1):
                         summary += f"  {i}. {hotel.get('name', 'Unbekannt')} - {hotel.get('price', 'Preis auf Anfrage')}\n"
                 else:
-                    summary += "🏨 Hotels: Daten verfügbar\n"
+                    summary += "Hotels: Daten verfügbar\n"
             else:
-                summary += "🏨 Hotels: Daten nicht verfügbar\n"
+                summary += "Hotels: Daten nicht verfügbar\n"
             
             summary += "\n"
             
@@ -340,16 +378,16 @@ class TravelGuideDecisionLogic:
                 attractions = mcp_data['attractions']
                 if isinstance(attractions, dict) and 'attractions' in attractions:
                     attraction_list = attractions['attractions']
-                    summary += f"🏛️ Sehenswürdigkeiten: {len(attraction_list)} Highlights\n"
+                    summary += f"Sehenswürdigkeiten: {len(attraction_list)} Highlights\n"
                     for i, attraction in enumerate(attraction_list[:3], 1):
                         summary += f"  {i}. {attraction}\n"
                 else:
-                    summary += "🏛️ Sehenswürdigkeiten: Daten verfügbar\n"
+                    summary += "Sehenswürdigkeiten: Daten verfügbar\n"
             else:
-                summary += "🏛️ Sehenswürdigkeiten: Daten nicht verfügbar\n"
+                summary += "Sehenswürdigkeiten: Daten nicht verfügbar\n"
             
             if mcp_data.get('data_file'):
-                summary += f"\n📄 Vollständiger Bericht gespeichert in: {mcp_data['data_file']}"
+                summary += f"\nVollständiger Bericht gespeichert in: {mcp_data['data_file']}"
             
             return {
                 'tool': 'get_complete_travel_data',
@@ -494,7 +532,6 @@ class TravelGuideDecisionLogic:
         
         return cleaned.strip()
     
-
     def _update_session_with_entities(self, session: Dict[str, Any], entities: Dict[str, Any]):
         if 'destination' in entities:
             session['preferences']['destination'] = self._clean_destination(entities['destination'])
@@ -550,8 +587,6 @@ class TravelGuideDecisionLogic:
                 'Was sollte ich in Berlin sehen?'
             ]
         }
-    
-
     
     def _handle_hotel_search_request(self, user_id: str, entities: Dict[str, Any], message: str = "") -> Dict[str, Any]:
         session = self.user_sessions[user_id]
@@ -613,23 +648,23 @@ class TravelGuideDecisionLogic:
                 'suggestions': ['Versuchen Sie es später erneut', 'Alles zurücksetzen']
             }
     
-
-    
     def _extract_location_from_message(self, message: str) -> Optional[str]:
         cities = [
-            'paris', 'london', 'rom', 'madrid', 'barcelona', 'amsterdam', 'berlin', 'wien', 'prag', 'budapest',
+            'berlin', 'hamburg', 'münchen', 'köln', 'frankfurt', 'stuttgart', 'düsseldorf', 'dortmund', 'essen', 'leipzig',
+            'bremen', 'dresden', 'hannover', 'nürnberg', 'duisburg', 'bochum', 'wuppertal', 'bielefeld', 'bonn', 'mannheim',
+            'karlsruhe', 'augsburg', 'wiesbaden', 'gelsenkirchen', 'münster', 'aachen', 'braunschweig', 'chemnitz', 'kiel',
+            'halle', 'magdeburg', 'freiburg', 'krefeld', 'lübeck', 'oberhausen', 'erfurt', 'mainz', 'rostock', 'kassel',
+            'potsdam', 'hagen', 'potsdam', 'hagen', 'potsdam', 'hagen', 'potsdam', 'hagen', 'potsdam', 'hagen',
+            
+            'paris', 'london', 'rom', 'madrid', 'barcelona', 'amsterdam', 'wien', 'prag', 'budapest',
             'stockholm', 'kopenhagen', 'oslo', 'helsinki', 'warschau', 'athen', 'istanbul', 'dubai', 'tokio',
             'singapur', 'bangkok', 'sydney', 'melbourne', 'new york', 'los angeles', 'chicago', 'miami', 'toronto',
             'montreal', 'vancouver', 'mexiko', 'rio de janeiro', 'sao paulo', 'buenos aires', 'santiago', 'lima',
             'bogota', 'caracas', 'havanna', 'kingston', 'port-au-prince', 'santo domingo', 'san juan', 'bridgetown',
             'port of spain', 'georgetown', 'paramaribo', 'cayenne', 'fortaleza', 'recife', 'salvador', 'belo horizonte',
-            'brasilia', 'curitiba', 'porto alegre', 'montevideo', 'asuncion', 'la paz', 'sucre', 'lima', 'quito',
-            'guayaquil', 'bogota', 'medellin', 'cali', 'caracas', 'maracaibo', 'valencia', 'barquisimeto',
-            'maracay', 'ciudad guayana', 'maturin', 'barcelona', 'puerto la cruz', 'petare', 'baruta', 'chacao',
-            'catia la mar', 'guarenas', 'guatire', 'los teques', 'petare', 'baruta', 'chacao', 'catia la mar',
-            'guarenas', 'guatire', 'los teques', 'petare', 'baruta', 'chacao', 'catia la mar', 'guarenas',
-            'guatire', 'los teques', 'petare', 'baruta', 'chacao', 'catia la mar', 'guarenas', 'guatire',
-            'los teques', 'petare', 'baruta', 'chacao', 'catia la mar', 'guarenas', 'guatire', 'los teques'
+            'brasilia', 'curitiba', 'porto alegre', 'montevideo', 'asuncion', 'la paz', 'sucre', 'quito',
+            'guayaquil', 'medellin', 'cali', 'maracaibo', 'valencia', 'barquisimeto', 'maracay', 'ciudad guayana',
+            'maturin', 'puerto la cruz', 'petare', 'baruta', 'chacao', 'catia la mar', 'guarenas', 'guatire', 'los teques'
         ]
         
         message_lower = message.lower()
@@ -637,6 +672,13 @@ class TravelGuideDecisionLogic:
         for city in cities:
             if city in message_lower:
                 return city.title()
+        
+        import re
+        in_pattern = re.search(r'in\s+([a-zA-ZäöüßÄÖÜ]+(?:\s+[a-zA-ZäöüßÄÖÜ]+)*)', message_lower)
+        if in_pattern:
+            potential_city = in_pattern.group(1).strip()
+            if len(potential_city) > 2:
+                return potential_city.title()
         
         return None
 
@@ -761,7 +803,7 @@ class TravelGuideDecisionLogic:
     def _handle_goodbye(self, user_id: str) -> Dict[str, Any]:
         return {
             'type': 'goodbye',
-            'message': 'Vielen Dank für die Nutzung des TravelGuide! Ich wünsche Ihnen eine wundervolle Reise! 🌍',
+            'message': 'Vielen Dank für die Nutzung des TravelGuide! Ich wünsche Ihnen eine wundervolle Reise!',
             'suggestions': ['Neue Reise planen']
         }
     

@@ -1,4 +1,5 @@
 import os
+import time
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
@@ -6,6 +7,7 @@ from decision_logic import TravelGuideDecisionLogic
 from api_services.hotel_service import HotelService
 from api_services.weather_service import WeatherService
 from rasa_bot.rasa_handler import RasaHandler
+from evaluation.evaluation_service import EvaluationService
 
 load_dotenv('config.env')
 
@@ -28,6 +30,15 @@ class TravelGuideApp:
                 weather_service=self.weather_service,
                 rasa_handler=self.rasa_handler
             )
+            
+            try:
+                self.evaluation_service = EvaluationService()
+                print("✅ Evaluation Service erfolgreich initialisiert")
+            except Exception as e:
+                print(f"❌ Fehler beim Initialisieren des Evaluation Service: {e}")
+                import traceback
+                traceback.print_exc()
+                self.evaluation_service = None
             
         except Exception as e:
             raise
@@ -56,14 +67,52 @@ class TravelGuideApp:
                         'error': 'Empty message'
                     }), 400
                 
+                start_time = time.time()
                 response = self.decision_logic.process_user_message(message, user_id)
+                response_time = time.time() - start_time
+                
+                interaction = None
+                if self.evaluation_service:
+                    try:
+                        interaction = self.evaluation_service.evaluate_interaction(
+                            user_message=message,
+                            response=response,
+                            user_id=user_id,
+                            response_time=response_time,
+                            response_type=response.get('type', 'unknown'),
+                            intent_recognized=response.get('intent_recognized', False),
+                            api_success=response.get('type') != 'error',
+                            detected_intent=response.get('detected_intent', ''),
+                            confidence=response.get('confidence', 0.0)
+                        )
+                    except Exception as e:
+                        print(f"❌ Fehler bei der Evaluierung: {e}")
+                        import traceback
+                        traceback.print_exc()
+                        interaction = {
+                            'interaction_id': f"{user_id}_{int(time.time())}",
+                            'response_quality': {'overall_quality': 0.5}
+                        }
+                else:
+                    interaction = {
+                        'interaction_id': f"{user_id}_{int(time.time())}",
+                        'response_quality': {'overall_quality': 0.5}
+                    }
                 
                 return jsonify({
                     'success': True,
-                    'response': response
+                    'response': response,
+                    'interaction_id': interaction.get('interaction_id'),
+                    'evaluation': {
+                        'quality_score': interaction.get('response_quality', {}).get('overall_quality', 0),
+                        'response_time': response_time
+                    }
                 })
                 
             except Exception as e:
+                import traceback
+                print(f"ERROR in chat endpoint: {str(e)}")
+                traceback.print_exc()
                 return jsonify({
                     'success': False,
                     'error': 'Internal server error'
@@ -76,6 +125,49 @@ class TravelGuideApp:
                 'timestamp': datetime.now().isoformat(),
                 'version': '1.0.0'
             })
+        
+        @self.app.route('/api/feedback', methods=['POST'])
+        def feedback_endpoint():
+            try:
+                data = request.get_json()
+                if not data:
+                    return jsonify({
+                        'success': False,
+                        'error': 'Keine Daten bereitgestellt'
+                    }), 400
+                
+                interaction_id = data.get('interaction_id')
+                rating = data.get('rating', 0)
+                helpful = data.get('helpful')
+                follow_up_needed = data.get('follow_up_needed', False)
+                specific_feedback = data.get('specific_feedback', '')
+                user_id = data.get('user_id', 'anonymous')
+                
+                if not interaction_id:
+                    return jsonify({
+                        'success': False,
+                        'error': 'Interaction ID erforderlich'
+                    }), 400
+                
+                self.evaluation_service.add_user_feedback(
+                    interaction_id=interaction_id,
+                    user_id=user_id,
+                    rating=rating,
+                    helpful=helpful,
+                    follow_up_needed=follow_up_needed,
+                    specific_feedback=specific_feedback
+                )
+                
+                return jsonify({
+                    'success': True,
+                    'message': 'Feedback erfolgreich gespeichert'
+                })
+                
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': 'Interner Server-Fehler'
+                }), 500
         
         @self.app.route('/api/test/hotels', methods=['GET'])
         def test_hotels():
@@ -199,7 +291,6 @@ class TravelGuideApp:
             try:
                 city = request.args.get('city', 'Wien')
                 
-                # Teste MCP-Service
                 mcp_data = self.decision_logic.mcp_service.collect_all_data_for_city(city)
                 
                 return jsonify({
@@ -221,7 +312,6 @@ class TravelGuideApp:
             try:
                 city = request.args.get('city', 'Wien')
                 
-                # Teste nur Wetter-Komponente
                 weather_data = self.decision_logic.mcp_service._get_weather(city)
                 
                 return jsonify({
@@ -243,7 +333,6 @@ class TravelGuideApp:
             try:
                 city = request.args.get('city', 'Wien')
                 
-                # Teste nur Hotel-Komponente
                 hotel_data = self.decision_logic.mcp_service._search_hotels({"city": city})
                 
                 return jsonify({
@@ -265,7 +354,6 @@ class TravelGuideApp:
             try:
                 city = request.args.get('city', 'Wien')
                 
-                # Teste nur Attractions-Komponente
                 attractions_data = self.decision_logic.mcp_service._get_attractions(city)
                 
                 return jsonify({
@@ -280,6 +368,34 @@ class TravelGuideApp:
                     'success': False,
                     'error': str(e),
                     'timestamp': datetime.now().isoformat()
+                }), 500
+        
+        @self.app.route('/api/evaluation/report', methods=['GET'])
+        def evaluation_report():
+            try:
+                report = self.evaluation_service.get_evaluation_report()
+                return jsonify({
+                    'success': True,
+                    'report': report
+                })
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e)
+                }), 500
+        
+        @self.app.route('/api/evaluation/quality-insights', methods=['GET'])
+        def quality_insights():
+            try:
+                insights = self.evaluation_service.get_quality_insights()
+                return jsonify({
+                    'success': True,
+                    'insights': insights
+                })
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e)
                 }), 500
     
     def run(self, host='127.0.0.1', port=5001):

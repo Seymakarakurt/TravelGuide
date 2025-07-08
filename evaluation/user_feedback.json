@@ -1,0 +1,16 @@
+{
+  "feedback_entries": [],
+  "statistics": {
+    "total_feedback": 0,
+    "average_rating": 0.0,
+    "helpful_percentage": 0.0,
+    "follow_up_percentage": 0.0,
+    "rating_distribution": {
+      "1_star": 0,
+      "2_star": 0,
+      "3_star": 0,
+      "4_star": 0,
+      "5_star": 0
+    }
+  }
+}

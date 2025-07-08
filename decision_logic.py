@@ -83,6 +83,9 @@ class TravelGuideDecisionLogic:
             else:
                 response = self._handle_with_autonomous_llm(message, user_id, session)
             
+            response['detected_intent'] = intent
+            response['confidence'] = confidence
+            response['intent_recognized'] = intent not in ['unknown', None, '']
             return response
             
         except Exception as e:

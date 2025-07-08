@@ -34,6 +34,13 @@ function sendMessage() {
         if (data.success) {
             const response = data.response;
             addBotMessage(response.message, response.suggestions, response.type);
+            
+
+            if (data.interaction_id && response.type !== 'error') {
+                setTimeout(() => {
+                    showFeedbackWidget(data.interaction_id);
+                }, 2000);
+            }
         } else {
             addBotMessage('Entschuldigung, es ist ein Fehler aufgetreten.', [], 'error');
         }

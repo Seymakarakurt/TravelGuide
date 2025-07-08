@@ -18,7 +18,6 @@ class TravelGuideDecisionLogic:
         self.ollama_mcp_client = OllamaMCPClient()
         self.user_sessions = {}
         
-        # Verfügbare Tools für das LLM
         self.available_tools = [
             {
                 "name": "search_hotels",
@@ -76,8 +75,6 @@ class TravelGuideDecisionLogic:
 
             self._update_session_with_entities(session, entities)
 
-            # OLLAMA ENTSCHEIDET AUTONOM
-            # Das LLM entscheidet selbst, ob es Tools verwenden möchte oder nicht
             if intent == 'greet':
                 response = self._handle_greeting(user_id)
             elif intent == 'reset_session':
@@ -85,7 +82,6 @@ class TravelGuideDecisionLogic:
             elif intent == 'goodbye':
                 response = self._handle_goodbye(user_id)
             else:
-                # Das LLM entscheidet autonom, ob es Tools verwenden möchte
                 response = self._handle_with_autonomous_llm(message, user_id, session)
             
             return response
@@ -98,18 +94,12 @@ class TravelGuideDecisionLogic:
             }
 
     def _handle_with_autonomous_llm(self, message: str, user_id: str, session: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        OLLAMA ENTSCHEIDET AUTONOM
-        Das LLM entscheidet selbst, ob es Tools verwenden möchte oder nicht
-        """
         try:
-            # Das LLM entscheidet, ob und welche Tools es verwenden möchte
             tool_response = self.ollama_mcp_client.generate_with_tools(message, self.available_tools)
             
             print(f"DEBUG: Tool-Response: {tool_response}")
             
             if tool_response.get("type") == "tool_call":
-                # Das LLM hat entschieden, ein Tool zu verwenden
                 tool_called = tool_response.get("tool_called", {})
                 tool_name = tool_called.get("tool")
                 parameters = tool_called.get("parameters", {})
@@ -117,11 +107,9 @@ class TravelGuideDecisionLogic:
                 print(f"OLLAMA ENTSCHEIDUNG: Tool {tool_name} wird verwendet")
                 print(f"Parameter: {parameters}")
                 
-                # Tool ausführen
                 tool_result = self._execute_tool(tool_name, parameters, session)
                 print(f"Tool-Ergebnis: {tool_result.get('summary', 'Keine Zusammenfassung verfügbar')}")
                 
-                # LLM generiert finale Antwort basierend auf Tool-Ergebnis
                 final_response = self.ollama_mcp_client.generate_follow_up(tool_result, message)
                 print(f"Finale Antwort generiert")
                 
@@ -133,13 +121,10 @@ class TravelGuideDecisionLogic:
                     'suggestions': self._get_suggestions_for_tool(tool_name, parameters)
                 }
             else:
-                # Prüfe, ob in der Antwort ein Tool-Call versteckt ist
                 content = tool_response.get("content", "")
                 if "TOOL_CALL:" in content:
-                    # Tool-Call in der Antwort gefunden - extrahiere und verarbeite
                     print(f"VERSTECKTER TOOL-CALL GEFUNDEN: {content}")
                     
-                    # Extrahiere Tool-Call aus der Antwort
                     import re
                     tool_call_match = re.search(r'TOOL_CALL:\s*(\{[^}]+\})', content)
                     
@@ -153,11 +138,9 @@ class TravelGuideDecisionLogic:
                             print(f"OLLAMA ENTSCHEIDUNG: Tool {tool_name} wird verwendet (aus verstecktem Call)")
                             print(f"Parameter: {parameters}")
                             
-                            # Tool ausführen
                             tool_result = self._execute_tool(tool_name, parameters, session)
                             print(f"Tool-Ergebnis: {tool_result.get('summary', 'Keine Zusammenfassung verfügbar')}")
                             
-                            # Verwende die Zusammenfassung als Antwort
                             summary = tool_result.get('summary', 'Keine Daten verfügbar.')
                             
                             return {
@@ -182,9 +165,7 @@ class TravelGuideDecisionLogic:
                             'suggestions': ['Versuchen Sie es erneut', 'Formulieren Sie Ihre Anfrage anders']
                         }
                 
-                # Das LLM hat entschieden, keine Tools zu verwenden
                 print("OLLAMA ENTSCHEIDUNG: Kein Tool benötigt - antwortet mit eigenem Wissen")
-                # Analysiere die Nachricht, um passende Vorschläge zu generieren
                 message_lower = message.lower()
                 suggestions = self._generate_smart_suggestions(message_lower)
                 
@@ -196,13 +177,9 @@ class TravelGuideDecisionLogic:
                 
         except Exception as e:
             print(f"Fehler bei Tool-Calling: {str(e)}")
-            # Fallback zu traditioneller Logik
             return self._fallback_to_traditional_logic(message, user_id, session)
 
     def _execute_tool(self, tool_name: str, parameters: Dict[str, Any], session: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Führt das vom LLM gewählte Tool aus
-        """
         location = parameters.get('location', '')
         
         if tool_name == "search_hotels":
@@ -244,7 +221,6 @@ class TravelGuideDecisionLogic:
             }
             
         elif tool_name == "search_attractions":
-            # Verwende RAG Service für Sehenswürdigkeiten
             if not location:
                 return {
                     'tool': 'search_attractions',
@@ -254,18 +230,14 @@ class TravelGuideDecisionLogic:
             
             print(f"RAG-Service wird verwendet für {location}")
             
-            # Suche nach spezifischen Informationen für die Stadt
             city_info = self.rag_service.get_city_info(location)
             attractions_results = self.rag_service.search(f"Sehenswürdigkeiten Attraktionen {location}", top_k=5)
             
-            # Priorisiere Ergebnisse für die spezifische Stadt
             city_specific_results = [doc for doc in attractions_results if doc.get('city', '').lower() == location.lower()]
             general_results = [doc for doc in attractions_results if doc.get('city', '') != location.lower()]
             
-            # Kombiniere die Ergebnisse, Stadt-spezifische zuerst
             combined_results = city_specific_results + general_results[:2]
             
-            # Erstelle eine Zusammenfassung
             if city_specific_results:
                 summary = f"Sehenswürdigkeiten in {location.title()}:\n"
                 for result in city_specific_results[:3]:
@@ -290,12 +262,10 @@ class TravelGuideDecisionLogic:
             
             print(f"RAG-Service wird verwendet für {location}")
             
-            # Sammle alle verfügbaren Informationen für die Stadt
             city_info = self.rag_service.get_city_info(location)
             travel_tips = self.rag_service.get_travel_tips(location)
             weather_data = self.weather_service.get_weather(location)
             
-            # Erstelle eine umfassende Zusammenfassung
             summary = f"Reiseempfehlungen für {location.title()}:\n\n"
             
             if city_info:
@@ -336,13 +306,10 @@ class TravelGuideDecisionLogic:
             
             print(f"MCP-SERVICE wird verwendet für {location}")
             
-            # Verwende MCP-Service für umfassende Datensammlung
             mcp_data = self.mcp_service.collect_all_data_for_city(location)
             
-            # Erstelle eine strukturierte Zusammenfassung
             summary = f"Vollständiger Reisebericht für {location.title()}:\n\n"
             
-            # Wetter-Informationen
             if mcp_data.get('weather') and 'error' not in mcp_data['weather']:
                 weather = mcp_data['weather']
                 if isinstance(weather, dict) and 'data' in weather:
@@ -355,7 +322,6 @@ class TravelGuideDecisionLogic:
             
             summary += "\n"
             
-            # Hotel-Informationen
             if mcp_data.get('hotels') and 'error' not in mcp_data['hotels']:
                 hotels = mcp_data['hotels']
                 if isinstance(hotels, dict) and 'hotels' in hotels:
@@ -370,7 +336,6 @@ class TravelGuideDecisionLogic:
             
             summary += "\n"
             
-            # Attractions-Informationen
             if mcp_data.get('attractions') and 'error' not in mcp_data['attractions']:
                 attractions = mcp_data['attractions']
                 if isinstance(attractions, dict) and 'attractions' in attractions:
@@ -383,7 +348,6 @@ class TravelGuideDecisionLogic:
             else:
                 summary += "🏛️ Sehenswürdigkeiten: Daten nicht verfügbar\n"
             
-            # Datei-Information
             if mcp_data.get('data_file'):
                 summary += f"\n📄 Vollständiger Bericht gespeichert in: {mcp_data['data_file']}"
             
@@ -401,9 +365,6 @@ class TravelGuideDecisionLogic:
             }
 
     def _get_suggestions_for_tool(self, tool_name: str, parameters: Dict[str, Any]) -> List[str]:
-        """
-        Generiert passende Vorschläge basierend auf dem verwendeten Tool
-        """
         location = parameters.get('location', '')
         
         if tool_name == "search_hotels":
@@ -450,14 +411,9 @@ class TravelGuideDecisionLogic:
             ]
 
     def _generate_smart_suggestions(self, message_lower: str) -> List[str]:
-        """
-        Generiert intelligente Vorschläge basierend auf der Benutzeranfrage
-        """
-        # Erkenne Städte in der Nachricht
         cities = ['wien', 'berlin', 'paris', 'london', 'rom', 'amsterdam', 'barcelona', 'kopenhagen', 'münchen', 'hamburg']
         mentioned_cities = [city for city in cities if city in message_lower]
         
-        # Erkenne Themen
         has_weather = any(word in message_lower for word in ['wetter', 'klima', 'temperatur'])
         has_hotels = any(word in message_lower for word in ['hotel', 'unterkunft', 'hotels', 'wohnen'])
         has_attractions = any(word in message_lower for word in ['sehenswürdigkeit', 'attraktion', 'besichtigen', 'museum'])
@@ -481,7 +437,6 @@ class TravelGuideDecisionLogic:
                 suggestions.append(f'Hotels in {city.title()} finden')
                 suggestions.append(f'Sehenswürdigkeiten in {city.title()}')
         else:
-            # Allgemeine Vorschläge
             if has_weather:
                 suggestions.extend(['Wetter in Wien abfragen', 'Wetter in Berlin abfragen'])
             elif has_hotels:
@@ -498,16 +453,12 @@ class TravelGuideDecisionLogic:
                     'Reiseempfehlungen für Rom'
                 ])
         
-        # Füge immer einen "Andere Stadt erkunden" Vorschlag hinzu
         if len(suggestions) < 4:
             suggestions.append('Andere Stadt erkunden')
         
-        return suggestions[:4]  # Maximal 4 Vorschläge
+        return suggestions[:4]
 
     def _fallback_to_traditional_logic(self, message: str, user_id: str, session: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Fallback zur traditionellen Logik, falls Tool-Calling fehlschlägt
-        """
         message_lower = message.lower()
         has_city = False
         has_hotel_word = any(word in message_lower for word in ["hotel", "unterkunft", "hotels"])
@@ -836,7 +787,6 @@ class TravelGuideDecisionLogic:
                     ]
                 }
             else:
-                # Fallback zu allgemeiner KI-Antwort
                 try:
                     ollama_response = ai_service.generate(message)
                     return {

@@ -137,7 +137,6 @@ class WeatherService:
             return None
     
     def _get_fallback_weather(self, location: str) -> Dict[str, Any]:
-        # Spezielle Dummy-Werte für bekannte Städte
         city_fallbacks = {
             'wien':    {'temperature': 21, 'feels_like': 22, 'description': 'Sonnig', 'icon': '01d'},
             'vienna':  {'temperature': 21, 'feels_like': 22, 'description': 'Sonnig', 'icon': '01d'},

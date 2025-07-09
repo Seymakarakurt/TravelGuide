@@ -196,7 +196,7 @@ Beispiele:
                     "data": None
                 }
         
-        # Fallback zu Mock-Daten mit Währung
+
         if currency and currency.upper() in ["TL", "TRY"]:
             mock_data = [
                 {"name": "Hotel A", "price": 4200, "rating": 4.2, "currency": "TL"},
@@ -217,7 +217,6 @@ Beispiele:
         }
     
     def _call_weather_api(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
-        """Direkter API-Aufruf für Wetter über MCP"""
         location = parameters.get("location", "")
         
         if self.weather_service:
@@ -235,7 +234,7 @@ Beispiele:
                     "data": None
                 }
         
-        # Fallback zu Mock-Daten
+
         return {
             "success": True,
             "data": {
@@ -247,7 +246,6 @@ Beispiele:
         }
     
     def _call_attractions_api(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
-        """Direkter API-Aufruf für Sehenswürdigkeiten über MCP"""
         location = parameters.get("location", "")
         
         attractions = {
@@ -267,13 +265,11 @@ Beispiele:
         }
     
     def _generate_response_from_api_result(self, api_result: Dict[str, Any], original_message: str, tool_name: str) -> str:
-        """Generiert eine natürliche Antwort basierend auf API-Ergebnis"""
         if not api_result.get("success", False):
             return f"Entschuldigung, ich konnte keine Daten für Ihre Anfrage abrufen: {api_result.get('error', 'Unbekannter Fehler')}"
         
         summary = api_result.get("summary", "Daten erfolgreich abgerufen.")
         
-        # Kontextuelle Antwort basierend auf Tool-Typ
         if tool_name == "search_hotels":
             return f"Hier sind die Hotels für Ihre Anfrage: {summary}"
         elif tool_name == "get_weather":

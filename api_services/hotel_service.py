@@ -22,15 +22,19 @@ class HotelService:
         self.cache_file = 'hotel_prices_cache.json'
         self.currency = currency.upper()
         self._load_cache()
-        
         self.driver = None
         
-        # Währungsinformationen
         self.currency_info = {
             "EUR": {"symbol": "€", "name": "Euro", "exchange_rate": 1.0},
-            "TL": {"symbol": "₺", "name": "Türkische Lira", "exchange_rate": 35.0},  # Ungefährer Kurs
+            "TL": {"symbol": "₺", "name": "Türkische Lira", "exchange_rate": 47.0},
             "USD": {"symbol": "$", "name": "US Dollar", "exchange_rate": 1.1},
-            "TRY": {"symbol": "₺", "name": "Türkische Lira", "exchange_rate": 35.0}
+            "TRY": {"symbol": "₺", "name": "Türkische Lira", "exchange_rate": 47.0},
+            "GBP": {"symbol": "£", "name": "Britische Pfund", "exchange_rate": 1.2},
+            "CHF": {"symbol": "CHF", "name": "Schweizer Franken", "exchange_rate": 1.1},
+            "CAD": {"symbol": "CA$", "name": "Kanadische Dollar", "exchange_rate": 1.4},
+            "AUD": {"symbol": "A$", "name": "Australische Dollar", "exchange_rate": 1.5},
+            "NZD": {"symbol": "NZ$", "name": "Neuseeland-Dollar", "exchange_rate": 1.6},
+            "JPY": {"symbol": "¥", "name": "Japanische Yen", "exchange_rate": 170.0},
         }
     
     def _load_cache(self):
@@ -77,7 +81,6 @@ class HotelService:
                     logger.info(f"Neues Cache-Format erkannt: {len(cached_hotels)} Hotels")
                 
                 hotels = cached_hotels
-                            # Währung konvertieren
             if currency and currency.upper() != self.currency:
                 hotels = self._convert_currency(hotels, currency.upper())
             
@@ -93,7 +96,6 @@ class HotelService:
             
             logger.info(f"Hotels gefunden: {len(hotels)} Hotels")
             
-            # Währung konvertieren
             if currency and currency.upper() != self.currency:
                 hotels = self._convert_currency(hotels, currency.upper())
             
@@ -147,7 +149,6 @@ class HotelService:
             
             summary += f"{i}. {name}\n"
             
-            # Währung anzeigen
             currency_symbol = self.currency_info.get(self.currency, {}).get("symbol", "€")
             currency_name = self.currency_info.get(self.currency, {}).get("name", "EUR")
             summary += f"   Preis: {price:.0f} {currency_symbol} ({currency_name}) pro Nacht\n"

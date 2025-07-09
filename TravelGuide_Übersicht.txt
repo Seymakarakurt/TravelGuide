@@ -1,0 +1,171 @@
+TRAVELGUIDE - INTELLIGENTE REISEBERATUNG
+==========================================
+
+WAS KANN DIE SOFTWARE?
+----------------------
+
+1. INTELLIGENTE KI-BERATUNG
+   - Ollama LLM (llama3.1:8b) mit Tool-Calling
+   - Automatische Tool-Auswahl basierend auf Benutzeranfragen
+   - Natürliche Sprachverarbeitung für Reisefragen
+
+2. VIER HAUPTFUNKTIONEN
+   - Hotel-Suche mit Preisvergleich (Webscraping von Google Hotels)
+   - Wetter-Abfragen (OpenWeatherMap API)
+   - Sehenswürdigkeiten und Attraktionen
+   - Allgemeine Reiseempfehlungen
+
+3. RAG-PIPELINE (Retrieval-Augmented Generation)
+   - Statische Wissensbasis mit 36 Einträgen zu europäischen Städten
+   - TF-IDF Vektorisierung für semantische Suche
+   - Kategorien: city_info, travel_tips, attractions, general_tips
+   - WARUM: Kombiniert LLM-Wissen mit strukturierten Reisedaten
+   - VORTEIL: Präzise, aktuelle Informationen statt Halluzinationen
+
+   TF-IDF VEKTORISIERUNG ERKLÄRUNG:
+   - TF (Term Frequency): Wie oft kommt ein Wort im Dokument vor?
+   - IDF (Inverse Document Frequency): Wie selten ist das Wort in allen Dokumenten?
+   - Beispiel: "Eiffelturm" ist wichtig in Paris-Dokumenten, aber selten in anderen
+   - Cosine Similarity: Misst Ähnlichkeit zwischen Benutzerfrage und Dokumenten
+   - Ergebnis: Findet semantisch ähnliche Inhalte, nicht nur exakte Wortübereinstimmungen
+
+4. MCP-SERVICE (Model Context Protocol)
+   - Sammelt alle verfügbaren Daten für eine Stadt in einem Aufruf
+   - Kombiniert Wetter, Hotels und Sehenswürdigkeiten
+   - Speichert vollständige Berichte als JSON-Dateien
+   - WARUM: Effiziente Datenaggregation für komplexe Anfragen
+   - VORTEIL: Einheitliche Schnittstelle für alle Services
+
+5. EVALUIERUNGSFRAMEWORK
+   - Response Quality Metrics (Relevanz, Vollständigkeit, Genauigkeit)
+   - Intent Recognition Evaluation
+   - User Feedback System
+   - Performance Tracking
+
+TECHNISCHE ARCHITEKTUR
+----------------------
+
+- Flask-Webanwendung mit REST-API
+- Modulare Service-Architektur
+- Session-Management für Benutzer
+- Caching-System für Hotelpreise
+- Umfassende Test-Endpunkte
+
+GENAUER ABLAUF
+--------------
+
+1. INTENT-RECOGNITION & OLLAMA LLM
+   - Eigener Regex-basierter Intent-Recognition Service (nicht Rasa-Framework)
+   - Erkennt: greet, get_weather, search_hotels, goodbye, reset_session
+   - Ollama LLM Tool-Calling: TOOL_CALL: {"tool": "search_hotels", "parameters": {"location": "Berlin"}}
+   - Automatische Tool-Auswahl basierend auf Schlüsselwörtern
+   - Fallback-Logik bei LLM-Versagen
+
+   VERFÜGBARE TOOLS:
+   - search_hotels: Hotel-Suche mit Check-in/Check-out Daten
+   - get_weather: Aktuelle Wetterinformationen für einen Ort
+   - search_attractions: Sehenswürdigkeiten und Attraktionen
+   - get_travel_recommendations: Allgemeine Reiseempfehlungen
+   - get_complete_travel_data: Vollständiger Reisebericht (alle Daten)
+
+2. TOOL-AUSFÜHRUNG
+   - search_hotels: Selenium WebScraping von Google Hotels
+   - get_weather: OpenWeatherMap API mit Geocoding
+   - search_attractions: RAG-Service mit TF-IDF Vektorisierung
+   - get_travel_recommendations: Kombination aller Services
+   - get_complete_travel_data: MCP-Service für vollständige Stadtberichte
+
+3. ERGEBNIS-VERARBEITUNG
+   - Formatierung in benutzerfreundliche Zusammenfassungen
+   - Session-Management für Kontext-Beibehaltung
+   - Caching für Performance-Optimierung
+
+BEISPIEL-ANFRAGEN & TOOL-ZUORDNUNG
+-----------------------------------
+
+"Wie ist das Wetter in Wien?" → get_weather Tool
+"Hotels in Barcelona finden" → search_hotels Tool
+"Sehenswürdigkeiten in Paris" → search_attractions Tool
+"Empfehlungen für Amsterdam" → get_travel_recommendations Tool
+"Wo kann man in Thailand gut essen?" → RAG-Service (Wissensbasis)
+"Vollständiger Reisebericht für Berlin" → get_complete_travel_data Tool (MCP-Service)
+
+QUALITÄTSBEWERTUNG
+------------------
+
+Das System misst automatisch:
+- Antwortqualität (0-1 Score) basierend auf 5 Metriken:
+  * Relevanz: Semantische Ähnlichkeit zwischen Frage und Antwort
+  * Vollständigkeit: Umfang der bereitgestellten Informationen
+  * Genauigkeit: Korrektheit der Daten und API-Erfolg
+  * Nützlichkeit: Praktische Handlungsempfehlungen
+  * Kohärenz: Logische Struktur und Verständlichkeit
+- Intent Recognition: Bewertung der Absichtserkennung
+- User Feedback: Benutzerbewertungen und spezifisches Feedback
+- Performance: Antwortzeiten und API-Erfolgsraten
+
+TECHNISCHE VORTEILE
+------------------
+
+RAG-SERVICE:
+- Verhindert LLM-Halluzinationen durch strukturierte Daten
+- Schnelle semantische Suche in Reisewissen
+- Skalierbare Wissensbasis (36 → beliebig viele Einträge)
+- TF-IDF Algorithmus: TF × IDF = Wortwichtigkeit
+- Cosine Similarity: Ähnlichkeitsmessung zwischen Vektoren
+- Praktisches Beispiel: "Sehenswürdigkeiten Paris" findet Eiffelturm-Info
+
+MCP-SERVICE:
+- Einheitliche API für alle Datenquellen
+- Automatische Fehlerbehandlung und Fallbacks
+- Vollständige Berichte als JSON-Dateien speichern
+- Vorbereitet für erweiterte MCP-Tool-Integration
+
+TOOL-AUSWAHL-LOGIK
+------------------
+
+Das Ollama LLM wählt automatisch das passende Tool:
+1. Analysiert Benutzeranfrage auf Schlüsselwörter
+2. Wählt aus 5 verfügbaren Tools das beste aus
+3. Übergibt Parameter (z.B. Stadt, Datum, Gäste)
+4. Führt Tool aus und formatiert Ergebnis
+5. Generiert benutzerfreundliche Antwort
+
+Fallback: Wenn LLM versagt, greift traditionelle Keyword-basierte Logik ein.
+
+PROJEKTSTRUKTUR - WICHTIGSTE DATEIEN
+====================================
+
+HAUPTDATEIEN:
+- main.py (16KB): Flask-Webanwendung mit REST-API Endpunkten
+- decision_logic.py (40KB): Intelligente Tool-Auswahl und Entscheidungslogik
+- config.env: API-Keys und Konfiguration (OpenWeatherMap, Ollama)
+- requirements.txt: Python-Abhängigkeiten
+- README.md: Projekt-Dokumentation
+
+API-SERVICES (api_services/):
+- hotel_service.py (20KB): Selenium WebScraping von Google Hotels
+- weather_service.py (8.7KB): OpenWeatherMap API Integration
+- ollama_mcp_client.py (5.4KB): Ollama LLM mit Tool-Calling
+- rag_service.py (8.9KB): TF-IDF Vektorisierung und Wissensbasis
+- mcp_service.py (4.7KB): Model Context Protocol Service
+- ai_service.py: Allgemeine KI-Service Funktionen
+
+EVALUIERUNG (evaluation/):
+- evaluation_service.py (17KB): Qualitätsbewertung und Metriken
+- metrics.json (18KB): Gesammelte Evaluierungsdaten
+- user_feedback.json: Benutzerbewertungen
+
+INTENT-RECOGNITION (rasa_bot/):
+- rasa_handler.py (6.3KB): Eigener Intent-Recognition Service (KEIN echtes Rasa-Framework)
+- Regex-basierte Intent-Erkennung für: greet, get_weather, search_hotels, goodbye
+- Entity-Extraction für Städte und Datumsangaben
+
+FRONTEND (templates/ & static/):
+- templates/index.html: Hauptseite der Webanwendung
+- templates/feedback_widget.html: Feedback-System
+- static/css/style.css (5.1KB): Styling
+- static/js/script.js (4.0KB): Frontend-JavaScript
+
+DATEN:
+- hotel_prices_cache.json: Gecachte Hotelpreise

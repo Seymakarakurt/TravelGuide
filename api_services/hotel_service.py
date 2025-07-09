@@ -361,17 +361,26 @@ class HotelService:
                 try:
                     aria_label = a.get_attribute('aria-label')
                     logger.info(f"Verarbeite aria-label {i+1}: '{aria_label}'")
-                    match = re.search(r'Preise ab (\d+(?:[.,]\d+)?)\s*([\$€])\s+für\s+(.+?)(?:\s+DEAL|\s+TOLLER|\s*$)', aria_label)
+                    match = re.search(r'Preise ab ([\d.,]+)\s*([\$€₺]|TRY)\s+für\s+(.+?)(?:\s+DEAL|\s+TOLLER|\s*$)', aria_label)
                     if not match:
-                        match = re.search(r'(\d+(?:[.,]\d+)?)\s*([\$€]).*?für\s+(.+?)(?:\s+DEAL|\s+TOLLER|\s*$)', aria_label)
+                        match = re.search(r'([\d.,]+)\s*([\$€₺]|TRY).*?für\s+(.+?)(?:\s+DEAL|\s+TOLLER|\s*$)', aria_label)
                     
                     if match:
-                        price = float(match.group(1).replace(',', '.'))
+                        price_str = match.group(1)
                         currency = match.group(2)
                         name = match.group(3).strip()
                         
+                        if currency == '₺' or currency == 'TRY':
+                            price_str = price_str.replace('.', '').replace(',', '.')
+                        else:
+                            price_str = price_str.replace(',', '.')
+                        
+                        price = float(price_str)
+                        
                         if currency == '$':
                             price = price * 0.85
+                        elif currency == '₺' or currency == 'TRY':
+                            price = price * 0.035
                         
                         if name in seen_hotels:
                             logger.info(f"Hotel bereits gesehen, überspringe: {name}")

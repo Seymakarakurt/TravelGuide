@@ -198,7 +198,7 @@ class WeatherService:
                     temp = round(item['main']['temp'])
                     description = item['weather'][0]['description']
                     
-                    forecast_summary += f"• {date_str}: {temp}°C, {description}\n"
+                    forecast_summary += f"{date_str}: {temp}°C, {description}\n"
             
             return forecast_summary.strip()
             
@@ -220,6 +220,6 @@ class WeatherService:
         
         forecast_5days = self._get_5day_forecast(location)
         if forecast_5days:
-            summary += f"\n\n5-Tage Vorhersage:\n{forecast_5days}"
+            summary += f"\n\n{forecast_5days}"
         
         return summary 

@@ -310,19 +310,17 @@ class TravelGuideDecisionLogic:
             summary = f"Reiseempfehlungen für {location.title()}:\n\n"
             
             if city_info:
-                summary += "Stadtinfo:\n"
                 for info in city_info:
                     summary += f"• {info['content']}\n"
                 summary += "\n"
             
             if travel_tips:
-                summary += "Reisetipps:\n"
                 for tip in travel_tips:
                     summary += f"• {tip['content']}\n"
                 summary += "\n"
             
             if weather_data and 'note' not in weather_data:
-                summary += f"Wetter: {weather_data['description']} bei {weather_data['temperature']}°C\n"
+                summary += f"{weather_data['description']} bei {weather_data['temperature']}°C\n"
             
             all_data = {
                 'city_info': city_info,
@@ -355,11 +353,11 @@ class TravelGuideDecisionLogic:
                 weather = mcp_data['weather']
                 if isinstance(weather, dict) and 'data' in weather:
                     weather_data = weather['data']
-                    summary += f"Wetter: {weather_data.get('description', 'N/A')} bei {weather_data.get('temperature', 'N/A')}°C\n"
+                    summary += f"{weather_data.get('description', 'N/A')} bei {weather_data.get('temperature', 'N/A')}°C\n"
                 else:
-                    summary += f"Wetter: {weather.get('description', 'N/A')} bei {weather.get('temperature', 'N/A')}°C\n"
+                    summary += f"{weather.get('description', 'N/A')} bei {weather.get('temperature', 'N/A')}°C\n"
             else:
-                summary += "Wetter: Daten nicht verfügbar\n"
+                summary += "Daten nicht verfügbar\n"
             
             summary += "\n"
             
@@ -367,13 +365,13 @@ class TravelGuideDecisionLogic:
                 hotels = mcp_data['hotels']
                 if isinstance(hotels, dict) and 'hotels' in hotels:
                     hotel_list = hotels['hotels']
-                    summary += f"Hotels: {len(hotel_list)} Optionen verfügbar\n"
+                    summary += f"{len(hotel_list)} Optionen verfügbar\n"
                     for i, hotel in enumerate(hotel_list[:3], 1):
                         summary += f"  {i}. {hotel.get('name', 'Unbekannt')} - {hotel.get('price', 'Preis auf Anfrage')}\n"
                 else:
-                    summary += "Hotels: Daten verfügbar\n"
+                    summary += "Daten verfügbar\n"
             else:
-                summary += "Hotels: Daten nicht verfügbar\n"
+                summary += "Daten nicht verfügbar\n"
             
             summary += "\n"
             
@@ -381,13 +379,13 @@ class TravelGuideDecisionLogic:
                 attractions = mcp_data['attractions']
                 if isinstance(attractions, dict) and 'attractions' in attractions:
                     attraction_list = attractions['attractions']
-                    summary += f"Sehenswürdigkeiten: {len(attraction_list)} Highlights\n"
+                    summary += f"{len(attraction_list)} Highlights\n"
                     for i, attraction in enumerate(attraction_list[:3], 1):
                         summary += f"  {i}. {attraction}\n"
                 else:
-                    summary += "Sehenswürdigkeiten: Daten verfügbar\n"
+                    summary += "Daten verfügbar\n"
             else:
-                summary += "Sehenswürdigkeiten: Daten nicht verfügbar\n"
+                summary += "Daten nicht verfügbar\n"
             
             if mcp_data.get('data_file'):
                 summary += f"\nVollständiger Bericht gespeichert in: {mcp_data['data_file']}"
@@ -412,36 +410,31 @@ class TravelGuideDecisionLogic:
             return [
                 f'Wetter in {location} abfragen',
                 f'Sehenswürdigkeiten in {location}',
-                f'Reiseempfehlungen für {location}',
-                'Andere Stadt erkunden'
+                f'Reiseempfehlungen für {location}'
             ]
         elif tool_name == "get_weather":
             return [
                 f'Hotels in {location} finden',
                 f'Sehenswürdigkeiten in {location}',
-                f'Reiseempfehlungen für {location}',
-                'Andere Stadt erkunden'
+                f'Reiseempfehlungen für {location}'
             ]
         elif tool_name == "search_attractions":
             return [
                 f'Hotels in {location} finden',
                 f'Wetter in {location} abfragen',
-                f'Reiseempfehlungen für {location}',
-                'Andere Stadt erkunden'
+                f'Reiseempfehlungen für {location}'
             ]
         elif tool_name == "get_travel_recommendations":
             return [
                 f'Hotels in {location} finden',
                 f'Wetter in {location} abfragen',
-                f'Sehenswürdigkeiten in {location}',
-                'Andere Stadt erkunden'
+                f'Sehenswürdigkeiten in {location}'
             ]
         elif tool_name == "get_complete_travel_data":
             return [
                 f'Detaillierte Hotels in {location}',
                 f'Wettervorhersage für {location}',
-                f'Sehenswürdigkeiten in {location}',
-                'Andere Stadt erkunden'
+                f'Sehenswürdigkeiten in {location}'
             ]
         else:
             return [
@@ -495,7 +488,7 @@ class TravelGuideDecisionLogic:
                 ])
         
         if len(suggestions) < 4:
-            suggestions.append('Andere Stadt erkunden')
+            pass
         
         return suggestions[:4]
 
@@ -689,8 +682,12 @@ class TravelGuideDecisionLogic:
         session = self.user_sessions[user_id]
         message_lower = message.lower()
 
+        location = self._extract_location_from_message(message)
+        
+        if location and any(word in message_lower for word in ['reise', 'urlaub', 'planen', 'besuchen', 'fahren', 'gehen']):
+            return self._execute_tool("get_complete_travel_data", {'location': location}, session)
+
         if 'wetter' in message_lower or 'klima' in message_lower:
-            location = self._extract_location_from_message(message)
             if location:
                 return self._handle_weather_request(user_id, {'weather_location': location}, message)
             else:
@@ -701,7 +698,6 @@ class TravelGuideDecisionLogic:
                 }
 
         if any(word in message_lower for word in ['sehenswürdigkeiten', 'attraktionen', 'besichtigen', 'empfehlungen', 'tipps']):
-            location = self._extract_location_from_message(message)
             if location:
                 rag_answer = self.rag_service.answer_question(message, location)
                 return {
@@ -827,8 +823,7 @@ class TravelGuideDecisionLogic:
                     'sources': rag_results,
                     'suggestions': [
                         'Mehr Details zu Sehenswürdigkeiten',
-                        'Praktische Reisetipps',
-                        'Andere Stadt erkunden'
+                        'Praktische Reisetipps'
                     ]
                 }
             else:

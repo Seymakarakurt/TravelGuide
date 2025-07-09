@@ -1,14 +1,26 @@
 {
-  "feedback_entries": [],
+  "feedback_entries": [
+    {
+      "user_id": "anonymous",
+      "interaction_id": "user_rsfgafs0g_1752091930",
+      "feedback": {
+        "rating": 3,
+        "helpful": null,
+        "follow_up_needed": true,
+        "specific_feedback": "",
+        "timestamp": "2025-07-09T22:12:32.716565"
+      }
+    }
+  ],
   "statistics": {
-    "total_feedback": 0,
-    "average_rating": 0.0,
+    "total_feedback": 1,
+    "average_rating": 3.0,
     "helpful_percentage": 0.0,
-    "follow_up_percentage": 0.0,
+    "follow_up_percentage": 100.0,
     "rating_distribution": {
       "1_star": 0,
       "2_star": 0,
-      "3_star": 0,
+      "3_star": 1,
       "4_star": 0,
       "5_star": 0
     }

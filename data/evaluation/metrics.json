@@ -1,0 +1,258 @@
+{
+  "interactions": [
+    {
+      "timestamp": "2025-07-10T19:23:44.382320",
+      "user_id": "user_plxsg4npq",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "tool_response",
+      "response_time": 13.317564249038696,
+      "response_quality": {
+        "relevance_score": 0.3547182785382199,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8109436557076439
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_plxsg4npq_1752168224"
+    },
+    {
+      "timestamp": "2025-07-10T19:42:36.322521",
+      "user_id": "user_ul3z8rh3g",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "tool_response",
+      "response_time": 12.333340644836426,
+      "response_quality": {
+        "relevance_score": 0.40086718855620707,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7901734377112414
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_ul3z8rh3g_1752169356"
+    },
+    {
+      "timestamp": "2025-07-10T19:47:42.313726",
+      "user_id": "user_5nac7j4uj",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "tool_response",
+      "response_time": 13.398029088973999,
+      "response_quality": {
+        "relevance_score": 0.37458880743936396,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7849177614878728
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_5nac7j4uj_1752169662"
+    },
+    {
+      "timestamp": "2025-07-10T19:52:40.270508",
+      "user_id": "user_5nac7j4uj",
+      "message": "Hotels in Wien finden",
+      "response_type": "tool_response",
+      "response_time": 86.41633081436157,
+      "response_quality": {
+        "relevance_score": 0.38980571519180407,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8179611430383609
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "search_hotels",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_5nac7j4uj_1752169960"
+    },
+    {
+      "timestamp": "2025-07-10T19:56:09.521443",
+      "user_id": "user_5nac7j4uj",
+      "message": "Reisedaten nach Istanbul",
+      "response_type": "tool_response",
+      "response_time": 79.93264174461365,
+      "response_quality": {
+        "relevance_score": 0.2626875099500714,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7925375019900143
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_5nac7j4uj_1752170169"
+    },
+    {
+      "timestamp": "2025-07-10T19:59:00.851483",
+      "user_id": "user_5nac7j4uj",
+      "message": "Reisedaten nach Paris",
+      "response_type": "general",
+      "response_time": 2.6409049034118652,
+      "response_quality": {
+        "relevance_score": 0.43421294006304684,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7968425880126093
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_5nac7j4uj_1752170340"
+    },
+    {
+      "timestamp": "2025-07-10T20:02:33.414296",
+      "user_id": "user_5nac7j4uj",
+      "message": "Suche nach Reise nach Paris",
+      "response_type": "tool_response",
+      "response_time": 13.563140630722046,
+      "response_quality": {
+        "relevance_score": 0.29848480881841755,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7996969617636835
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_5nac7j4uj_1752170553"
+    },
+    {
+      "timestamp": "2025-07-10T20:07:27.575323",
+      "user_id": "user_twnyk5e4g",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "tool_response",
+      "response_time": 12.632782220840454,
+      "response_quality": {
+        "relevance_score": 0.3852276151896151,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.787045523037923
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_twnyk5e4g_1752170847"
+    },
+    {
+      "timestamp": "2025-07-10T20:09:06.128191",
+      "user_id": "user_twnyk5e4g",
+      "message": "Hotels in Wien finden",
+      "response_type": "tool_response",
+      "response_time": 83.47606658935547,
+      "response_quality": {
+        "relevance_score": 0.3515136142028287,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8103027228405658
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "search_hotels",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_twnyk5e4g_1752170946"
+    }
+  ],
+  "evaluation_summary": {
+    "total_interactions": 9,
+    "average_response_time": 35.30120009846158,
+    "average_quality_score": 0.7989356995099907,
+    "average_intent_confidence": 0.3333333333333333,
+    "api_success_rate": 100.0,
+    "intent_recognition_rate": 66.66666666666666,
+    "feedback_statistics": {},
+    "last_updated": "2025-07-10T20:09:06.129206"
+  },
+  "last_updated": ""
+}

@@ -3,10 +3,10 @@ import time
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 import re
-from api_services import ai_service
-from api_services.mcp_service import MCPService
-from api_services.rag_service import RAGService
-from api_services.ollama_mcp_client import OllamaMCPClient
+from services import ai_service
+from services.mcp_service import MCPService
+from services.rag_service import RAGService
+from services.ollama_mcp_client import OllamaMCPClient
 
 class TravelGuideDecisionLogic:
     def __init__(self, hotel_service, weather_service, rasa_handler):

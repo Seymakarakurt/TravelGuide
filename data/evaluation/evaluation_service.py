@@ -177,7 +177,7 @@ class ResponseQualityEvaluator:
 
 class UserFeedbackCollector:
     
-    def __init__(self, feedback_file: str = 'evaluation/user_feedback.json'):
+    def __init__(self, feedback_file: str = 'data/evaluation/user_feedback.json'):
         self.feedback_file = feedback_file
         self.feedback_data = self._load_feedback()
     
@@ -297,7 +297,7 @@ class IntentEvaluator:
 
 class EvaluationService:
     
-    def __init__(self, metrics_file: str = 'evaluation/metrics.json'):
+    def __init__(self, metrics_file: str = 'data/evaluation/metrics.json'):
         self.metrics_file = metrics_file
         self.quality_evaluator = ResponseQualityEvaluator()
         self.feedback_collector = UserFeedbackCollector()

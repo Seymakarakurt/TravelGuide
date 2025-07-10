@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class HotelService:
     def __init__(self):
         self.price_cache = {}
-        self.cache_file = 'hotel_prices_cache.json'
+        self.cache_file = 'data/hotel_prices_cache.json'
         self._load_cache()
         
         self.driver = None
@@ -130,15 +130,6 @@ class HotelService:
             
             summary += f"{i}. {name}\n"
             summary += f"   Preis: {price:.0f} EUR pro Nacht\n"
-            if address:
-                summary += f"   Adresse: {address}\n"
-            if amenities:
-                amenities_str = ', '.join(amenities[:3])
-                summary += f"   Ausstattung: {amenities_str}\n"
-            
-            booking_links = hotel.get('booking_links', {})
-            if booking_links and 'Google Hotels' in booking_links:
-                summary += f"   Google Hotels: {booking_links['Google Hotels']}\n"
             
             summary += "\n"
         
@@ -388,17 +379,9 @@ class HotelService:
                         
                         seen_hotels.add(name)
                         
-                        name_safe = name.replace(' ', '+').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
-                        location_safe = location.replace(' ', '+').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
-                        
-                        google_hotels_url = f"https://www.google.com/travel/hotels?q={name_safe}+{location_safe}&checkin={check_in}&checkout={check_out}&adults={guests}&hl=de&gl=de&curr=EUR"
-                        
                         hotels.append({
                             'name': name,
-                            'price': price,
-                            'booking_links': {
-                                'Google Hotels': google_hotels_url
-                            }
+                            'price': price
                         })
                         logger.info(f"Hotel extrahiert (aria-label): {name} | {price} €")
                     else:

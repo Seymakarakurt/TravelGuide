@@ -1,0 +1,32 @@
+{
+  "Berlin_2025-07-17_2025-07-24_1": [
+    {
+      "name": "Happy Hotel Berlin",
+      "price": 53.0
+    },
+    {
+      "name": "Industriepalast Hostel & Hotel Berlin - Friedrichshain",
+      "price": 59.0
+    },
+    {
+      "name": "Easy Lodges Berlin",
+      "price": 64.0
+    },
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 79.0
+    },
+    {
+      "name": "Motel Home",
+      "price": 84.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 97.0
+    },
+    {
+      "name": "Mercure Hotel Berlin Tempelhof",
+      "price": 101.0
+    }
+  ]
+}

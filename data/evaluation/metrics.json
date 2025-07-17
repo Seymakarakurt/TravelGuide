@@ -242,17 +242,341 @@
       },
       "api_success": true,
       "interaction_id": "user_twnyk5e4g_1752170946"
+    },
+    {
+      "timestamp": "2025-07-17T18:31:28.736620",
+      "user_id": "user_kcymfizsk",
+      "message": "Was sollte ich in Berlin sehen?",
+      "response_type": "tool_response",
+      "response_time": 14.30837106704712,
+      "response_quality": {
+        "relevance_score": 0.2224216948047361,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7844843389609473
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752769888"
+    },
+    {
+      "timestamp": "2025-07-17T18:34:30.844152",
+      "user_id": "user_kcymfizsk",
+      "message": "Welchen Bezirk in Berlin sollte ich meiden",
+      "response_type": "general",
+      "response_time": 8.14358401298523,
+      "response_quality": {
+        "relevance_score": 0.23535635507604158,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7270712710152083
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752770070"
+    },
+    {
+      "timestamp": "2025-07-17T18:35:34.427077",
+      "user_id": "user_kcymfizsk",
+      "message": "Welche Sehenswürdigkeiten kann ich in London sehen",
+      "response_type": "tool_response",
+      "response_time": 15.853859186172485,
+      "response_quality": {
+        "relevance_score": 0.258111937148902,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7916223874297804
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752770134"
+    },
+    {
+      "timestamp": "2025-07-17T18:37:02.607883",
+      "user_id": "user_kcymfizsk",
+      "message": "Wetter in London abfragen",
+      "response_type": "tool_response",
+      "response_time": 17.09495711326599,
+      "response_quality": {
+        "relevance_score": 0.3515923308290899,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7803184661658179
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752770222"
+    },
+    {
+      "timestamp": "2025-07-17T18:54:32.699483",
+      "user_id": "user_kcymfizsk",
+      "message": "Wetter München",
+      "response_type": "tool_response",
+      "response_time": 13.218827962875366,
+      "response_quality": {
+        "relevance_score": 0.4134944382658979,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7626988876531796
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752771272"
+    },
+    {
+      "timestamp": "2025-07-17T19:34:45.708367",
+      "user_id": "user_kcymfizsk",
+      "message": "Finde mir nur 3 Sterne Hotels in Berlin",
+      "response_type": "tool_response",
+      "response_time": 57.88479781150818,
+      "response_quality": {
+        "relevance_score": 0.2525643850632704,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.790512877012654
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752773685"
+    },
+    {
+      "timestamp": "2025-07-17T19:35:44.673222",
+      "user_id": "user_kcymfizsk",
+      "message": "Such mir nur Hotels raus die Weniger als 3 Sterne haben",
+      "response_type": "general",
+      "response_time": 1.1899771690368652,
+      "response_quality": {
+        "relevance_score": 0.1487855248202354,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7097571049640471
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752773744"
+    },
+    {
+      "timestamp": "2025-07-17T19:36:20.108720",
+      "user_id": "user_kcymfizsk",
+      "message": "was kannst du alles",
+      "response_type": "tool_response",
+      "response_time": 14.32001781463623,
+      "response_quality": {
+        "relevance_score": 0.16041840920775777,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7420836818415516
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 0.5,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752773780"
+    },
+    {
+      "timestamp": "2025-07-17T19:37:27.797220",
+      "user_id": "user_kcymfizsk",
+      "message": "Wetter in Der Türkei",
+      "response_type": "tool_response",
+      "response_time": 13.14191198348999,
+      "response_quality": {
+        "relevance_score": 0.46347712011341247,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 0.85,
+        "overall_quality": 0.8026954240226825
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752773847"
+    },
+    {
+      "timestamp": "2025-07-17T19:40:08.554507",
+      "user_id": "user_kcymfizsk",
+      "message": "Wetter in Berlin jetzt",
+      "response_type": "tool_response",
+      "response_time": 13.338815927505493,
+      "response_quality": {
+        "relevance_score": 0.2984525306864906,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7696905061372981
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774008"
+    },
+    {
+      "timestamp": "2025-07-17T19:40:55.472836",
+      "user_id": "user_kcymfizsk",
+      "message": "Welcher Tag ist heute",
+      "response_type": "general",
+      "response_time": 1.6071462631225586,
+      "response_quality": {
+        "relevance_score": 0.0,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.6799999999999999
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774055"
+    },
+    {
+      "timestamp": "2025-07-17T19:41:58.138653",
+      "user_id": "user_kcymfizsk",
+      "message": "Wie Spät ist es gerade in Berlin",
+      "response_type": "general",
+      "response_time": 1.2465860843658447,
+      "response_quality": {
+        "relevance_score": 0.04285714285714285,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.6885714285714285
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774118"
     }
   ],
   "evaluation_summary": {
-    "total_interactions": 9,
-    "average_response_time": 35.30120009846158,
-    "average_quality_score": 0.7989356995099907,
-    "average_intent_confidence": 0.3333333333333333,
+    "total_interactions": 21,
+    "average_response_time": 23.288554918198358,
+    "average_quality_score": 0.7723775080649766,
+    "average_intent_confidence": 0.23809523809523808,
     "api_success_rate": 100.0,
-    "intent_recognition_rate": 66.66666666666666,
+    "intent_recognition_rate": 47.61904761904761,
     "feedback_statistics": {},
-    "last_updated": "2025-07-10T20:09:06.129206"
+    "last_updated": "2025-07-17T19:41:58.138877"
   },
   "last_updated": ""
 }

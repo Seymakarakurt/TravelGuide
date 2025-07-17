@@ -586,17 +586,15 @@ class TravelGuideApp:
             host=host,
             port=port
         )
+def main():
+    try:
+        app = TravelGuideApp()
+        app.run(port=5001)
+    except KeyboardInterrupt:
+        print("Application stopped by user")
+    except Exception as e:
+        print(f"Application failed to start: {e}")
+        raise
 
-    def main():
-        try:
-            app = TravelGuideApp()
-            app.run(port=5001)
-            
-        except KeyboardInterrupt:
-            print("Application stopped by user")
-        except Exception as e:
-            print(f"Application failed to start: {e}")
-            raise
-
-    if __name__ == '__main__':
-    main() 
+if __name__ == '__main__':
+    main()

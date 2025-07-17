@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-07-17T19:41:48.355862",
+    "category": "allgemein",
+    "user_message": "Welcher Tag ist heute",
+    "ai_response": "Es tut mir leid, aber ich kann keine Informationen über den aktuellen Zeitpunkt oder das Wetter abrufen. Ich kann jedoch dir helfen, die aktuelle Uhrzeit oder das Wetter in einer bestimmten Stadt zu erfahren, wenn du es wissen möchtest! \n\nWie kann ich dir bei der Suche nach Informationen über Hotels, Wetter oder Sehenswürdigkeiten assistieren?",
+    "feedback_types": [
+      "Unvollständig"
+    ],
+    "specific_feedback": "",
+    "tool_used": "",
+    "response_type": "general"
+  }
+]

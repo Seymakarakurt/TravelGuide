@@ -1,54 +1,55 @@
-# plot_learning_curve.py
-
 import json
-import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import learning_curve
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import make_pipeline
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import make_scorer, mean_squared_error, mean_absolute_error, r2_score
 
-# Lade die Daten
+# Daten laden
 with open('data/evaluation/metrics.json', 'r') as f:
     data = json.load(f)
 
-messages = [i['message'] for i in data['interactions']]
-qualities = [i['response_quality']['overall_quality'] for i in data['interactions']]
+# DataFrame erstellen
+df = pd.DataFrame({
+    'response_time': [i.get('response_time', 0) for i in data['interactions']],
+    'confidence_score': [i.get('intent_evaluation', {}).get('confidence_score', 0) for i in data['interactions']],
+    'api_success': [int(i.get('api_success', False)) for i in data['interactions']],
+    'overall_quality': [i.get('response_quality', {}).get('overall_quality', 0) for i in data['interactions']]
+})
 
-# Feature + Target
-X = np.array(messages)
-y = np.array(qualities)
+# Features und Target
+X = df[['response_time', 'confidence_score', 'api_success']]
+y = df['overall_quality']
 
-# Pipeline: TF-IDF + Regression
-pipeline = make_pipeline(
-    TfidfVectorizer(),
-    LinearRegression()
-)
+# Modell
+model = RandomForestRegressor(n_estimators=100, random_state=42)
 
-# Berechne Lernkurve
-train_sizes, train_scores, test_scores = learning_curve(
-    pipeline, X, y,
-    cv=5,
-    scoring='r2',
-    train_sizes=np.linspace(0.1, 1.0, 5),
-    n_jobs=-1
-)
+# Cross-Validation Scores berechnen
+scoring = {
+    'R2': 'r2',
+    'MAE': make_scorer(mean_absolute_error),
+    'MSE': make_scorer(mean_squared_error)
+}
+scores = {name: cross_val_score(model, X, y, cv=5, scoring=score).mean() for name, score in scoring.items()}
 
-# Mittelwert + Std-Abweichung
-train_mean = np.mean(train_scores, axis=1)
-train_std = np.std(train_scores, axis=1)
-test_mean = np.mean(test_scores, axis=1)
-test_std = np.std(test_scores, axis=1)
+# Ausgabe der Model Performance
+print("Model Performance (Cross-Validated):")
+for metric, value in scores.items():
+    print(f"{metric}: {value:.4f}")
 
-# Plot
-plt.figure(figsize=(10, 6))
-plt.plot(train_sizes, train_mean, 'o-', label='Training Score')
-plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.1)
-plt.plot(train_sizes, test_mean, 'o-', label='Cross-validation Score')
-plt.fill_between(train_sizes, test_mean - test_std, test_mean + test_std, alpha=0.1)
-plt.title('Learning Curve (Text → Overall Quality)')
-plt.xlabel('Training Samples')
-plt.ylabel('R² Score')
-plt.legend(loc='best')
-plt.grid()
+# Statistische Übersicht zu overall_quality
+print("\nStatistik zu overall_quality:")
+print(df['overall_quality'].describe())
+print("\nWerteverteilung von overall_quality:")
+print(df['overall_quality'].value_counts().sort_index())
+
+# Bild generieren: Balkendiagramm der Scores
+plt.figure(figsize=(8, 5))
+plt.bar(scores.keys(), scores.values(), color='skyblue')
+plt.title('Model Performance (Cross-Validated)')
+plt.ylabel('Score')
+plt.ylim(0, max(scores.values()) * 1.2)
+plt.grid(axis='y')
+plt.tight_layout()
+plt.savefig('model_performance.png')
 plt.show()

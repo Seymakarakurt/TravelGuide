@@ -566,17 +566,692 @@
       },
       "api_success": true,
       "interaction_id": "user_kcymfizsk_1752774118"
+    },
+    {
+      "timestamp": "2025-07-17T19:52:59.861895",
+      "user_id": "user_kcymfizsk",
+      "message": "Sehenswürdigkeiten in Paris",
+      "response_type": "tool_response",
+      "response_time": 13.675106048583984,
+      "response_quality": {
+        "relevance_score": 0.49911665547575235,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8398233310951504
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774779"
+    },
+    {
+      "timestamp": "2025-07-17T19:54:03.815660",
+      "user_id": "user_kcymfizsk",
+      "message": "Sehenswürdigkeiten in Madrid",
+      "response_type": "tool_response",
+      "response_time": 13.84712290763855,
+      "response_quality": {
+        "relevance_score": 0.47333108242484023,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8346662164849681
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774843"
+    },
+    {
+      "timestamp": "2025-07-17T19:55:06.389557",
+      "user_id": "user_kcymfizsk",
+      "message": "Brauche ich heute in Berlin einen Regenschirm",
+      "response_type": "tool_response",
+      "response_time": 12.000044822692871,
+      "response_quality": {
+        "relevance_score": 0.31727060342031366,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7434541206840627
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774906"
+    },
+    {
+      "timestamp": "2025-07-17T19:55:46.959321",
+      "user_id": "user_kcymfizsk",
+      "message": "Sollte ich heute mit einem T-Shirt in Berlin rumlaufen?",
+      "response_type": "tool_response",
+      "response_time": 13.236195802688599,
+      "response_quality": {
+        "relevance_score": 0.40649402815496577,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7912988056309931
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752774946"
+    },
+    {
+      "timestamp": "2025-07-17T19:58:42.690260",
+      "user_id": "user_kcymfizsk",
+      "message": "Heute lieber mit Gummistiefel durch Paris?",
+      "response_type": "tool_response",
+      "response_time": 12.419150114059448,
+      "response_quality": {
+        "relevance_score": 0.2886063198643383,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7677212639728677
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752775122"
+    },
+    {
+      "timestamp": "2025-07-17T19:59:19.214817",
+      "user_id": "user_kcymfizsk",
+      "message": "Ich habe meine Jacke vergessen, sollte ich eine kaufen für das Wetter?",
+      "response_type": "tool_response",
+      "response_time": 1.5697479248046875,
+      "response_quality": {
+        "relevance_score": 0.0375806483961937,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.6875161296792387
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752775159"
+    },
+    {
+      "timestamp": "2025-07-17T19:59:39.172142",
+      "user_id": "user_kcymfizsk",
+      "message": "Ich habe meine Jacke vergessen, sollte ich eine kaufen für das Wetter in Sydney?",
+      "response_type": "tool_response",
+      "response_time": 1.2587130069732666,
+      "response_quality": {
+        "relevance_score": 0.056100131013588767,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.6912200262027178
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752775179"
+    },
+    {
+      "timestamp": "2025-07-17T20:00:02.671177",
+      "user_id": "user_kcymfizsk",
+      "message": "Wetter Sydney",
+      "response_type": "tool_response",
+      "response_time": 14.044656038284302,
+      "response_quality": {
+        "relevance_score": 0.3823682937571343,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7864736587514269
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752775202"
+    },
+    {
+      "timestamp": "2025-07-17T20:12:40.961066",
+      "user_id": "user_kcymfizsk",
+      "message": "Welche Orte in Berlin sind echt sehenswert",
+      "response_type": "tool_response",
+      "response_time": 14.147534132003784,
+      "response_quality": {
+        "relevance_score": 0.18431262097176,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7768625241943521
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752775960"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:10.139984",
+      "user_id": "user_kcymfizsk",
+      "message": "Was MUSS man gesehen haben in Berlin",
+      "response_type": "tool_response",
+      "response_time": 15.56721305847168,
+      "response_quality": {
+        "relevance_score": 0.16332993735598314,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7726659874711966
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752775990"
+    },
+    {
+      "timestamp": "2025-07-17T20:18:01.776449",
+      "user_id": "user_kcymfizsk",
+      "message": "Gute Spots in Berlin",
+      "response_type": "tool_response",
+      "response_time": 14.629948139190674,
+      "response_quality": {
+        "relevance_score": 0.2002165646027863,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7800433129205573
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752776281"
+    },
+    {
+      "timestamp": "2025-07-17T21:57:28.223774",
+      "user_id": "user_kcymfizsk",
+      "message": "In London regnet es doch oft, benötige ich Morgen einen Regenschirm?",
+      "response_type": "tool_response",
+      "response_time": 5.2951109409332275,
+      "response_quality": {
+        "relevance_score": 0.06760070115272113,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.6935201402305442
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_kcymfizsk_1752782248"
+    },
+    {
+      "timestamp": "2025-07-17T22:09:11.507442",
+      "user_id": "user_b0oi31mtw",
+      "message": "wie ist das Wetter morgen in London",
+      "response_type": "tool_response",
+      "response_time": 12.18828797340393,
+      "response_quality": {
+        "relevance_score": 0.3958518239695755,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7591703647939151
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_b0oi31mtw_1752782951"
+    },
+    {
+      "timestamp": "2025-07-17T22:10:20.173524",
+      "user_id": "user_b0oi31mtw",
+      "message": "Ich fliege für fünf Tage nach London, kannst du mir das Wetter zeigen",
+      "response_type": "tool_response",
+      "response_time": 13.695985794067383,
+      "response_quality": {
+        "relevance_score": 0.32630923336584217,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8052618466731684
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_b0oi31mtw_1752783020"
+    },
+    {
+      "timestamp": "2025-07-17T22:25:25.391566",
+      "user_id": "user_agg1yjb4b",
+      "message": "Morgen möchte ich in London Spazieren wie ist das Wetter",
+      "response_type": "tool_response",
+      "response_time": 12.145358085632324,
+      "response_quality": {
+        "relevance_score": 0.35549025517583155,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7510980510351662
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_agg1yjb4b_1752783925"
+    },
+    {
+      "timestamp": "2025-07-17T22:25:56.416713",
+      "user_id": "user_b0oi31mtw",
+      "message": "und samstag?",
+      "response_type": "tool_response",
+      "response_time": 12.950619220733643,
+      "response_quality": {
+        "relevance_score": 0.21226270126115912,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7524525402522318
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 0.5,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_b0oi31mtw_1752783956"
+    },
+    {
+      "timestamp": "2025-07-17T22:27:11.677085",
+      "user_id": "user_b0oi31mtw",
+      "message": "Ich bin morgen 5 Tage in London, wie ist das wetter",
+      "response_type": "tool_response",
+      "response_time": 13.957544088363647,
+      "response_quality": {
+        "relevance_score": 0.26972374355219053,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7939447487104381
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_b0oi31mtw_1752784031"
+    },
+    {
+      "timestamp": "2025-07-17T22:30:17.635941",
+      "user_id": "user_b0oi31mtw",
+      "message": "welcher Tag ist Heute",
+      "response_type": "tool_response",
+      "response_time": 13.387095928192139,
+      "response_quality": {
+        "relevance_score": 0.1125544661620287,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7325108932324058
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_b0oi31mtw_1752784217"
+    },
+    {
+      "timestamp": "2025-07-18T00:26:56.622302",
+      "user_id": "user_z4idtbygq",
+      "message": "Wetter Rom",
+      "response_type": "tool_response",
+      "response_time": 13.7122061252594,
+      "response_quality": {
+        "relevance_score": 0.43751287108915987,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.827502574217832
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_z4idtbygq_1752791216"
+    },
+    {
+      "timestamp": "2025-07-18T00:28:20.220594",
+      "user_id": "user_z4idtbygq",
+      "message": "Ich bin morgen in Berlin, kannst mir sagen ob ich einen Regenschirm brauche",
+      "response_type": "tool_response",
+      "response_time": 12.88635778427124,
+      "response_quality": {
+        "relevance_score": 0.3347711635234548,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 0.85,
+        "overall_quality": 0.776954232704691
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.7
+      },
+      "api_success": true,
+      "interaction_id": "user_z4idtbygq_1752791300"
+    },
+    {
+      "timestamp": "2025-07-18T00:30:22.030754",
+      "user_id": "user_z4idtbygq",
+      "message": "kannst du mir sagen wie viel Grad es am 20 Juli in Berlin ist?",
+      "response_type": "tool_response",
+      "response_time": 12.081515789031982,
+      "response_quality": {
+        "relevance_score": 0.26505578177633105,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7630111563552662
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_z4idtbygq_1752791422"
+    },
+    {
+      "timestamp": "2025-07-18T00:31:47.437560",
+      "user_id": "user_z4idtbygq",
+      "message": "wie wird das Wetter am 21 Juli nachmittags in Berlin?",
+      "response_type": "tool_response",
+      "response_time": 12.75701904296875,
+      "response_quality": {
+        "relevance_score": 0.39530376671162165,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.8190607533423243
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_z4idtbygq_1752791507"
+    },
+    {
+      "timestamp": "2025-07-18T00:33:28.188545",
+      "user_id": "user_z4idtbygq",
+      "message": "Ich Fliege am Montag den 21 Juli nach Manchester, wie wird das Wetter über den Tag entlang?",
+      "response_type": "tool_response",
+      "response_time": 12.066208839416504,
+      "response_quality": {
+        "relevance_score": 0.4022380516338372,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.7904476103267675
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_z4idtbygq_1752791608"
+    },
+    {
+      "timestamp": "2025-07-18T08:29:37.856096",
+      "user_id": "user_wm80clc6v",
+      "message": "Berlin in Wetter",
+      "response_type": "tool_response",
+      "response_time": 0.447418212890625,
+      "response_quality": {
+        "relevance_score": 0.37874338535197943,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.755748677070396
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_wm80clc6v_1752820177"
+    },
+    {
+      "timestamp": "2025-07-24T17:18:06.809244",
+      "user_id": "user_xxd9yeegl",
+      "message": "Erzähl mir einen Witz",
+      "response_type": "general",
+      "response_time": 0.9090986251831055,
+      "response_quality": {
+        "relevance_score": 0.0,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.65
+      },
+      "user_feedback": null,
+      "intent_recognized": false,
+      "intent_evaluation": {
+        "detected_intent": "unknown",
+        "confidence_score": 0.0,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_xxd9yeegl_1753370286"
     }
   ],
   "evaluation_summary": {
-    "total_interactions": 21,
-    "average_response_time": 23.288554918198358,
-    "average_quality_score": 0.7723775080649766,
-    "average_intent_confidence": 0.23809523809523808,
+    "total_interactions": 46,
+    "average_response_time": 16.60728068973707,
+    "average_quality_score": 0.7687468833781996,
+    "average_intent_confidence": 0.18478260869565216,
     "api_success_rate": 100.0,
-    "intent_recognition_rate": 47.61904761904761,
+    "intent_recognition_rate": 36.95652173913043,
     "feedback_statistics": {},
-    "last_updated": "2025-07-17T19:41:58.138877"
+    "last_updated": "2025-07-24T17:18:06.809397"
   },
   "last_updated": ""
 }

@@ -10,5 +10,79 @@
     "specific_feedback": "",
     "tool_used": "",
     "response_type": "general"
+  },
+  {
+    "timestamp": "2025-07-17T19:58:54.507680",
+    "category": "allgemein",
+    "user_message": "Heute lieber mit Gummistiefel durch Paris?",
+    "ai_response": "Heute ist es ein perfekter Tag für einen Spaziergang durch Paris! Die Wettervorhersage zeigt, dass es 27°C warm ist und sich das Wetter leicht bewölkt präsentiert. Das gefühlte Temperatur von 28°C macht den Tag besonders angenehm zum Wandern.\n\nBleib aber nicht ohne deine Gummistiefel, denn ab dem morgigen Tag (18.07) wird es regnerisch. Es wäre also ratsam, vorher alles zu planen und auch die Regenkittel nicht zu vergessen. \n\nEs lohnt sich auf jeden Fall, heute nach Paris zu kommen und das Wetter zu genießen!",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "get_weather",
+    "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-17T20:12:53.698879",
+    "category": "allgemein",
+    "user_message": "Welche Orte in Berlin sind echt sehenswert",
+    "ai_response": "Hallo! Ich helfe dir gerne bei der Suche nach sehenswerten Orten in Berlin.\n\nBasierend auf unseren Daten empfehle ich dir folgende Orte, um das wahre Berlin zu erleben:\n\n1. **Brandenburger Tor**: Ein Symbol für die deutsche Hauptstadt und ein Muss für jeden Besucher.\n2. **Berliner Mauer**: Eine wichtige historische Stätte, die den Teilungswall zwischen Ost- und West-Berlin darstellt.\n3. **Museumsinsel**: Ein UNESCO-Weltkulturerbe mit einer Vielzahl von Museen, darunter das Alte Nationalmuseum, das Bode-Museum und das Pergamon-Museum.\n\nIch empfehle dir auch, früh morgens oder spät abends diese Sehenswürdigkeiten zu besuchen, um die Menschenmassen zu vermeiden. So kannst du die Orte in Ruhe erkunden und genauer hinsehen.\n\nWenn du noch weitere Fragen hast oder weitere Tipps benötigst, stehe ich gerne zur Verfügung!",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "search_attractions",
+    "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-17T20:17:22.073724",
+    "category": "allgemein",
+    "user_message": "Was MUSS man gesehen haben in Berlin",
+    "ai_response": "Berlin! Die deutsche Hauptstadt ist ein wahres Juwel, voller Geschichte, Kultur und Attraktionen. Wenn du nach Berlin reist, gibt es einige Dinge, die du auf jeden Fall sehen musst.\n\nZunächst einmal solltest du das berühmte Brandenburger Tor besuchen. Es ist eines der ikonischsten Wahrzeichen Berlins und ein Symbol für die Einheit Deutschlands. Der historische Bahnhof Potsdamer Platz ist auch sehr sehenswert, insbesondere wenn Sie Interesse an Geschichte haben.\n\nDie Berliner Mauer ist ein weiteres Highlight, das du nicht verpassen solltest. Es ist eine Mahnung an die dunkle Vergangenheit der Stadt und ein Zeichen für die Freiheit und Einheit Deutschlands.\n\nWenn Sie mehr von der Kunst und Kultur Berlins entdecken möchten, besuchen Sie die Museumsinsel. Hier finden Sie einige der besten Museen der Welt, wie das Alte Museum, das Neue Museum oder das Bode-Museum. Die Insel selbst ist auch sehr schön zu besichtigen.\n\nDa die Stadt während des Tages sehr voll und laut sein kann, empfehle ich Ihnen, früh morgens oder spät abends Sehenswürdigkeiten zu besuchen. Das gibt Ihnen die Möglichkeit, alles in Ruhe zu genießen und sich nicht von Menschenmassen begeistern lassen.\n\nIch hoffe, diese Tipps helfen dir bei deiner Reise nach Berlin! Wenn du noch weitere Fragen hast oder mehr über die Stadt erfahren möchtest, stehe ich gerne zur Verfügung.",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "search_attractions",
+    "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-17T20:18:35.922223",
+    "category": "allgemein",
+    "user_message": "Gute Spots in Berlin",
+    "ai_response": "Hallo! Ich helfe dir gerne bei deiner Suche nach interessanten Orten in Berlin!\n\nBasierend auf unseren Informationen habe ich einige Empfehlungen für dich:\n\n1. **Brandenburger Tor**: Ein ikonisches Symbol Berlins und ein Muss für jeden Besucher. Das Brandenburger Tor ist ein beeindruckendes Bauwerk, das Geschichte und Architektur vereint.\n2. **Berliner Mauer**: Die Berliner Mauer war ein wichtiger Teil der Stadtgeschichte und ein Zeichen für die politische Wende in Deutschland. Heute kannst du sie als Mahnmal besuchen und ihre Bedeutung verstehen.\n3. **Museumsinsel**: Ein Ensemble von fünf Museen, die alle eine reiche Sammlung von Kunst und Geschichte bieten. Hier findest du alles von der Alten Geschichte bis hin zur modernen Kunst.\n\nEs lohnt sich, diese Orte auch früh morgens oder spät abends zu besuchen, um Menschenmassen zu vermeiden. Außerdem solltest du wissen, dass Berlin eine lebendige Stadt ist und man immer etwas Neues entdecken kann!\n\nIch hoffe, diese Tipps helfen dir bei deiner Reiseplanung nach Berlin! Wenn du noch weitere Fragen hast oder weitere Orte kennst, stehe ich gerne zur Verfügung.",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "search_attractions",
+    "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-17T22:32:20.426854",
+    "category": "allgemein",
+    "user_message": "welcher Tag ist Heute",
+    "ai_response": "Hallo! Ich sehe, dass du nach dem heutigen Wetter in Berlin suchst.\n\nNach den bereitgestellten Informationen ist das aktuelle Datum der 17. Juli. Derzeit ist es um 22:30 Uhr abends. Das Wetter ist bedeckt und die Temperatur beträgt 18°C. Es fühlt sich auch so an, da die gefühlte Temperatur ebenfalls 18°C beträgt.\n\nFür die nächsten Tage soll es weiterhin bewölkt sein, mit etwas Regen am heutigen Abend oder in der Nacht. Am Donnerstag (18. Juli) wird das Wetter noch einmal überwiegend bewölkt sein, aber am Freitag (19. Juli) und Samstag (20. Juli) gibt es Mäßigbewölkung mit 19°C bzw. 21°C. Am Sonntag (21. Juli) wird es wieder bedeckt sein.\n\nIch hoffe, diese Informationen helfen dir bei deiner Planung! Wenn du noch weitere Fragen hast, stehe ich gerne zur Verfügung.",
+    "feedback_types": [
+      "Schlecht"
+    ],
+    "specific_feedback": "",
+    "tool_used": "get_weather",
+    "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-24T17:37:11.023957",
+    "category": "allgemein",
+    "user_message": "Erzähl mir einen Witz",
+    "ai_response": "Ich bin nur ein Reiseassistent, ich kann dir keine Witze erzählen. Wenn du nach Informationen über Reisen suchst, stehe ich gerne zur Verfügung!",
+    "feedback_types": [
+      "Gut",
+      "Schlecht",
+      "Unvollständig"
+    ],
+    "specific_feedback": "",
+    "tool_used": "",
+    "response_type": "general"
   }
 ]

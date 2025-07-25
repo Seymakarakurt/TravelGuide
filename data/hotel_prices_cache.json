@@ -28,5 +28,383 @@
       "name": "Mercure Hotel Berlin Tempelhof",
       "price": 101.0
     }
+  ],
+  "Wien_2025-08-01_2025-08-08_1": [
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Gasteiner Hof",
+      "price": 69.0
+    },
+    {
+      "name": "Happy Hotel Berlin",
+      "price": 70.0
+    },
+    {
+      "name": "Hotel Schöneberg",
+      "price": 103.0
+    },
+    {
+      "name": "Hotel Steglitz International",
+      "price": 110.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 143.0
+    },
+    {
+      "name": "Das Literaturhotel Berlin",
+      "price": 193.0
+    }
+  ],
+  "Berlin_2025-07-25_2025-08-01_1": [
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Gasteiner Hof",
+      "price": 69.0
+    },
+    {
+      "name": "Happy Hotel Berlin",
+      "price": 70.0
+    },
+    {
+      "name": "Hotel Schöneberg",
+      "price": 103.0
+    },
+    {
+      "name": "Hotel Steglitz International",
+      "price": 110.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 143.0
+    },
+    {
+      "name": "Das Literaturhotel Berlin",
+      "price": 193.0
+    }
+  ],
+  "Paris_2025-08-01_2025-08-08_1": [
+    {
+      "name": "Industriepalast Hostel & Hotel Berlin - Friedrichshain",
+      "price": 52.0
+    },
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Märkischer Hof",
+      "price": 73.0
+    },
+    {
+      "name": "Capri By Fraser Berlin",
+      "price": 102.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 143.0
+    }
+  ],
+  "Wien_heute_morgen_1": [
+    {
+      "name": "MEININGER Hotel Wien Downtown Franz",
+      "price": 39.0
+    },
+    {
+      "name": "Hotel Westbahn Wien",
+      "price": 52.0
+    },
+    {
+      "name": "Best Western Plus Amedia Wien",
+      "price": 60.0
+    },
+    {
+      "name": "IntercityHotel Wien",
+      "price": 61.0
+    },
+    {
+      "name": "Ruby Marie Hotel Vienna",
+      "price": 62.0
+    },
+    {
+      "name": "B&B HOTEL Wien-Hbf",
+      "price": 63.0
+    },
+    {
+      "name": "ibis Wien City",
+      "price": 64.0
+    },
+    {
+      "name": "Hotel Mercure Wien Westbahnhof",
+      "price": 65.0
+    },
+    {
+      "name": "MAXX by Steigenberger Wien",
+      "price": 68.0
+    },
+    {
+      "name": "Eurostars Embassy",
+      "price": 75.0
+    },
+    {
+      "name": "Superbude Hotel Wien Prater",
+      "price": 76.0
+    },
+    {
+      "name": "ibis Hotel Wien Hauptbahnhof",
+      "price": 83.0
+    },
+    {
+      "name": "Flemings Selection Hotel Wien-City",
+      "price": 90.0
+    },
+    {
+      "name": "Mercure Grand Hotel Biedermeier Wien",
+      "price": 90.0
+    },
+    {
+      "name": "Holiday Inn Vienna City",
+      "price": 97.0
+    },
+    {
+      "name": "Hotel Rathauspark Wien, a member of Radisson Individuals",
+      "price": 101.0
+    },
+    {
+      "name": "Hotel Mercure Wien Zentrum",
+      "price": 125.0
+    },
+    {
+      "name": "Hotel Grand Ferdinand Wien",
+      "price": 131.0
+    }
+  ],
+  "Madrid_2025-07-25_2025-08-01_1": [
+    {
+      "name": "Industriepalast Hostel & Hotel Berlin - Friedrichshain",
+      "price": 52.0
+    },
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Märkischer Hof",
+      "price": 73.0
+    },
+    {
+      "name": "Capri By Fraser Berlin",
+      "price": 102.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 143.0
+    }
+  ],
+  "Dresden_2025-07-25_2025-08-01_1": [
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Gasteiner Hof",
+      "price": 69.0
+    },
+    {
+      "name": "Happy Hotel Berlin",
+      "price": 70.0
+    },
+    {
+      "name": "Hotel Steglitz International",
+      "price": 101.0
+    },
+    {
+      "name": "Hotel Schöneberg",
+      "price": 103.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 130.0
+    },
+    {
+      "name": "Das Literaturhotel Berlin",
+      "price": 193.0
+    }
+  ],
+  "München_2025-07-25_2025-08-01_1": [
+    {
+      "name": "Industriepalast Hostel & Hotel Berlin - Friedrichshain",
+      "price": 52.0
+    },
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Capri By Fraser Berlin",
+      "price": 102.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 130.0
+    }
+  ],
+  "Istanbul_2025-07-25_2025-08-01_1": [
+    {
+      "name": "Royal Inci Hotel",
+      "price": 16.0
+    },
+    {
+      "name": "Express İnci Hotel",
+      "price": 17.0
+    },
+    {
+      "name": "Aruna Hotel İstanbul",
+      "price": 20.0
+    },
+    {
+      "name": "Grand Palace Hotel",
+      "price": 20.0
+    },
+    {
+      "name": "Kondoskali Hotel",
+      "price": 20.0
+    },
+    {
+      "name": "seyithan palace hotel",
+      "price": 22.0
+    },
+    {
+      "name": "RİVERSİDE HOTEL",
+      "price": 24.0
+    },
+    {
+      "name": "The Lola Pansiyon",
+      "price": 25.0
+    },
+    {
+      "name": "Loss Hotel",
+      "price": 26.0
+    },
+    {
+      "name": "Avrasya Hostel",
+      "price": 28.0
+    },
+    {
+      "name": "The Camelot hotel",
+      "price": 36.0
+    },
+    {
+      "name": "Primero Hotel",
+      "price": 44.0
+    },
+    {
+      "name": "Boss Hotel Sultanahmet",
+      "price": 53.0
+    },
+    {
+      "name": "No:12 Hotel Sultanahmet",
+      "price": 66.0
+    },
+    {
+      "name": "Hotel Zurich Istanbul",
+      "price": 74.0
+    },
+    {
+      "name": "Crowne Plaza Istanbul - Old City, an IHG Hotel",
+      "price": 77.0
+    },
+    {
+      "name": "Legacy Ottoman Hotel",
+      "price": 91.0
+    },
+    {
+      "name": "Wyndham Grand Istanbul Kalamis Marina Hotel",
+      "price": 134.0
+    }
+  ],
+  "München_heute_morgen_2": [
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Gasteiner Hof",
+      "price": 69.0
+    },
+    {
+      "name": "Happy Hotel Berlin",
+      "price": 70.0
+    },
+    {
+      "name": "Hotel Steglitz International",
+      "price": 101.0
+    },
+    {
+      "name": "Hotel Schöneberg",
+      "price": 104.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 130.0
+    },
+    {
+      "name": "Das Literaturhotel Berlin",
+      "price": 193.0
+    }
+  ],
+  "Berlin_heute_morgen_2": [
+    {
+      "name": "Industriepalast Hostel & Hotel Berlin - Friedrichshain",
+      "price": 52.0
+    },
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Capri By Fraser Berlin",
+      "price": 102.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 130.0
+    }
+  ],
+  "Mainz_2025-08-01_2025-08-08_1": [
+    {
+      "name": "Hotel Ambiente Berlin City",
+      "price": 63.0
+    },
+    {
+      "name": "Hotel Gasteiner Hof",
+      "price": 69.0
+    },
+    {
+      "name": "Happy Hotel Berlin",
+      "price": 70.0
+    },
+    {
+      "name": "Hotel Steglitz International",
+      "price": 101.0
+    },
+    {
+      "name": "Hotel Schöneberg",
+      "price": 104.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 130.0
+    },
+    {
+      "name": "Das Literaturhotel Berlin",
+      "price": 193.0
+    }
   ]
 }

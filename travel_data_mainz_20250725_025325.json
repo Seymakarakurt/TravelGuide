@@ -1,0 +1,55 @@
+{
+  "city": "Mainz",
+  "timestamp": "2025-07-25T02:52:45.835366",
+  "weather": {
+    "city": "Mainz",
+    "data": {
+      "temperature": 19,
+      "feels_like": 19,
+      "description": "Mäßig bewölkt",
+      "icon": "03n",
+      "timestamp": "2025-07-25T02:52:45.967506"
+    },
+    "summary": "Wetter in Mainz:\n• Temperatur: 19°C (gefühlt 19°C)\n• Beschreibung: Mäßig Bewölkt\n\n25.07: 18°C, Mäßig bewölkt\n26.07: 20°C, Leichter Regen\n27.07: 21°C, Bedeckt\n28.07: 17°C, Leichter Regen\n29.07: 16°C, Mäßig bewölkt"
+  },
+  "hotels": {
+    "city": "Mainz",
+    "hotels": [
+      {
+        "name": "Hotel Ambiente Berlin City",
+        "price": 63.0
+      },
+      {
+        "name": "Hotel Gasteiner Hof",
+        "price": 69.0
+      },
+      {
+        "name": "Happy Hotel Berlin",
+        "price": 70.0
+      },
+      {
+        "name": "Hotel Steglitz International",
+        "price": 101.0
+      },
+      {
+        "name": "Hotel Schöneberg",
+        "price": 104.0
+      },
+      {
+        "name": "Hotel Bohemia",
+        "price": 130.0
+      },
+      {
+        "name": "Das Literaturhotel Berlin",
+        "price": 193.0
+      }
+    ],
+    "summary": "Datenquelle: https://www.google.com/travel/hotels?q=Mainz\n\nGefunden: 5 gut bewertete Hotels (sortiert nach Preis)\n\n1. Hotel Ambiente Berlin City\n   Preis: 63 EUR pro Nacht\n\n2. Hotel Gasteiner Hof\n   Preis: 69 EUR pro Nacht\n\n3. Happy Hotel Berlin\n   Preis: 70 EUR pro Nacht\n\n4. Hotel Steglitz International\n   Preis: 101 EUR pro Nacht\n\n5. Hotel Schöneberg\n   Preis: 104 EUR pro Nacht\n\n"
+  },
+  "attractions": {
+    "city": "Mainz",
+    "attractions": [
+      "Keine Daten verfügbar"
+    ]
+  }
+}

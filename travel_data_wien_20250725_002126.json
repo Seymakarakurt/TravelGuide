@@ -1,0 +1,55 @@
+{
+  "city": "Wien",
+  "timestamp": "2025-07-25T00:20:34.910868",
+  "weather": {
+    "city": "Wien",
+    "data": {
+      "temperature": 19,
+      "feels_like": 19,
+      "description": "Klarer Himmel",
+      "icon": "01n",
+      "timestamp": "2025-07-25T00:20:35.021526"
+    },
+    "summary": "Wetter in Wien:\n• Temperatur: 19°C (gefühlt 19°C)\n• Beschreibung: Klarer Himmel\n\n25.07: 19°C, Mäßig bewölkt\n26.07: 20°C, Bedeckt\n27.07: 18°C, Mäßiger Regen\n28.07: 16°C, Ein paar Wolken\n29.07: 14°C, Mäßiger Regen"
+  },
+  "hotels": {
+    "city": "Wien",
+    "hotels": [
+      {
+        "name": "Hotel Ambiente Berlin City",
+        "price": 63.0
+      },
+      {
+        "name": "Hotel Gasteiner Hof",
+        "price": 69.0
+      },
+      {
+        "name": "Happy Hotel Berlin",
+        "price": 70.0
+      },
+      {
+        "name": "Hotel Schöneberg",
+        "price": 103.0
+      },
+      {
+        "name": "Hotel Steglitz International",
+        "price": 110.0
+      },
+      {
+        "name": "Hotel Bohemia",
+        "price": 143.0
+      },
+      {
+        "name": "Das Literaturhotel Berlin",
+        "price": 193.0
+      }
+    ],
+    "summary": "Datenquelle: https://www.google.com/travel/hotels?q=Wien\n\nGefunden: 5 gut bewertete Hotels (sortiert nach Preis)\n\n1. Hotel Ambiente Berlin City\n   Preis: 63 EUR pro Nacht\n\n2. Hotel Gasteiner Hof\n   Preis: 69 EUR pro Nacht\n\n3. Happy Hotel Berlin\n   Preis: 70 EUR pro Nacht\n\n4. Hotel Schöneberg\n   Preis: 103 EUR pro Nacht\n\n5. Hotel Steglitz International\n   Preis: 110 EUR pro Nacht\n\n"
+  },
+  "attractions": {
+    "city": "Wien",
+    "attractions": [
+      "Keine Daten verfügbar"
+    ]
+  }
+}

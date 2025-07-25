@@ -28,5 +28,19 @@
       "name": "Mercure Hotel Berlin Tempelhof",
       "price": 101.0
     }
+  ],
+  "Barcelona_2025-07-25_2025-08-01_1": [
+    {
+      "name": "Industriepalast Hostel & Hotel Berlin - Friedrichshain",
+      "price": 52.0
+    },
+    {
+      "name": "Capri By Fraser Berlin",
+      "price": 93.0
+    },
+    {
+      "name": "Hotel Bohemia",
+      "price": 105.0
+    }
   ]
 }

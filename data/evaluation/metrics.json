@@ -1241,17 +1241,98 @@
       },
       "api_success": true,
       "interaction_id": "user_xxd9yeegl_1753370286"
+    },
+    {
+      "timestamp": "2025-07-25T19:39:52.990287",
+      "user_id": "user_15pf3xtq0",
+      "message": "Hotels in Barcelona finden",
+      "response_type": "tool_response",
+      "response_time": 62.965003967285156,
+      "response_quality": {
+        "relevance_score": 0.3425018608061358,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.85,
+        "coherence_score": 1.0,
+        "overall_quality": 0.808500372161227
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "search_hotels",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_15pf3xtq0_1753465192"
+    },
+    {
+      "timestamp": "2025-07-25T19:40:12.564003",
+      "user_id": "user_15pf3xtq0",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "tool_response",
+      "response_time": 13.909215927124023,
+      "response_quality": {
+        "relevance_score": 0.20015681911629044,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 1.0,
+        "overall_quality": 0.750031363823258
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_15pf3xtq0_1753465212"
+    },
+    {
+      "timestamp": "2025-07-25T19:42:08.301817",
+      "user_id": "user_15pf3xtq0",
+      "message": "Wie ist das Wetter in Madrid",
+      "response_type": "tool_response",
+      "response_time": 11.742692947387695,
+      "response_quality": {
+        "relevance_score": 0.5920843498354972,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7984168699670995
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_15pf3xtq0_1753465328"
     }
   ],
   "evaluation_summary": {
-    "total_interactions": 46,
-    "average_response_time": 16.60728068973707,
-    "average_quality_score": 0.7687468833781996,
-    "average_intent_confidence": 0.18478260869565216,
+    "total_interactions": 49,
+    "average_response_time": 17.399016827953105,
+    "average_quality_score": 0.7697817396193628,
+    "average_intent_confidence": 0.20408163265306123,
     "api_success_rate": 100.0,
-    "intent_recognition_rate": 36.95652173913043,
+    "intent_recognition_rate": 40.816326530612244,
     "feedback_statistics": {},
-    "last_updated": "2025-07-24T17:18:06.809397"
+    "last_updated": "2025-07-25T19:42:08.302065"
   },
   "last_updated": ""
 }

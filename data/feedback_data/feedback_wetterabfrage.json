@@ -190,5 +190,29 @@
     "specific_feedback": "",
     "tool_used": "get_weather",
     "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-25T19:40:20.883857",
+    "category": "wetterabfrage",
+    "user_message": "Wie ist das Wetter in Wien?",
+    "ai_response": "Hallo! Ich helfe dir gerne bei der Wetterinformation für Wien.\n\nNach dem Wetterbericht ist heute in Wien eine Mäßige Regen zu erwarten mit einer Temperatur von 22°C (gefühlt 23°C). Für die nächsten Tage kann man folgende Vorhersagen sehen:\n\n* Am 25.07. wird es weiterhin leicht regnen, bei einer Temperatur von ebenfalls 22°C.\n* Am 26.07. ist die Wettervorhersage bedeckt mit einer Temperatur von 21°C.\n* Auch am 27. und 28. Juli soll es bedeckt sein, mit Temperaturen von jeweils 18°C bzw. 17°C.\n* Am 29. Juli wird wieder leichter Regen vorhergesagt, bei einer Temperatur von 16°C.\n\nIch hoffe, diese Informationen helfen dir bei deiner Reiseplanung! Wenn du noch weitere Fragen hast, stehe ich gerne zur Verfügung.",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "get_weather",
+    "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-25T19:42:26.874123",
+    "category": "wetterabfrage",
+    "user_message": "Wie ist das Wetter in Madrid",
+    "ai_response": "Hallo! Ich bin hier, um dir das Wetter in Madrid zu beschreiben.\n\nAktuell ist das Wetter in Madrid hervorragend! Es gibt einen klaren Himmel mit einer Temperaturentwicklung von 29°C (gefühlt 28°C). Das Klima scheint sehr angenehm für eine Stadt wie Madrid zu sein. Für die nächsten Tage ist ebenfalls ein wunderschönes Wetter vorhergesagt, mit Höchsttemperaturen zwischen 24°C und 29°C.\n\nWenn du also nach Madrid reisen möchtest, dann kannst du dich auf einen sonnigen Aufenthalt freuen!\n\nHast du noch weitere Fragen zu dem Wetter in Madrid? Ich bin hier, um dir weiterzu helfen!",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "get_weather",
+    "response_type": "tool_response"
   }
 ]

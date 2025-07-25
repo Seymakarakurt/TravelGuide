@@ -251,5 +251,17 @@
     "specific_feedback": "",
     "tool_used": "get_complete_travel_data",
     "response_type": "tool_response"
+  },
+  {
+    "timestamp": "2025-07-25T20:48:51.331834",
+    "category": "wetterabfrage",
+    "user_message": "Wie ist das Wetter in Wien?",
+    "ai_response": "Wetter in Wien:\n• Temperatur: 21°C (gefühlt 22°C)\n• Beschreibung: Leichter Regen\n\n5-Tage Vorhersage:\n• 25.07: 22°C, Leichter Regen\n• 26.07: 20°C, Bedeckt\n• 27.07: 18°C, Bedeckt\n• 28.07: 17°C, Bedeckt\n• 29.07: 16°C, Leichter Regen",
+    "feedback_types": [
+      "Gut"
+    ],
+    "specific_feedback": "",
+    "tool_used": "get_weather",
+    "response_type": "tool_response"
   }
 ]

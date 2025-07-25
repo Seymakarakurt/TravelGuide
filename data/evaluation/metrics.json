@@ -2888,17 +2888,314 @@
       },
       "api_success": true,
       "interaction_id": "user_4eayrzzwb_1753404961"
+    },
+    {
+      "timestamp": "2025-07-25T20:07:41.141445",
+      "user_id": "user_b97wgrrce",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 2.800830841064453,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_b97wgrrce_1753466861"
+    },
+    {
+      "timestamp": "2025-07-25T20:09:20.031710",
+      "user_id": "user_pjhnummsi",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 1.2587227821350098,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_pjhnummsi_1753466960"
+    },
+    {
+      "timestamp": "2025-07-25T20:10:43.342184",
+      "user_id": "user_mw3c31rsa",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 1.5867438316345215,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_mw3c31rsa_1753467043"
+    },
+    {
+      "timestamp": "2025-07-25T20:11:04.532006",
+      "user_id": "user_hl278e27x",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 1.2662138938903809,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_hl278e27x_1753467064"
+    },
+    {
+      "timestamp": "2025-07-25T20:14:46.445875",
+      "user_id": "user_560k928iz",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 4.540642261505127,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_560k928iz_1753467286"
+    },
+    {
+      "timestamp": "2025-07-25T20:20:06.198079",
+      "user_id": "user_idaui0mnu",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 21.796300649642944,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_idaui0mnu_1753467606"
+    },
+    {
+      "timestamp": "2025-07-25T20:42:03.496280",
+      "user_id": "user_9o3tblv3",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 5.811694145202637,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_9o3tblv3_1753468923"
+    },
+    {
+      "timestamp": "2025-07-25T20:47:03.399522",
+      "user_id": "user_ebpv7z1wz",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 1.5342967510223389,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_ebpv7z1wz_1753469223"
+    },
+    {
+      "timestamp": "2025-07-25T20:47:29.385379",
+      "user_id": "user_h6fwu8mze",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 3.4356300830841064,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_h6fwu8mze_1753469249"
+    },
+    {
+      "timestamp": "2025-07-25T20:47:45.774223",
+      "user_id": "user_m3ixq3gda",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "error",
+      "response_time": 2.355375051498413,
+      "response_quality": {
+        "relevance_score": 0.11093112754752953,
+        "completeness_score": 0.85,
+        "accuracy_score": 0.6,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.7,
+        "overall_quality": 0.5921862255095058
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": false,
+      "interaction_id": "user_m3ixq3gda_1753469265"
+    },
+    {
+      "timestamp": "2025-07-25T20:48:27.981206",
+      "user_id": "user_0gdmygzla",
+      "message": "Wie ist das Wetter in Wien?",
+      "response_type": "tool_response",
+      "response_time": 18.756989002227783,
+      "response_quality": {
+        "relevance_score": 0.19169434169210567,
+        "completeness_score": 0.95,
+        "accuracy_score": 0.9,
+        "helpfulness_score": 0.7,
+        "coherence_score": 0.85,
+        "overall_quality": 0.7183388683384211
+      },
+      "user_feedback": null,
+      "intent_recognized": true,
+      "intent_evaluation": {
+        "detected_intent": "get_weather",
+        "confidence_score": 0.5,
+        "expected_intent": null,
+        "intent_correct": null,
+        "entity_extraction_accuracy": 1.0,
+        "context_understanding": 0.5
+      },
+      "api_success": true,
+      "interaction_id": "user_0gdmygzla_1753469307"
     }
   ],
   "evaluation_summary": {
-    "total_interactions": 107,
-    "average_response_time": 15.705452566949006,
-    "average_quality_score": 0.7643281981053205,
-    "average_intent_confidence": 0.09813084112149532,
-    "api_success_rate": 99.06542056074767,
-    "intent_recognition_rate": 19.626168224299064,
+    "total_interactions": 118,
+    "average_response_time": 14.793447999630944,
+    "average_quality_score": 0.749350155260193,
+    "average_intent_confidence": 0.13559322033898305,
+    "api_success_rate": 90.67796610169492,
+    "intent_recognition_rate": 27.11864406779661,
     "feedback_statistics": {},
-    "last_updated": "2025-07-25T02:56:01.698258"
+    "last_updated": "2025-07-25T20:48:27.981394"
   },
   "last_updated": ""
 }

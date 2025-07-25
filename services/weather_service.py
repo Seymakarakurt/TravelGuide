@@ -2,7 +2,7 @@ import os
 import requests
 import logging
 from typing import Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -137,79 +137,74 @@ class WeatherService:
             return None
     
     def _get_fallback_weather(self, location: str) -> Dict[str, Any]:
-        city_fallbacks = {
-            'wien':    {'temperature': 21, 'feels_like': 22, 'description': 'Sonnig', 'icon': '01d'},
-            'vienna':  {'temperature': 21, 'feels_like': 22, 'description': 'Sonnig', 'icon': '01d'},
-            'berlin':  {'temperature': 19, 'feels_like': 19, 'description': 'Leicht bewölkt', 'icon': '02d'},
-            'münchen': {'temperature': 18, 'feels_like': 18, 'description': 'Regnerisch', 'icon': '09d'},
-            'munich':  {'temperature': 18, 'feels_like': 18, 'description': 'Regnerisch', 'icon': '09d'},
-            'hamburg': {'temperature': 17, 'feels_like': 16, 'description': 'Windig', 'icon': '50d'},
-            'paris':   {'temperature': 23, 'feels_like': 24, 'description': 'Heiter', 'icon': '01d'},
-            'london':  {'temperature': 16, 'feels_like': 15, 'description': 'Bedeckt', 'icon': '04d'},
-            'rom':     {'temperature': 27, 'feels_like': 28, 'description': 'Sonnig', 'icon': '01d'},
-            'rome':    {'temperature': 27, 'feels_like': 28, 'description': 'Sonnig', 'icon': '01d'},
-            'amsterdam': {'temperature': 15, 'feels_like': 15, 'description': 'Leichter Regen', 'icon': '10d'},
-        }
-        key = location.strip().lower()
-        fallback = city_fallbacks.get(key, {'temperature': 20, 'feels_like': 22, 'description': 'Leicht bewölkt', 'icon': '02d'})
         return {
-            'temperature': fallback['temperature'],
-            'feels_like': fallback['feels_like'],
-            'description': fallback['description'],
-            'icon': fallback['icon'],
+            'temperature': 20,
+            'feels_like': 22,
+            'description': 'Leicht bewölkt',
+            'icon': '02d',
             'timestamp': datetime.now().isoformat(),
             'note': f'Wetterdaten für {location} (Simulation - API nicht verfügbar)'
         }
     
-def _get_5day_forecast(self, location: str) -> Optional[str]:
-    try:
-        if not self.api_key:
+    def _get_5day_forecast(self, location: str) -> Optional[str]:
+        try:
+            if not self.api_key:
+                return None
+            
+            coords = self._get_coordinates(location)
+            if not coords:
+                return None
+            
+            lat, lon = coords
+            
+            url = f"{self.base_url}/forecast"
+            params = {
+                'lat': lat,
+                'lon': lon,
+                'appid': self.api_key,
+                'units': 'metric',
+                'lang': 'de'
+            }
+            
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            forecast_summary = ""
+            seen_dates = set()
+            
+            for item in data['list']:
+                forecast_dt = datetime.fromtimestamp(item['dt'])
+                date_str = forecast_dt.strftime("%d.%m")
+                
+                if date_str not in seen_dates and len(seen_dates) < 5:
+                    seen_dates.add(date_str)
+                    temp = round(item['main']['temp'])
+                    description = item['weather'][0]['description']
+                    
+                    forecast_summary += f"• {date_str}: {temp}°C, {description}\n"
+            
+            return forecast_summary.strip()
+            
+        except Exception as e:
+            logger.error(f"Fehler bei 5-Tage-Vorhersage: {e}")
             return None
-
-        coords = self._get_coordinates(location)
-        if not coords:
-            return None
-
-        lat, lon = coords
-
-        url = f"{self.base_url}/forecast"
-        params = {
-            'lat': lat,
-            'lon': lon,
-            'appid': self.api_key,
-            'units': 'metric',
-            'lang': 'de'
-        }
-
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
-
-        data = response.json()
-
-        daily_data = {}
-        for item in data['list']:
-            forecast_dt = datetime.fromtimestamp(item['dt'])
-            date_str = forecast_dt.strftime("%d.%m")
-            temp = item['main']['temp']
-            description = item['weather'][0]['description']
-
-            if date_str not in daily_data:
-                daily_data[date_str] = {'temps': [], 'descriptions': []}
-
-            daily_data[date_str]['temps'].append(temp)
-            daily_data[date_str]['descriptions'].append(description)
-
-        forecast_summary = ""
-        for date_str, values in list(daily_data.items())[:5]:
-            min_temp = round(min(values['temps']))
-            max_temp = round(max(values['temps']))
-            # Häufigste Beschreibung
-            most_common_desc = max(set(values['descriptions']), key=values['descriptions'].count)
-
-            forecast_summary += f"{date_str}: {min_temp}-{max_temp}°C, {most_common_desc}\n"
-
-        return forecast_summary.strip()
-
-    except Exception as e:
-        logger.error(f"Fehler bei 5-Tage-Vorhersage: {e}")
-        return None
+    
+    def get_weather_summary(self, location: str) -> str:
+        weather = self.get_weather(location)
+        
+        location_title = location.title()
+        
+        if 'note' in weather:
+            return f"Wetter in {location_title}: {weather['description']} bei {weather['temperature']}°C (Simulation)"
+        
+        summary = f"Wetter in {location_title}:\n"
+        summary += f"• Temperatur: {weather['temperature']}°C (gefühlt {weather['feels_like']}°C)\n"
+        summary += f"• Beschreibung: {weather['description'].title()}"
+        
+        forecast_5days = self._get_5day_forecast(location)
+        if forecast_5days:
+            summary += f"\n\n5-Tage Vorhersage:\n{forecast_5days}"
+        
+        return summary 
